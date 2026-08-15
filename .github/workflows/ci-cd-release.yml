@@ -52,6 +52,7 @@ jobs:
           cp content.js dist/extension/
           cp content.css dist/extension/
           cp README.md dist/extension/
+          cp LICENSE dist/extension/
           
           # Copy directories
           cp -r libs dist/extension/
@@ -62,34 +63,37 @@ jobs:
           [ -f threads-content.js ] && cp threads-content.js dist/extension/ || true
           [ -f threads-widget.css ] && cp threads-widget.css dist/extension/ || true
 
-          # Create ZIP for import into chrome://extensions
+          # Create ZIP packages for import into chrome://extensions
           cd dist/extension
+          zip -r ../../shopithread-${{ env.VERSION }}.zip .
           zip -r ../../shopee-affiliate-threads-extension-${{ env.VERSION }}.zip .
           cd ../..
-          ls -lh shopee-affiliate-threads-extension-*.zip
+          ls -lh *.zip
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: shopee-affiliate-threads-extension-${{ env.VERSION }}
-          path: shopee-affiliate-threads-extension-${{ env.VERSION }}.zip
+          name: shopithread-${{ env.VERSION }}
+          path: shopithread-${{ env.VERSION }}.zip
           retention-days: 30
 
       - name: Create GitHub Release with Pre-built ZIP
         if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
         with:
-          name: "Shopee Affiliate Downloader & Threads Extension ${{ env.VERSION }}"
+          name: "ShopiThread - Shopee Affiliate & Threads AutoCraft ${{ env.VERSION }}"
           tag_name: ${{ github.ref_name || env.VERSION }}
-          files: shopee-affiliate-threads-extension-${{ env.VERSION }}.zip
+          files: |
+            shopithread-${{ env.VERSION }}.zip
+            shopee-affiliate-threads-extension-${{ env.VERSION }}.zip
           generate_release_notes: true
           draft: false
           prerelease: false
           body: |
-            ## 🚀 Shopee Affiliate Downloader, CSV Dashboard & Threads Content Generator (${{ env.VERSION }})
+            ## 🧵 ShopiThread — Shopee Affiliate & Threads AutoCraft (${{ env.VERSION }})
             
             ### 📦 Cara Import Ekstensi ke Chrome:
-            1. Download file asset **`shopee-affiliate-threads-extension-${{ env.VERSION }}.zip`** di bawah.
+            1. Download file asset **`shopithread-${{ env.VERSION }}.zip`** di bawah.
             2. Ekstrak file ZIP tersebut ke sebuah folder di komputer Anda.
             3. Buka browser Chrome dan akses `chrome://extensions`.
             4. Aktifkan **Developer mode** (Mode pengembang) di pojok kanan atas.

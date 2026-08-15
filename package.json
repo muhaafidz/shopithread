@@ -1,7 +1,7 @@
 {
-  "name": "shopee-affiliate-threads-extension",
+  "name": "shopithread",
   "version": "1.0.0",
-  "description": "Chrome Extension for Shopee Affiliate Product Downloader, CSV Dashboard, & Threads Content Generator",
+  "description": "ShopiThread - Chrome Extension for Shopee Affiliate Downloader, CSV Dashboard, & Threads Content Generator",
   "main": "background.js",
   "scripts": {
     "test": "node -c libs/*.js content.js dashboard/dashboard.js popup/popup.js background.js && node test-dashboard.js",

@@ -1,10 +1,21 @@
-# 📦 Shopee Affiliate Downloader, CSV Dashboard & Threads Content Generator
+# 🧵 ShopiThread — Shopee Affiliate & Threads AutoCraft
 
-[![CI/CD & Chrome Extension Release Package](https://github.com/sodikinnaa/shopee-affiliate-threads-extension/actions/workflows/ci-cd-release.yml/badge.svg)](https://github.com/sodikinnaa/shopee-affiliate-threads-extension/actions/workflows/ci-cd-release.yml)
-[![Latest Release](https://img.shields.io/github/v/release/sodikinnaa/shopee-affiliate-threads-extension?color=orange&label=Release)](https://github.com/sodikinnaa/shopee-affiliate-threads-extension/releases/latest)
+[![CI/CD & Release Package](https://github.com/sodikinnaa/shopithread/actions/workflows/ci-cd-release.yml/badge.svg)](https://github.com/sodikinnaa/shopithread/actions/workflows/ci-cd-release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/sodikinnaa/shopithread?color=orange&label=Release)](https://github.com/sodikinnaa/shopithread/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Landing Page](https://img.shields.io/badge/Website-Landing%20Page-ff5722.svg)](https://sodikinnaa.github.io/shopithread/)
 
-Ekstensi Google Chrome modern untuk para kreator & affiliate marketer Shopee guna mempermudah proses kurasi produk, pembuatan link affiliate resmi, manajemen database CSV produk, dan pembuatan materi konten viral untuk Meta Threads.
+> **ShopiThread** adalah ekstensi Google Chrome all-in-one untuk kreator konten & affiliate marketer Shopee: Scrape foto HD asli, auto shortlink resmi (`s.shopee.co.id`), manajemen database CSV (RFC 4180), dan generator materi caption Meta Threads viral bebas karakter rusak.
+
+---
+
+## 📹 Video Tutorial & Demo Penggunaan
+
+[![ShopiThread Video Tutorial Demo](https://img.shields.io/badge/YouTube-Video%20Tutorial%203%20Menit-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
+[![Watch the tutorial](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
+> 💡 **Tonton Tutorial Singkat:** Pelajari alur lengkap mulai dari instalasi, scraping multi-halaman Shopee, ekspor CSV, hingga generate caption Threads siap posting!
 
 ---
 
@@ -38,7 +49,7 @@ Ekstensi Google Chrome modern untuk para kreator & affiliate marketer Shopee gun
 ## 🚀 Cara Download & Pasang Ekstensi (Siap Import)
 
 ### Metode 1: Download Versi Rilis Siap Import (Rekomendasi)
-1. Buka halaman **[Releases Terbaru](https://github.com/sodikinnaa/shopee-affiliate-threads-extension/releases/latest)**.
+1. Buka halaman **[Releases Terbaru](https://github.com/sodikinnaa/shopithread/releases/latest)**.
 2. Download file asset **`shopee-affiliate-threads-extension-v1.0.0.zip`**.
 3. Ekstrak file ZIP tersebut di folder komputer Anda.
 4. Buka Google Chrome lalu masuk ke URL: `chrome://extensions`.
@@ -52,6 +63,8 @@ Ekstensi Google Chrome modern untuk para kreator & affiliate marketer Shopee gun
 
 ```
 .
+├── index.html                      # Landing Page resmi ShopiThread
+├── docs/                           # Dokumentasi & GitHub Pages deployment
 ├── .github/workflows/
 │   └── ci-cd-release.yml           # CI/CD pipeline & automated release zip packaging
 ├── libs/
