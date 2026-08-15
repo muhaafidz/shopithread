@@ -1,0 +1,97 @@
+name: CI/CD & Chrome Extension Release Package
+
+on:
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Automated Tests & Syntax Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate Syntax & Run Unit Tests
+        run: |
+          node -c libs/*.js content.js dashboard/dashboard.js popup/popup.js background.js
+          node test-dashboard.js
+
+  build-and-release:
+    name: Build Ready-to-Import ZIP & Publish Release
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./manifest.json').version")
+          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+          echo "RAW_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Prepare Clean Distribution Package
+        run: |
+          mkdir -p dist/extension
+          cp manifest.json dist/extension/
+          cp background.js dist/extension/
+          cp content.js dist/extension/
+          cp content.css dist/extension/
+          cp README.md dist/extension/
+          
+          # Copy directories
+          cp -r libs dist/extension/
+          cp -r dashboard dist/extension/
+          cp -r popup dist/extension/
+          cp -r icons dist/extension/
+          [ -d panel ] && cp -r panel dist/extension/ || true
+          [ -f threads-content.js ] && cp threads-content.js dist/extension/ || true
+          [ -f threads-widget.css ] && cp threads-widget.css dist/extension/ || true
+
+          # Create ZIP for import into chrome://extensions
+          cd dist/extension
+          zip -r ../../shopee-affiliate-threads-extension-${{ env.VERSION }}.zip .
+          cd ../..
+          ls -lh shopee-affiliate-threads-extension-*.zip
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shopee-affiliate-threads-extension-${{ env.VERSION }}
+          path: shopee-affiliate-threads-extension-${{ env.VERSION }}.zip
+          retention-days: 30
+
+      - name: Create GitHub Release with Pre-built ZIP
+        if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Shopee Affiliate Downloader & Threads Extension ${{ env.VERSION }}"
+          tag_name: ${{ github.ref_name || env.VERSION }}
+          files: shopee-affiliate-threads-extension-${{ env.VERSION }}.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          body: |
+            ## 🚀 Shopee Affiliate Downloader, CSV Dashboard & Threads Content Generator (${{ env.VERSION }})
+            
+            ### 📦 Cara Import Ekstensi ke Chrome:
+            1. Download file asset **`shopee-affiliate-threads-extension-${{ env.VERSION }}.zip`** di bawah.
+            2. Ekstrak file ZIP tersebut ke sebuah folder di komputer Anda.
+            3. Buka browser Chrome dan akses `chrome://extensions`.
+            4. Aktifkan **Developer mode** (Mode pengembang) di pojok kanan atas.
+            5. Klik tombol **Load unpacked** (Muat yang belum dibongkar), lalu pilih folder hasil ekstrak tadi.
+            6. Selesai! Ekstensi siap digunakan di Shopee Affiliate & Threads!

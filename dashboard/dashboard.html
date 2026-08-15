@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Affiliate — CSV & Product Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge">
+          <div class="brand-logo">
+            <span class="logo-icon">📦</span>
+          </div>
+          <div class="brand-meta">
+            <h1 class="brand-name">Shopee <span class="accent-text">Affiliate</span></h1>
+            <span class="brand-version">CSV & Product Manager</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Pill -->
+      <div class="queue-status-banner">
+        <div class="status-indicator-dot active"></div>
+        <div class="status-meta">
+          <span class="status-label">Database Lokal</span>
+          <span class="status-sub" id="sidebar-product-count">0 produk tersimpan</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="tab-products">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Daftar Produk</span>
+          <span class="nav-badge" id="badge-total-products">0</span>
+        </button>
+        <button class="nav-item" data-tab="tab-threads-generator">
+          <span class="nav-icon">🧵</span>
+          <span class="nav-label">Generator Konten Threads</span>
+          <span class="nav-badge" style="background: linear-gradient(135deg, #10b981, #059669);">Manual</span>
+        </button>
+        <button class="nav-item" data-tab="tab-import-export">
+          <span class="nav-icon">📁</span>
+          <span class="nav-label">Impor & Ekspor CSV</span>
+        </button>
+        <button class="nav-item" data-tab="tab-guide">
+          <span class="nav-icon">💡</span>
+          <span class="nav-label">Panduan Penggunaan</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="stats-mini-card">
+          <div class="stat-row">
+            <span>Kapasitas Simpan</span>
+            <strong id="db-storage-usage">Lokal (Chrome Storage)</strong>
+          </div>
+        </div>
+        <div class="author-credits">
+          <span>By <b>sodikinnaa</b></span>
+          <span class="client-mode-badge">100% Client-Side</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-breadcrumb">
+          <span class="parent-title">Dashboard</span>
+          <span class="separator">/</span>
+          <span class="current-title" id="active-tab-title">Daftar Produk & CSV</span>
+        </div>
+        
+        <div class="header-actions">
+          <button id="btn-header-import-csv" class="btn-outline-glass">
+            <span>📥 Impor CSV</span>
+          </button>
+          <button id="btn-header-export-csv" class="btn-primary-gradient">
+            <span>📤 Ekspor File CSV</span>
+          </button>
+          <button id="btn-header-download-zip" class="btn-outline-glass">
+            <span>📦 Download Semua Foto (ZIP)</span>
+          </button>
+          <a href="https://affiliate.shopee.co.id/offer/product_offer" target="_blank" class="btn-outline-glass">
+            <span>🌐 Buka Shopee Affiliate</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- TAB 1: DAFTAR PRODUK (PRODUCTS TABLE) -->
+      <section id="tab-products" class="tab-pane active">
+        
+        <!-- Stat Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-primary">📦</div>
+            <div class="stat-details">
+              <span class="stat-title">Total Produk</span>
+              <h2 class="stat-value" id="stat-total-products">0</h2>
+              <span class="stat-trend">Tersimpan di database</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-amber">💰</div>
+            <div class="stat-details">
+              <span class="stat-title">Estimasi Nilai Produk</span>
+              <h2 class="stat-value" id="stat-total-value">Rp 0</h2>
+              <span class="stat-trend">Akumulasi harga produk</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-emerald">🏷️</div>
+            <div class="stat-details">
+              <span class="stat-title">Rata-rata Komisi</span>
+              <h2 class="stat-value" id="stat-avg-commission">0%</h2>
+              <span class="stat-trend">Komisi Shopee Affiliate</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-purple">📈</div>
+            <div class="stat-details">
+              <span class="stat-title">Total Terjual</span>
+              <h2 class="stat-value" id="stat-total-sold">0+</h2>
+              <span class="stat-trend">Volume penjualan produk</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Toolbar -->
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="product-search-input" placeholder="Cari nama produk, link, ID...">
+              <button id="search-clear-btn" class="search-clear-btn" style="display:none;">✕</button>
+            </div>
+
+            <div class="filter-group">
+              <select id="product-sort-filter" class="custom-select">
+                <option value="newest" selected>Urutkan: Terbaru</option>
+                <option value="oldest">Urutkan: Terlama</option>
+                <option value="price_high">Harga Tertinggi</option>
+                <option value="price_low">Harga Terendah</option>
+                <option value="title_asc">Nama Produk (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="toolbar-right">
+            <button id="btn-add-manual-product" class="btn-toolbar btn-outline">
+              <span>➕ Tambah Produk</span>
+            </button>
+            <button id="btn-clear-all-products" class="btn-toolbar btn-danger-outline">
+              <span>🗑️ Hapus Semua</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Products Table Container -->
+        <div class="table-responsive-container">
+          <table class="data-table" id="products-table">
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center;">No</th>
+                <th style="width: 80px; text-align: center;">Foto</th>
+                <th style="min-width: 260px;">Detail Produk Shopee</th>
+                <th style="width: 140px;">Harga</th>
+                <th style="width: 120px;">Komisi / Terjual</th>
+                <th style="min-width: 220px;">Link Singkat Affiliate</th>
+                <th style="width: 130px; text-align: center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+
+          <!-- Empty State -->
+          <div class="empty-table-state" id="empty-table-state">
+            <div class="empty-icon">📭</div>
+            <h3 class="empty-title">Belum Ada Data Produk Shopee</h3>
+            <p class="empty-desc">
+              Gunakan tombol <b>📦 Affiliate Downloader</b> di halaman penawaran Shopee Affiliate untuk scrape produk, atau impor file CSV Anda di sini.
+            </p>
+            <div class="empty-actions">
+              <button id="empty-import-btn" class="btn-toolbar btn-outline">
+                <span>📥 Impor File CSV</span>
+              </button>
+              <a href="https://affiliate.shopee.co.id/offer/product_offer" target="_blank" class="btn-toolbar btn-primary-gradient">
+                <span>🌐 Buka Shopee Affiliate</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: GENERATOR KONTEN THREADS -->
+      <section id="tab-threads-generator" class="tab-pane">
+        <div class="threads-generator-grid">
+          <!-- Left Column: Settings & Controls -->
+          <div class="threads-config-card">
+            <div class="card-header">
+              <h3 class="card-title">🧵 Editor Konten Threads</h3>
+              <p class="card-desc">Pilih produk, acak variasi teks dengan Spintax, dan sesuaikan template caption.</p>
+            </div>
+            <div class="card-body">
+              <!-- Product Selector -->
+              <div class="form-group">
+                <label for="threads-product-select">📦 Pilih Produk dari Database:</label>
+                <select id="threads-product-select" class="custom-select" style="width: 100%;">
+                  <option value="">-- Pilih Produk Shopee --</option>
+                </select>
+              </div>
+
+              <!-- Template Selector -->
+              <div class="form-group">
+                <label for="threads-template-select">🎨 Pilih Gaya Template Caption:</label>
+                <select id="threads-template-select" class="custom-select" style="width: 100%;">
+                  <option value="racun_shopee">Gaya Santai / Racun Shopee (Clean)</option>
+                  <option value="edukasi_review">Gaya Review Jujur / Honest Review (Clean)</option>
+                  <option value="promo_diskon">Gaya Promo Diskon / Flash Sale (Clean)</option>
+                  <option value="solusi_praktis">Gaya Solusi Praktis & Lifehack (Clean)</option>
+                  <option value="simple_direct">Gaya Singkat & To The Point (Clean)</option>
+                </select>
+              </div>
+
+              <!-- Category Hashtag -->
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="threads-hashtag-category">Kategori Hashtag:</label>
+                  <select id="threads-hashtag-category" class="custom-select" style="width: 100%;">
+                    <option value="viral" selected>Viral & Racun Shopee</option>
+                    <option value="fashion">Fashion & OOTD</option>
+                    <option value="elektronik">Elektronik & Gadget</option>
+                    <option value="home_living">Home & Living</option>
+                    <option value="beauty">Beauty & Skincare</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label for="threads-hashtag-count">Jumlah Hashtag:</label>
+                  <select id="threads-hashtag-count" class="custom-select" style="width: 100%;">
+                    <option value="2">2 Hashtags</option>
+                    <option value="3" selected>3 Hashtags</option>
+                    <option value="4">4 Hashtags</option>
+                    <option value="5">5 Hashtags</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Raw / Editable Caption Textarea -->
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <label for="threads-caption-editor" style="margin-bottom: 0;">📝 Teks Caption (Clean & No Broken Icons):</label>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" id="btn-threads-clean-emoji" class="btn-toolbar btn-outline" style="padding: 4px 8px; font-size: 11px;" title="Bersihkan emoji atau simbol rusak">
+                      <span>🧹 Bersihkan Simbol</span>
+                    </button>
+                    <button type="button" id="btn-threads-spin-caption" class="btn-toolbar btn-outline" style="padding: 4px 8px; font-size: 11px;">
+                      <span>🎲 Acak Variasi</span>
+                    </button>
+                  </div>
+                </div>
+                <textarea id="threads-caption-editor" rows="7" class="threads-textarea" placeholder="Pilih produk atau ketik caption Threads di sini..."></textarea>
+                <div class="threads-char-counter">
+                  <span id="threads-char-count">0 / 500 karakter</span>
+                  <span id="threads-char-status" class="status-ok">Mendukung Threads</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="threads-action-buttons">
+                <button type="button" id="btn-threads-copy-caption" class="btn-toolbar btn-primary-gradient flex-1">
+                  <span>📋 Salin Caption Threads</span>
+                </button>
+                <button type="button" id="btn-threads-open-web" class="btn-toolbar btn-outline flex-1">
+                  <span>🔗 Buka Threads.net</span>
+                </button>
+                <button type="button" id="btn-threads-fill-tab" class="btn-toolbar btn-outline" style="border-color: rgba(16, 185, 129, 0.4); color: #34d399;" title="Buka Threads dan isi caption ke form tanpa klik post otomatis">
+                  <span>✍️ Isi ke Threads Tab</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Mockup / Preview Threads -->
+          <div class="threads-preview-card">
+            <div class="card-header">
+              <h3 class="card-title">📱 Live Preview Tampilan Postingan Threads</h3>
+              <p class="card-desc">Simulasi visual bagaimana postingan terlihat di aplikasi web Threads.</p>
+            </div>
+            <div class="card-body">
+              <!-- Threads Post Mockup Box -->
+              <div class="threads-mockup-wrapper">
+                <div class="threads-mockup-header">
+                  <div class="threads-avatar-ring">
+                    <img id="preview-threads-avatar" src="../icons/icon48.png" alt="Avatar" class="threads-avatar-img">
+                  </div>
+                  <div class="threads-user-meta">
+                    <div class="threads-username-row">
+                      <strong class="threads-username">shopee_affiliate_id</strong>
+                      <span class="threads-badge-verified">✓</span>
+                      <span class="threads-timestamp">1m</span>
+                    </div>
+                    <span class="threads-handle">Rekomendasi & Racun Belanja</span>
+                  </div>
+                  <div class="threads-more-icon">•••</div>
+                </div>
+
+                <div class="threads-mockup-content">
+                  <!-- Text Body -->
+                  <div id="preview-threads-text" class="threads-post-text">
+                    Pilih produk di sebelah kiri untuk melihat live preview postingan Threads...
+                  </div>
+
+                  <!-- Image Preview Box -->
+                  <div id="preview-threads-image-wrap" class="threads-image-wrap" style="display: none;">
+                    <img id="preview-threads-image" src="" alt="Foto Produk" class="threads-media-img">
+                  </div>
+
+                  <!-- Product Link Card Component -->
+                  <div id="preview-threads-link-card" class="threads-link-card" style="display: none;">
+                    <div class="threads-link-info">
+                      <span class="threads-link-site">s.shopee.co.id</span>
+                      <h4 id="preview-link-title" class="threads-link-headline">Link Produk Shopee Affiliate</h4>
+                      <p id="preview-link-sub" class="threads-link-meta">Lihat detail & diskon harga</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer Engagement Icons -->
+                <div class="threads-mockup-footer">
+                  <div class="threads-engagement-icons">
+                    <span title="Suka">🤍</span>
+                    <span title="Balas">💬</span>
+                    <span title="Repost">🔁</span>
+                    <span title="Bagikan">✈️</span>
+                  </div>
+                  <div class="threads-footer-meta">
+                    <span>100% Kontrol Pengguna (No Auto-Post)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: IMPORT & EXPORT CSV -->
+      <section id="tab-import-export" class="tab-pane">
+        <div class="settings-grid">
+          <!-- Card 1: Import CSV -->
+          <div class="settings-card">
+            <div class="card-header">
+              <h3 class="card-title">📥 Impor File CSV Produk</h3>
+              <p class="card-desc">Unggah file CSV produk Shopee Affiliate untuk dimasukkan ke database tabel produk.</p>
+            </div>
+            <div class="card-body">
+              <div class="csv-upload-dropzone" id="csv-dropzone">
+                <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+                <div class="dropzone-icon">📁</div>
+                <h4 class="dropzone-title">Klik atau seret file CSV ke sini</h4>
+                <p class="dropzone-subtitle">Mendukung format CSV standar (No, Nama Produk, Harga, Komisi, Terjual, Link Affiliate, File Foto)</p>
+                <button type="button" id="btn-browse-csv" class="btn-toolbar btn-outline" style="margin-top: 12px;">
+                  <span>Pilih File CSV</span>
+                </button>
+              </div>
+
+              <div id="csv-import-preview-box" class="import-preview-box" style="display: none;">
+                <div class="preview-header">
+                  <span id="csv-preview-filename">file.csv</span>
+                  <span id="csv-preview-count" class="badge-tag">0 Baris Ditemukan</span>
+                </div>
+                <div class="preview-table-wrap">
+                  <table class="preview-table">
+                    <thead>
+                      <tr>
+                        <th>Nama Produk</th>
+                        <th>Harga</th>
+                        <th>Komisi</th>
+                        <th>Link Affiliate</th>
+                      </tr>
+                    </thead>
+                    <tbody id="csv-preview-tbody"></tbody>
+                  </table>
+                </div>
+                <div class="preview-actions">
+                  <button id="btn-cancel-import" class="btn-toolbar btn-outline">Batal</button>
+                  <button id="btn-confirm-import" class="btn-toolbar btn-primary-gradient">💾 Simpan ke Database</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Export CSV & ZIP -->
+          <div class="settings-card">
+            <div class="card-header">
+              <h3 class="card-title">📤 Ekspor & Backup Data</h3>
+              <p class="card-desc">Unduh seluruh produk yang ada di database dalam berbagai format file.</p>
+            </div>
+            <div class="card-body export-options-list">
+              <div class="export-option-item">
+                <div class="export-info">
+                  <span class="export-icon">📊</span>
+                  <div>
+                    <h4 class="export-name">Ekspor File CSV (.csv)</h4>
+                    <p class="export-desc">File spreadsheet lengkap dengan nama, harga, link affiliate, dan URL foto.</p>
+                  </div>
+                </div>
+                <button id="btn-export-csv-direct" class="btn-toolbar btn-primary-gradient">
+                  <span>Unduh CSV</span>
+                </button>
+              </div>
+
+              <div class="export-option-item">
+                <div class="export-info">
+                  <span class="export-icon">📋</span>
+                  <div>
+                    <h4 class="export-name">Daftar Link Affiliate (.txt)</h4>
+                    <p class="export-desc">File teks berisi kumpulan link singkat affiliate yang siap dibagikan.</p>
+                  </div>
+                </div>
+                <button id="btn-export-txt-direct" class="btn-toolbar btn-outline">
+                  <span>Unduh TXT</span>
+                </button>
+              </div>
+
+              <div class="export-option-item">
+                <div class="export-info">
+                  <span class="export-icon">📦</span>
+                  <div>
+                    <h4 class="export-name">Paket Foto & Link (ZIP)</h4>
+                    <p class="export-desc">Mengunduh seluruh foto produk resolusi tinggi beserta file CSV dalam satu arsip ZIP.</p>
+                  </div>
+                </div>
+                <button id="btn-export-zip-direct" class="btn-toolbar btn-outline">
+                  <span>Unduh ZIP</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: PANDUAN PENGGUNAAN -->
+      <section id="tab-guide" class="tab-pane">
+        <div class="settings-card">
+          <div class="card-header">
+            <h3 class="card-title">💡 Panduan Ekstensi Shopee Affiliate & CSV Dashboard</h3>
+            <p class="card-desc">Langkah mudah mengumpulkan produk Shopee dan mengekspornya ke CSV.</p>
+          </div>
+          <div class="card-body guide-steps-list">
+            <div class="guide-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Buka Portal Shopee Affiliate</h4>
+                <p>Masuk ke akun affiliate Anda di <a href="https://affiliate.shopee.co.id/offer/product_offer" target="_blank">affiliate.shopee.co.id/offer/product_offer</a>.</p>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Klik Tombol "📦 Affiliate Downloader"</h4>
+                <p>Di pojok kanan bawah halaman Shopee, klik tombol floating oranye untuk membuka panel kontrol.</p>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Pilih Target Halaman & Simpan</h4>
+                <p>Pilih jumlah halaman yang ingin di-scrape (1 s/d 10 halaman) lalu klik <b>"💾 Simpan ke Dashboard"</b> atau <b>"⚡ Generate ZIP"</b>.</p>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>Kelola & Ekspor di Dashboard</h4>
+                <p>Semua produk yang tersimpan akan otomatis muncul di tabel ini. Anda dapat menyalin link affiliate, mengedit data, atau mengunduh file CSV kapan saja.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT PRODUCT -->
+  <div class="modal-overlay" id="modal-product-edit">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-edit-title">✏️ Edit Data Produk</h3>
+        <button class="modal-close-btn" id="modal-edit-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-product-edit">
+          <input type="hidden" id="edit-product-id">
+
+          <div class="form-group">
+            <label for="edit-product-title">Nama Produk *</label>
+            <input type="text" id="edit-product-title" required placeholder="Nama produk Shopee...">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="edit-product-price">Harga (Rp) *</label>
+              <input type="text" id="edit-product-price" required placeholder="Rp 99.000">
+            </div>
+            <div class="form-group flex-1">
+              <label for="edit-product-commission">Komisi</label>
+              <input type="text" id="edit-product-commission" placeholder="10% / Rp 9.900">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="edit-product-sold">Jumlah Terjual</label>
+              <input type="text" id="edit-product-sold" placeholder="1rb+ terjual">
+            </div>
+            <div class="form-group flex-1">
+              <label for="edit-product-image">URL Foto Produk</label>
+              <input type="url" id="edit-product-image" placeholder="https://cf.shopee.co.id/file/...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-product-shortlink">Link Singkat Affiliate (s.shopee.co.id / shope.ee) *</label>
+            <input type="url" id="edit-product-shortlink" required placeholder="https://s.shopee.co.id/...">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-product-longlink">Link Asli Produk Shopee</label>
+            <input type="url" id="edit-product-longlink" placeholder="https://shopee.co.id/product/...">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-toolbar btn-outline" id="modal-edit-cancel">Batal</button>
+            <button type="submit" class="btn-toolbar btn-primary-gradient">💾 Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: IMAGE PREVIEW -->
+  <div class="modal-overlay" id="modal-image-preview">
+    <div class="modal-card image-preview-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="img-preview-title">Pratinjau Foto HD</h3>
+        <button class="modal-close-btn" id="modal-img-close">✕</button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="img-preview-target" src="" alt="Preview HD" class="full-preview-image">
+        <div style="margin-top: 12px;">
+          <a id="img-preview-download-link" href="#" target="_blank" class="btn-toolbar btn-primary-gradient" style="display: inline-flex;">
+            <span>📥 Unduh Foto Resolusi Penuh</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="dashboard-toast" class="dashboard-toast">
+    <span class="toast-icon">✅</span>
+    <span class="toast-message" id="toast-message">Notifikasi</span>
+  </div>
+
+  <script src="../libs/jszip.min.js"></script>
+  <script src="../libs/storage-service.js"></script>
+  <script src="../libs/csv-service.js"></script>
+  <script src="../libs/threads-content-service.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
