@@ -112,7 +112,15 @@ Mohon dukung toko kami dengan review bintang 5 ya kak! Terima kasih banyak! â¤ï
    - *Solusi 2:* Gunakan fitur **Hadiah Gratis (Add-on Deals / Free Gift)** yang dipasangkan ke produk lain.
 2. **Kategori Produk:**
    - Gunakan kategori `Voucher & Jasa` atau `Buku & Majalah > E-Book / Buku Digital` (atau kategori Digital jika toko sudah membuka opsi fitur Non-Fisik).
-3. **Metode Pengiriman:**
-   - Aktifkan fitur **"Termasuk Ongkos Kirim" (Rp 0)** agar pembeli tidak terbebani ongkir kurir fisik.
-4. **Optimasi Foto Produk:**
+3. **Pengaturan Berat & Dimensi Paket (Wajib di Seller Centre):**
+   | Parameter | Nilai Rekomendasi | Catatan / Alasan |
+   |---|---|---|
+   | **Berat Produk** | `10 gram` (atau `1 - 50 gram`) | Isi seminimal mungkin agar tarif ongkir terendah / tidak membebani pembeli. |
+   | **Dimensi (P x L x T)** | `1 cm x 1 cm x 1 cm` | Dimensi terkecil agar terhindar dari perhitungan berat volumetrik kurir. |
+   | **Dikirim dalam (Pre-Order)** | `Tidak (Kirim Instan)` | Agar toko dinilai cepat memproses pesanan. |
+4. **Metode Pengiriman:**
+   - **Opsi Utama (Terbaik):** Aktifkan fitur **"Termasuk Ongkos Kirim" (Rp 0)** agar transaksi 100% digital tanpa biaya pengiriman.
+   - **Opsi Alternatif (Jika Kurir Fisik Wajib):** Aktifkan kurir hemat/reguler dengan berat `10 gram` & cantumkan di deskripsi bahwa invoice/panduan fisik/voucher digital dikirim via amplop mini atau email.
+5. **Optimasi Foto Produk:**
    - Buat cover utama dengan badge mencolok: `[100% GRATIS]`, `[PENGIRIMAN INSTAN]`, `[KHUSUS HARI INI]`.
+
