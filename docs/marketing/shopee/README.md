@@ -34,10 +34,10 @@ Panduan dan kumpulan template copywriting siap pakai untuk listing **Produk Grat
 
 ---
 
-### 🔥 Template 1: Khusus Produk Digital / Tools (ShopiThread Extension)
+### Template 1: Khusus Produk Digital / Tools (ShopiThread Extension)
 
-```markdown
-🎁 [PROMO SPESIAL GRATIS / RP 0] - SHOPIHREAD CHROME EXTENSION 🎁
+```text
+[PROMO SPESIAL GRATIS / RP 0] - SHOPIHREAD CHROME EXTENSION
 Solusi all-in-one untuk kamu para Kreator Konten & Affiliate Marketer Shopee!
 
 Mau bikin konten promosi produk Shopee Affiliate tapi capek scrape foto manual dan bikin caption satu per satu? 
@@ -45,16 +45,16 @@ Gunakan ShopiThread sekarang juga — 100% GRATIS!
 
 ---
 
-✨ FITUR UNGGULAN:
-✅ Scraper Produk & Foto HD: Ambil gambar asli beresolusi tinggi tanpa watermark / blur.
-✅ Auto Generate Shortlink Resmi: Otomatis buat link affiliate resmi (s.shopee.co.id) tanpa repot.
-✅ Ekspor & Database CSV: Kelola ribuan data produk dengan rapi dan terstruktur.
-✅ Generator Caption Meta Threads: Buat teks promosi viral siap posting bebas typo dan karakter rusak.
-✅ 100% Aman & Ringan di Browser.
+FITUR UNGGULAN:
+- Scraper Produk & Foto HD: Ambil gambar asli beresolusi tinggi tanpa watermark / blur.
+- Auto Generate Shortlink Resmi: Otomatis buat link affiliate resmi (s.shopee.co.id) tanpa repot.
+- Ekspor & Database CSV: Kelola ribuan data produk dengan rapi dan terstruktur.
+- Generator Caption Meta Threads: Buat teks promosi viral siap posting bebas typo dan karakter rusak.
+- 100% Aman & Ringan di Browser.
 
 ---
 
-📦 APA YANG KAMU DAPATKAN:
+APA YANG KAMU DAPATKAN:
 1. File Installer Ekstensi Chrome (ShopiThread).
 2. Panduan Lengkap Instalasi & Cara Penggunaan (Video & PDF).
 3. Template Copywriting Threads Siap Pakai.
@@ -62,31 +62,31 @@ Gunakan ShopiThread sekarang juga — 100% GRATIS!
 
 ---
 
-🚀 CARA KLAIM / PENGIRIMAN PRODUK:
+CARA KLAIM / PENGIRIMAN PRODUK:
 1. Checkout produk ini seperti biasa (Harga promo / Gratis).
 2. Setelah pesanan terkonfirmasi, cantumkan ALAMAT EMAIL kamu di catatan order atau kirim via Chat Shopee.
 3. Link download dan panduan akses akan langsung dikirimkan ke Email / Chat dalam hitungan menit.
-4. Jangan lupa konfirmasi "Pesanan Diterima" dan berikan ulasan bintang 5 ya kak! ⭐⭐⭐⭐⭐
+4. Konfirmasi "Pesanan Diterima" dan berikan ulasan bintang 5 ya kak!
 
 ---
 
-⚠️ CATATAN PENTING:
+CATATAN PENTING:
 - Produk ini merupakan PRODUK DIGITAL (non-fisik), tidak ada pengiriman kurir fisik.
-- Gratis konsultasi jika mengalami kendala saat instalasi.
+- Layanan bantuan / konsultasi gratis jika mengalami kendala saat instalasi.
 ```
 
 ---
 
-### 📚 Template 2: Khusus Ebook / File Materi / Template Gratis
+### Template 2: Khusus Ebook / File Materi / Template Gratis
 
-```markdown
-🎁 [FREEBIES] EBOOK PANDUAN & TEMPLATE AFFILIATE VIRAL 🎁
+```text
+[FREEBIES] EBOOK PANDUAN & TEMPLATE AFFILIATE VIRAL
 
 Ingin mulai affiliate tapi bingung cara riset produk dan merangkai kata-kata jualan yang memikat? Dapatkan panduan lengkap ini secara GRATIS!
 
 ---
 
-💡 ISI MATERI & TEMPLATE:
+ISI MATERI & TEMPLATE:
 - Cara mencari produk dengan komisi tertinggi & konversi tinggi di Shopee.
 - Formula copywriting viral untuk Threads, Instagram, dan TikTok.
 - Tips menghindari pembatasan / link error.
@@ -94,12 +94,12 @@ Ingin mulai affiliate tapi bingung cara riset produk dan merangkai kata-kata jua
 
 ---
 
-📥 CARA ORDER & PENGIRIMAN:
+CARA ORDER & PENGIRIMAN:
 1. Klik "Beli Sekarang" & selesaikan transaksi.
 2. Tuliskan EMAIL kamu di kolom catatan atau Chat Toko.
 3. File PDF + Spreadsheet template akan langsung dikirim ke email kamu.
 
-Mohon dukung toko kami dengan review bintang 5 ya kak! Terima kasih banyak! ❤️
+Mohon dukung toko kami dengan ulasan bintang 5 ya kak! Terima kasih banyak!
 ```
 
 ---
