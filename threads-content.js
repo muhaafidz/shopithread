@@ -43,6 +43,21 @@
 
   Logger.info('ThreadsContent', 'Shopee Affiliate Threads Content Script & Carousel Controller Ready! 🧵✨');
 
+  /**
+   * Minimal HTML escaper for interpolating scraped product data into
+   * innerHTML sinks (widget DOM runs inside the threads.net page).
+   * @param {string} str
+   * @returns {string}
+   */
+  function escapeHtmlSafe(str) {
+    return String(str === undefined || str === null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   // ==========================================================================
   // CONSTANTS & FALLBACKS (Aligned with libs/constants.js & libs/db.js)
   // ==========================================================================
@@ -2463,10 +2478,11 @@
           selector.innerHTML = '<option disabled selected>(Queue Empty / Done)</option>';
         } else {
           selector.innerHTML = pendingItems.map((item, idx) => {
-            const safeTitle = (item.title || 'Produk').substring(0, 32);
-            const priceStr = item.price || '-';
+            const safeTitle = escapeHtmlSafe((item.title || 'Product').substring(0, 32));
+            const priceStr = escapeHtmlSafe(String(item.price || '-'));
+            const safeItemId = escapeHtmlSafe(String(item.id || ''));
             const isSelected = idx === this.currentIndex ? 'selected' : '';
-            return `<option value="${item.id}" ${isSelected}>[${idx + 1}/${totalPending}] ${safeTitle} - ${priceStr}</option>`;
+            return `<option value="${safeItemId}" ${isSelected}>[${idx + 1}/${totalPending}] ${safeTitle} - ${priceStr}</option>`;
           }).join('');
         }
       }
@@ -2659,21 +2675,21 @@
         <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2147483646; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
           <div style="width: 420px; max-width: 90vw; background: #18181b; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 18px; color: #f4f4f5; display: flex; flex-direction: column; gap: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
-              <h4 style="margin: 0; font-size: 14px; font-weight: 700;">✏️ Edit Caption Postingan</h4>
+              <h4 style="margin: 0; font-size: 14px; font-weight: 700;">✏️ Edit Post Caption</h4>
               <button id="threads-modal-close" style="background: none; border: none; color: #a1a1aa; font-size: 16px; cursor: pointer;">✕</button>
             </div>
 
             <div style="font-size: 11.5px; color: #a1a1aa; line-height: 1.35;">
-              <b>Produk:</b> ${(item.title || 'Produk Shopee').substring(0, 50)}...
+              <b>Product:</b> ${escapeHtmlSafe((item.title || 'Shopee Product').substring(0, 50))}...
             </div>
 
-            <textarea id="threads-edit-caption-textarea" style="width: 100%; height: 110px; background: #27272a; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; color: #ffffff; font-size: 12px; font-family: inherit; resize: vertical; box-sizing: border-box;" placeholder="Tulis atau edit caption Threads di sini...">${item.caption || ''}</textarea>
+            <textarea id="threads-edit-caption-textarea" style="width: 100%; height: 110px; background: #27272a; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; color: #ffffff; font-size: 12px; font-family: inherit; resize: vertical; box-sizing: border-box;" placeholder="Write or edit the Threads caption here...">${escapeHtmlSafe(item.caption || '')}</textarea>
 
             <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
-              <span id="threads-modal-char-counter" style="font-size: 11px; color: #71717a;">${(item.caption || '').length} Karakter</span>
+              <span id="threads-modal-char-counter" style="font-size: 11px; color: #71717a;">${(item.caption || '').length} characters</span>
               <div style="display: flex; gap: 8px;">
-                <button id="threads-modal-btn-cancel" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #e4e4e7; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">Batal</button>
-                <button id="threads-modal-btn-save" style="background: #8b5cf6; border: none; color: #ffffff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">💾 Simpan</button>
+                <button id="threads-modal-btn-cancel" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #e4e4e7; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">Cancel</button>
+                <button id="threads-modal-btn-save" style="background: #8b5cf6; border: none; color: #ffffff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">💾 Save</button>
               </div>
             </div>
           </div>
@@ -2691,7 +2707,7 @@
       textarea.focus();
 
       textarea.oninput = () => {
-        counter.textContent = `${textarea.value.length} Karakter`;
+        counter.textContent = `${textarea.value.length} characters`;
       };
 
       const closeModal = () => modal.remove();
@@ -2701,12 +2717,12 @@
       saveBtn.onclick = async () => {
         const newCaption = textarea.value.trim();
         if (!newCaption) {
-          alert('Caption tidak boleh kosong!');
+          alert('Caption cannot be empty!');
           return;
         }
 
         await this.syncService.updateItem(item.id, { caption: newCaption });
-        ThreadsWidgetDOM.showToast('✅ Caption berhasil disimpan!');
+        ThreadsWidgetDOM.showToast('✅ Caption saved successfully!');
         closeModal();
         this.render();
       };
@@ -2717,10 +2733,10 @@
   // 9. INITIALIZATION & EXPORTS
   // ==========================================================================
 
-  // Inisialisasi Message Listener Threads Automator
+  // Initialize the Threads Automator message listener
   ThreadsPostController.initMessageListener();
 
-  // Inisialisasi Singleton ThreadsQueueSyncService & ThreadsWidgetController
+  // Initialize the ThreadsQueueSyncService & ThreadsWidgetController singletons
   const queueSyncService = ThreadsQueueSyncService.getInstance();
   const widgetController = ThreadsWidgetController.getInstance();
 

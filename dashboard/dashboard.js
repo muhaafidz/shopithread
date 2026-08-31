@@ -220,7 +220,8 @@
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   // ==========================================================================
@@ -304,15 +305,22 @@
       const longLink = p.longLink || p.url || `https://affiliate.shopee.com.my/offer/product_offer/${p.shopeeId || ''}`;
       const id = p.id || `prod_${idx}`;
 
+      // Defense in depth: escape every interpolated attribute (scraped data
+      // flows into this privileged extension page)
+      const safeImageUrl = escapeHtml(imageUrl);
+      const safeLongLink = escapeHtml(longLink);
+      const safeId = escapeHtml(id);
+      const safeShopeeId = escapeHtml(p.shopeeId || id.substring(0, 10));
+
       return `
-        <tr data-id="${id}">
+        <tr data-id="${safeId}">
           <td style="text-align: center; color: var(--text-dim); font-weight: 700;">${idx + 1}</td>
           <td style="text-align: center;">
-            <img src="${imageUrl}" alt="Thumbnail" class="table-product-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'52\\' height=\\'52\\' fill=\\'%23333\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%231e293b\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%2364748b\\' font-size=\\'9\\'>No Img</text></svg>'">
+            <img src="${safeImageUrl}" alt="Thumbnail" class="table-product-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'52\\' height=\\'52\\' fill=\\'%23333\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%231e293b\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%2364748b\\' font-size=\\'9\\'>No Img</text></svg>'">
           </td>
           <td>
-            <a href="${longLink}" target="_blank" class="table-product-title" title="${escapeHtml(title)}">${escapeHtml(title)}</a>
-            <span class="table-meta-text">ID: ${p.shopeeId || id.substring(0, 10)}</span>
+            <a href="${safeLongLink}" target="_blank" rel="noopener noreferrer" class="table-product-title" title="${escapeHtml(title)}">${escapeHtml(title)}</a>
+            <span class="table-meta-text">ID: ${safeShopeeId}</span>
           </td>
           <td>
             <span class="table-price-badge">${escapeHtml(price)}</span>
@@ -329,11 +337,11 @@
           </td>
           <td>
             <div class="table-actions-cell">
-              <button class="btn-action-icon btn-threads-prod" data-id="${id}" title="🧵 Create Threads Content">🧵</button>
-              <button class="btn-action-icon btn-queue-prod" data-id="${id}" title="🚀 Add to Poster Panel Queue">🚀</button>
-              <button class="btn-action-icon btn-dl-img" data-img="${imageUrl}" data-title="${escapeHtml(title)}" title="Download HD Photo">📥</button>
-              <button class="btn-action-icon btn-edit-prod" data-id="${id}" title="Edit Data">✏️</button>
-              <button class="btn-action-icon danger btn-del-prod" data-id="${id}" title="Delete Product">🗑️</button>
+              <button class="btn-action-icon btn-threads-prod" data-id="${safeId}" title="🧵 Create Threads Content">🧵</button>
+              <button class="btn-action-icon btn-queue-prod" data-id="${safeId}" title="🚀 Add to Poster Panel Queue">🚀</button>
+              <button class="btn-action-icon btn-dl-img" data-img="${safeImageUrl}" data-title="${escapeHtml(title)}" title="Download HD Photo">📥</button>
+              <button class="btn-action-icon btn-edit-prod" data-id="${safeId}" title="Edit Data">✏️</button>
+              <button class="btn-action-icon danger btn-del-prod" data-id="${safeId}" title="Delete Product">🗑️</button>
             </div>
           </td>
         </tr>

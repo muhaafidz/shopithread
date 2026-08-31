@@ -2463,3 +2463,52 @@
     app: posterPanelInstance
   };
 });
+
+/**
+ * Extra UI bindings moved out of poster-panel.html (MV3 CSP blocks inline
+ * scripts on extension pages, so the previous inline <script> never ran).
+ */
+(function () {
+  'use strict';
+
+  if (typeof document === 'undefined') return;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Dashboard navigation
+    const btnDashboard = document.getElementById('btn-open-dashboard');
+    if (btnDashboard) {
+      btnDashboard.addEventListener('click', () => {
+        if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+          window.open(chrome.runtime.getURL('dashboard/dashboard.html'), '_blank');
+        } else {
+          window.location.href = '../dashboard/dashboard.html';
+        }
+      });
+    }
+
+    // 2. Character counter updater
+    const captionTextarea = document.getElementById('preview-caption');
+    const charCounter = document.getElementById('caption-char-count');
+    function updateCharCount() {
+      if (captionTextarea && charCounter) {
+        charCounter.textContent = captionTextarea.value.length;
+      }
+    }
+    if (captionTextarea) {
+      captionTextarea.addEventListener('input', updateCharCount);
+      updateCharCount();
+    }
+
+    // 3. Open shopee link updater
+    const shortlinkInput = document.getElementById('preview-shortlink');
+    const openShopeeBtn = document.getElementById('btn-open-shopee-link');
+    if (shortlinkInput && openShopeeBtn) {
+      const syncShopeeHref = () => {
+        if (shortlinkInput.value && shortlinkInput.value.startsWith('http')) {
+          openShopeeBtn.href = shortlinkInput.value;
+        }
+      };
+      shortlinkInput.addEventListener('change', syncShopeeHref);
+    }
+  });
+})();

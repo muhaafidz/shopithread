@@ -80,7 +80,10 @@
         "libs/*"
       ],
       "matches": [
-        "<all_urls>"
+        "*://*.shopee.com.my/*",
+        "*://shopee.com.my/*",
+        "*://*.threads.net/*",
+        "*://threads.net/*"
       ]
     }
   ]

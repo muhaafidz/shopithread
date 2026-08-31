@@ -361,48 +361,5 @@ https://s.shopee.com.my/7V1bKx9zQ
   <script src="../libs/spintax.js"></script>
   <script src="../libs/db.js"></script>
   <script src="poster-panel.js"></script>
-
-  <!-- SMALL UI HELPER SCRIPT FOR EXTRA CONTROLS -->
-  <script>
-    // Simple UI bindings for Dashboard link & character counter
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1. Dashboard navigation
-      const btnDashboard = document.getElementById('btn-open-dashboard');
-      if (btnDashboard) {
-        btnDashboard.addEventListener('click', () => {
-          if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
-            window.open(chrome.runtime.getURL('dashboard/dashboard.html'), '_blank');
-          } else {
-            window.location.href = '../dashboard/dashboard.html';
-          }
-        });
-      }
-
-      // 2. Character counter updater
-      const captionTextarea = document.getElementById('preview-caption');
-      const charCounter = document.getElementById('caption-char-count');
-      function updateCharCount() {
-        if (captionTextarea && charCounter) {
-          charCounter.textContent = captionTextarea.value.length;
-        }
-      }
-      if (captionTextarea) {
-        captionTextarea.addEventListener('input', updateCharCount);
-        updateCharCount();
-      }
-
-      // 3. Open shopee link updater
-      const shortlinkInput = document.getElementById('preview-shortlink');
-      const openShopeeBtn = document.getElementById('btn-open-shopee-link');
-      if (shortlinkInput && openShopeeBtn) {
-        const syncShopeeHref = () => {
-          if (shortlinkInput.value && shortlinkInput.value.startsWith('http')) {
-            openShopeeBtn.href = shortlinkInput.value;
-          }
-        };
-        shortlinkInput.addEventListener('change', syncShopeeHref);
-      }
-    });
-  </script>
 </body>
 </html>
