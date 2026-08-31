@@ -293,6 +293,9 @@
                 <button type="button" id="btn-threads-fill-tab" class="btn-toolbar btn-outline" style="border-color: rgba(16, 185, 129, 0.4); color: #34d399;" title="Open Threads and fill the caption into the form without auto-clicking post">
                   <span>✍️ Fill into Threads Tab</span>
                 </button>
+                <button type="button" id="btn-threads-qr" class="btn-toolbar btn-outline" title="Show a QR code — scan with your phone to open this caption in the Threads app">
+                  <span>📱 QR to Phone</span>
+                </button>
               </div>
             </div>
           </div>
@@ -412,8 +415,22 @@
               <h3 class="card-title">📤 Export & Backup Data</h3>
               <p class="card-desc">Download all products in the database in various file formats.</p>
             </div>
-            <div class="card-body export-options-list">
-              <div class="export-option-item">
+          <div class="card-body export-options-list">
+            <div class="export-option-item" style="border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 14px; padding: 14px; margin-bottom: 16px; background: rgba(139, 92, 246, 0.05);">
+              <div style="font-weight: 800; font-size: 14px; margin-bottom: 10px;">📱 Phone Sync — ShopiThread MY Mobile</div>
+              <label style="display:block; font-size:11.5px; color:var(--muted); margin-bottom:4px;">GitHub fine-grained token (shopithread-sync repo only)</label>
+              <input type="password" id="syncToken" placeholder="github_pat_..." autocomplete="off" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:rgba(7,11,20,.6); color:var(--text); font-size:13px; margin-bottom:8px;">
+              <div style="display:flex; gap:8px;">
+                <button id="btnSyncPush" class="btn-toolbar btn-primary-gradient" style="flex:1;">⬆️ Push to Phone</button>
+                <button id="btnSyncTest" class="btn-toolbar btn-outline">Test</button>
+              </div>
+              <div class="hint" id="syncStatus" style="font-size:11.5px; color:var(--dim); margin-top:8px;">
+                Pushes products + queue captions to your private <b>shopithread-sync</b> repo; the mobile PWA pulls from there.
+                Payloads carry product data only.
+              </div>
+            </div>
+
+            <div class="export-option-item">
                 <div class="export-info">
                   <span class="export-icon">📊</span>
                   <div>
@@ -588,6 +605,7 @@
   <script src="../libs/storage-service.js"></script>
   <script src="../libs/csv-service.js"></script>
   <script src="../libs/threads-content-service.js"></script>
+  <script src="../libs/qrcode.min.js"></script>
   <script src="dashboard.js"></script>
 </body>
 </html>

@@ -88,6 +88,13 @@
       btnThreadsCopyCaption: document.getElementById('btn-threads-copy-caption'),
       btnThreadsOpenWeb: document.getElementById('btn-threads-open-web'),
       btnThreadsFillTab: document.getElementById('btn-threads-fill-tab'),
+      btnThreadsQr: document.getElementById('btn-threads-qr'),
+
+      // Phone sync
+      syncToken: document.getElementById('syncToken'),
+      btnSyncPush: document.getElementById('btnSyncPush'),
+      btnSyncTest: document.getElementById('btnSyncTest'),
+      syncStatus: document.getElementById('syncStatus'),
 
       // Threads Live Preview Mockup
       previewThreadsText: document.getElementById('preview-threads-text'),
@@ -1078,7 +1085,140 @@
     }
   }
 
-  // Auto-init on DOMContentLoaded
+    // 12. Phone sync (private GitHub repo <-> mobile PWA)
+    const SYNC_KEY = 'phone_sync';
+    const SYNC_REPO = 'muhaafidz/shopithread-sync';
+
+    const syncCfg = () =>
+      new Promise((resolve) => {
+        chrome.storage.local.get([SYNC_KEY], (store) => resolve(store[SYNC_KEY] || {}));
+      });
+
+    const syncHeaders = (token) => ({ Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' });
+
+    async function syncPush() {
+      const cfg = await syncCfg();
+      const token = (dom.syncToken.value || cfg.token || '').trim();
+      if (!token) {
+        dom.syncStatus.innerHTML = '⚠️ Paste a fine-grained token scoped to <b>shopithread-sync</b> first.';
+        return;
+      }
+
+      const queue = await new Promise((resolve) => {
+        chrome.storage.local.get(['threads_queue'], (store) => resolve(Array.isArray(store.threads_queue) ? store.threads_queue : []));
+      });
+      const localProducts = state.products.map((p) => ({ ...p, id: p.id || p.shopeeId }));
+      const localQueue = queue.map((q) => ({
+        id: q.id,
+        productId: q.productId || q.shopeeId || '',
+        title: q.title || '',
+        price: q.price || '-',
+        rating: q.rating || '4.9',
+        sold: q.sold || '',
+        discount: q.discount || '',
+        caption: q.caption || '',
+        image: q.primaryImage || q.image || '',
+        status: (q.status || 'PENDING').toLowerCase(),
+        createdAt: q.createdAt || q.scheduleTime || new Date().toISOString()
+      }));
+
+      dom.syncStatus.textContent = '⏳ Uploading to ' + SYNC_REPO + '...';
+      let sha = null;
+      let remote = { products: [], queue: [] };
+      const getRes = await fetch('https://api.github.com/repos/' + SYNC_REPO + '/contents/data.json', {
+        headers: syncHeaders(token), cache: 'no-store'
+      });
+      if (getRes.ok) {
+        const j = await getRes.json();
+        sha = j.sha;
+        try { remote = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))))); } catch (_) {}
+      } else if (getRes.status !== 404) {
+        dom.syncStatus.textContent = '❌ GitHub error ' + getRes.status + ' (check token scope)';
+        return;
+      }
+
+      const merge = (a, b) => {
+        const map = new Map();
+        a.forEach((x) => map.set(x.id, x));
+        b.forEach((x) => { if (!map.has(x.id)) map.set(x.id, x); });
+        return Array.from(map.values());
+      };
+      const payload = {
+        version: 1,
+        products: merge(remote.products || [], localProducts),
+        queue: merge(remote.queue || [], localQueue)
+      };
+
+      const putRes = await fetch('https://api.github.com/repos/' + SYNC_REPO + '/contents/data.json', {
+        method: 'PUT',
+        headers: syncHeaders(token),
+        body: JSON.stringify({
+          message: 'sync from desktop ' + new Date().toISOString(),
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))),
+          sha
+        })
+      });
+
+      if (!putRes.ok) {
+        dom.syncStatus.textContent = '❌ Push failed (' + putRes.status + ') — check token has Contents: Read and write';
+        return;
+      }
+      await chrome.storage.local.set({ [SYNC_KEY]: { token } });
+      dom.syncStatus.textContent = '✅ Pushed ' + payload.products.length + ' products, ' + payload.queue.length + ' queue items. Open the PWA on your phone → Settings → ⬇️ Pull.';
+      showToast('📱 Pushed to Phone Sync!');
+    }
+
+    if (dom.btnSyncPush) dom.btnSyncPush.onclick = () => syncPush().catch((e) => { dom.syncStatus.textContent = '❌ ' + e.message; });
+    if (dom.btnSyncTest) {
+      dom.btnSyncTest.onclick = async () => {
+        const cfg = await syncCfg();
+        const token = (dom.syncToken.value || cfg.token || '').trim();
+        if (!token) { dom.syncStatus.textContent = '⚠️ Paste a token first.'; return; }
+        const res = await fetch('https://api.github.com/repos/' + SYNC_REPO, { headers: syncHeaders(token) });
+        dom.syncStatus.textContent = res.ok
+          ? '✅ Connection OK — repo accessible with this token.'
+          : '❌ ' + res.status + ' — token missing scope or wrong repo.';
+      };
+    }
+    if (dom.syncToken) {
+      syncCfg().then((cfg) => { if (cfg.token) dom.syncToken.value = cfg.token; });
+    }
+
+    // 13. QR to Phone (Threads intent URL)
+    if (dom.btnThreadsQr) {
+      dom.btnThreadsQr.onclick = () => {
+        const text = dom.threadsCaptionEditor ? dom.threadsCaptionEditor.value : state.threadsGeneratedCaption;
+        if (!text || !text.trim()) return showToast('Caption is empty. Pick a product first!', false);
+        if (typeof qrcode !== 'function') return showToast('QR library not loaded', false);
+        const intentUrl = 'https://www.threads.com/intent/post?text=' + encodeURIComponent(text.trim());
+        const qr = qrcode(0, 'M');
+        qr.addData(intentUrl);
+        qr.make();
+        const img = qr.createImgTag(6, 8);
+        App_openQrModal(img);
+      };
+    }
+
+    function App_openQrModal(imgTag) {
+      let back = document.getElementById('qrModalBack');
+      if (!back) {
+        back = document.createElement('div');
+        back.id = 'qrModalBack';
+        back.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;';
+        back.addEventListener('click', (e) => { if (e.target === back) back.remove(); });
+        document.body.appendChild(back);
+      }
+      back.innerHTML = `
+        <div style="background:var(--bg-soft,#0b1120);border:1px solid rgba(148,163,184,.3);border-radius:20px;padding:24px;text-align:center;max-width:320px;">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:6px;">📱 Scan to Post on Phone</h3>
+          <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;">Scan with your phone camera — it opens the Threads app with this caption pre-filled.</p>
+          <div style="background:#fff;border-radius:14px;padding:12px;display:inline-block;">${imgTag}</div>
+          <div style="margin-top:14px;"><button id="qrClose" class="btn-toolbar btn-outline">Close</button></div>
+        </div>`;
+      back.querySelector('#qrClose').onclick = () => back.remove();
+    }
+
+    // Auto-init on DOMContentLoaded
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
   } else {
