@@ -1,6 +1,6 @@
 {
   "name": "shopithread",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "ShopiThread - Chrome Extension for Shopee Affiliate Downloader, CSV Dashboard, & Threads Content Generator",
   "main": "background.js",
   "scripts": {

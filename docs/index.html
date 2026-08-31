@@ -528,6 +528,40 @@
         display: none;
       }
     }
+  
+    /* ===== Animated hero (ShopiThread MY) ===== */
+    @keyframes st-fade-up { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    @keyframes st-orb { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(42px, -30px) scale(1.16); } }
+    @keyframes st-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+    @keyframes st-draw { to { stroke-dashoffset: 0; } }
+    @keyframes st-pulse { 0%, 100% { box-shadow: 0 0 10px #ff5722; } 50% { box-shadow: 0 0 24px #ff8a65; } }
+
+    .hero { position: relative; overflow: hidden; }
+    .hero-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; }
+    .hero-orb.o1 { width: 340px; height: 340px; background: rgba(238, 77, 45, .35); top: -60px; left: -80px; animation: st-orb 11s ease-in-out infinite; }
+    .hero-orb.o2 { width: 300px; height: 300px; background: rgba(139, 92, 246, .32); top: 30px; right: -70px; animation: st-orb 13s ease-in-out -4s infinite reverse; }
+    .hero-orb.o3 { width: 220px; height: 220px; background: rgba(255, 138, 101, .26); bottom: -90px; left: 38%; animation: st-orb 15s ease-in-out -8s infinite; }
+    .hero .container { position: relative; z-index: 1; }
+
+    .hero .pill-badge { animation: st-fade-up .7s cubic-bezier(.22, .9, .34, 1) both; }
+    .hero-title { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .12s both; }
+    .hero-desc { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .26s both; }
+    .hero-actions { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .4s both; }
+
+    .hero-title .highlight-orange, .hero-title .highlight-violet {
+      background-size: 200% auto;
+      animation: st-shimmer 5s linear infinite;
+    }
+    .pill-dot { animation: st-pulse 2.4s ease-in-out infinite; }
+
+    .hero-thread { display: block; max-width: 560px; width: 72%; margin: -4px auto 18px; }
+    .hero-thread path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: st-draw 1.3s ease .55s forwards; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-orb, .hero .pill-badge, .hero-title, .hero-desc, .hero-actions,
+      .hero-title .highlight-orange, .hero-title .highlight-violet, .pill-dot { animation: none !important; }
+      .hero-thread path { animation: none !important; stroke-dashoffset: 0 !important; }
+    }
   </style>
 </head>
 <body>
@@ -555,19 +589,31 @@
 
   <!-- Hero Section -->
   <header class="hero">
+    <div class="hero-orb o1"></div>
+    <div class="hero-orb o2"></div>
+    <div class="hero-orb o3"></div>
     <div class="container">
       <div class="pill-badge">
         <div class="pill-dot"></div>
-        🇲🇾 Malaysia Edition · Version 1.1.1 Officially Released for Google Chrome!
+        🇲🇾 Malaysia Edition · Version 1.1.2 Officially Released for Google Chrome!
       </div>
       <h1 class="hero-title">
         Turn Shopee Affiliate Links Into <span class="highlight-violet">Viral Threads Content</span> & <span class="highlight-orange">Product CSVs</span>
       </h1>
+      <svg class="hero-thread" viewBox="0 0 640 44" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="st-thread-grad" x1="0" y1="0" x2="640" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ff7043"/><stop offset=".5" stop-color="#ee4d2d"/><stop offset="1" stop-color="#8b5cf6"/>
+          </linearGradient>
+        </defs>
+        <path d="M8 30 C 120 6, 220 40, 320 22 S 520 4, 560 20 C 600 34, 588 40, 556 34"
+              stroke="url(#st-thread-grad)" stroke-width="6" stroke-linecap="round" pathLength="1"/>
+      </svg>
       <p class="hero-desc">
         All-in-one Google Chrome extension for creators & affiliate marketers: HD photo extraction, official auto-shortlinks, CSV database management (RFC 4180), and a Threads caption generator with zero broken characters — with caption templates in Bahasa Melayu tuned for the Malaysia market.
       </p>
       <div class="hero-actions">
-        <a href="https://github.com/muhaafidz/shopithread/releases/download/v1.1.0/shopee-affiliate-threads-extension-v1.1.0.zip" class="btn btn-primary">
+        <a href="https://github.com/muhaafidz/shopithread/releases/download/v1.1.2/shopee-affiliate-threads-extension-v1.1.2.zip" class="btn btn-primary">
           📦 Download the Ready-to-Import Version (.ZIP)
         </a>
         <a href="#video-tutorial" class="btn btn-secondary">
@@ -594,7 +640,7 @@
         <div class="video-header-bar">
           <div class="video-title-wrap">
             <span class="video-badge">▶️ YOUTUBE TUTORIAL</span>
-            <span style="font-weight: 700; font-size: 14px;">Complete ShopiThread v1.1.0 Guide</span>
+            <span style="font-weight: 700; font-size: 14px;">Complete ShopiThread v1.1.2 Guide</span>
           </div>
           <div style="font-size: 12.5px; color: var(--text-dim);">
             ⏱️ Duration: 03:45 | 4K UHD
@@ -679,7 +725,7 @@
         <div class="step-card">
           <span class="step-number">STEP 1</span>
           <h4>Download the Release ZIP File</h4>
-          <p>Download the <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #ff7043; text-decoration: underline;"><code>shopee-affiliate-threads-extension-v1.1.0.zip</code></a> file, then extract it to a folder on your computer.</p>
+          <p>Download the <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #ff7043; text-decoration: underline;"><code>shopee-affiliate-threads-extension-v1.1.2.zip</code></a> file, then extract it to a folder on your computer.</p>
         </div>
 
         <div class="step-card">
