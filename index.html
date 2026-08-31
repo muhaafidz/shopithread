@@ -4,774 +4,739 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ShopiThread MY 🇲🇾 — Shopee Affiliate & Threads AutoCraft (Malaysia Edition)</title>
-  <meta name="description" content="All-in-one Chrome extension for Shopee Affiliate: scrape HD photos, auto official shortlinks, manage a CSV product database, and generate viral Threads captions.">
+  <meta name="description" content="All-in-one Chrome extension for Shopee Malaysia affiliates: scrape HD photos, auto official shortlinks, manage a CSV product database, and generate viral Threads captions in Bahasa Melayu.">
   <link rel="icon" type="image/png" href="icons/icon32.png">
+  <meta property="og:title" content="ShopiThread MY — Shopee Affiliate & Threads AutoCraft">
+  <meta property="og:description" content="Scrape HD photos, auto shortlinks, CSV database & BM caption generator for Shopee Malaysia affiliates. 100% client-side, free & open source.">
+  <meta property="og:image" content="icons/icon128.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* ============================================================
+       ShopiThread MY — Design System
+       ============================================================ */
     :root {
-      --bg-main: #090d16;
-      --bg-card: rgba(18, 24, 38, 0.75);
-      --bg-card-hover: rgba(28, 38, 58, 0.85);
-      --border-color: rgba(255, 255, 255, 0.1);
-      --border-focus: rgba(255, 107, 0, 0.5);
-      --primary-shopee: #ee4d2d;
-      --primary-orange: #ff5722;
-      --primary-gradient: linear-gradient(135deg, #ff5722 0%, #ee4d2d 50%, #ff8a65 100%);
-      --threads-violet: #8b5cf6;
-      --threads-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --shadow-glow: 0 10px 40px -10px rgba(238, 77, 45, 0.35);
-      --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
+      --bg: #070b14;
+      --bg-soft: #0b1120;
+      --card: rgba(17, 24, 39, 0.62);
+      --card-solid: #111827;
+      --border: rgba(148, 163, 184, 0.14);
+      --border-strong: rgba(148, 163, 184, 0.28);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --orange: #ff6a3d;
+      --orange-deep: #ee4d2d;
+      --violet: #8b5cf6;
+      --violet-soft: #a78bfa;
+      --grad-brand: linear-gradient(120deg, #ff8a65 0%, #ee4d2d 45%, #8b5cf6 100%);
+      --grad-text: linear-gradient(100deg, #ffb38a, #ff7043, #c084fc, #8b5cf6, #ffb38a);
+      --radius: 18px;
+      --radius-lg: 26px;
+      --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.55);
+      --shadow-brand: 0 14px 44px -12px rgba(238, 77, 45, 0.45);
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --container: 1160px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      line-height: 1.6;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
       overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 20% 15%, rgba(238, 77, 45, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 80% 25%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(238, 77, 45, 0.08) 0%, transparent 50%);
-      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    ::selection { background: rgba(238, 77, 45, 0.4); }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    code { font-family: var(--mono); }
 
-    /* Navbar */
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+
+    /* ============================================================
+       Navbar
+       ============================================================ */
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(9, 13, 22, 0.8);
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 11, 20, 0.72);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s, background .3s;
+    }
+    .navbar.scrolled { border-bottom-color: var(--border); background: rgba(7, 11, 20, 0.9); }
+
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
+
+    .brand { display: flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 800; letter-spacing: -0.4px; }
+    .brand img { width: 36px; height: 36px; border-radius: 10px; box-shadow: var(--shadow-brand); }
+    .brand .my-chip {
+      font-size: 10px; font-weight: 800; letter-spacing: .5px;
+      background: rgba(238, 77, 45, 0.16); border: 1px solid rgba(255, 106, 61, 0.45);
+      color: #ff8a65; padding: 2px 8px; border-radius: 20px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-link { font-size: 14px; font-weight: 600; color: var(--muted); transition: color .2s; }
+    .nav-link:hover { color: var(--text); }
 
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--primary-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      box-shadow: var(--shadow-glow);
-    }
-
-    .brand-text span {
-      color: var(--primary-orange);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .nav-link {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      transition: color 0.2s;
-    }
-
-    .nav-link:hover {
-      color: var(--text-main);
-    }
-
-    /* Buttons */
     .btn {
-      display: inline-flex;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px; border-radius: 14px;
+      font-size: 15px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; border: 1px solid transparent;
+      transition: transform .22s cubic-bezier(.4, 0, .2, 1), box-shadow .22s, background .22s, border-color .22s;
+    }
+    .btn-primary { background: var(--grad-brand); background-size: 150% auto; color: #fff; box-shadow: var(--shadow-brand); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 50px -10px rgba(238, 77, 45, .6); background-position: right center; }
+    .btn-ghost { background: rgba(148, 163, 184, 0.08); color: var(--text); border-color: var(--border); }
+    .btn-ghost:hover { background: rgba(148, 163, 184, 0.15); border-color: var(--border-strong); transform: translateY(-2px); }
+    .btn-sm { padding: 9px 18px; font-size: 13.5px; border-radius: 12px; }
+
+    .nav-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 18px; padding: 6px 12px; cursor: pointer; }
+
+    /* ============================================================
+       Hero
+       ============================================================ */
+    .hero { position: relative; overflow: hidden; padding: clamp(64px, 9vw, 110px) 0 clamp(56px, 7vw, 84px); }
+
+    .hero-orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .5; pointer-events: none; z-index: 0; }
+    .hero-orb.o1 { width: 380px; height: 380px; background: rgba(238, 77, 45, .32); top: -80px; left: -100px; animation: st-orb 11s ease-in-out infinite; }
+    .hero-orb.o2 { width: 320px; height: 320px; background: rgba(139, 92, 246, .3); top: 30px; right: -80px; animation: st-orb 13s ease-in-out -4s infinite reverse; }
+    .hero-orb.o3 { width: 240px; height: 240px; background: rgba(255, 138, 101, .22); bottom: -100px; left: 40%; animation: st-orb 15s ease-in-out -8s infinite; }
+
+    .hero-grid {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px);
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border-radius: var(--radius-md);
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid transparent;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--primary-gradient);
-      color: #ffffff;
-      box-shadow: var(--shadow-glow);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 45px -8px rgba(238, 77, 45, 0.55);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(8px);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 80px 0 60px;
-      text-align: center;
-      position: relative;
     }
 
     .pill-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(238, 77, 45, 0.12);
-      border: 1px solid rgba(238, 77, 45, 0.3);
-      padding: 6px 16px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #ff7043;
-      margin-bottom: 24px;
+      display: inline-flex; align-items: center; gap: 9px;
+      background: rgba(238, 77, 45, 0.1); border: 1px solid rgba(238, 77, 45, 0.32);
+      padding: 6px 16px; border-radius: 30px;
+      font-size: 12.5px; font-weight: 700; color: #ff8a65;
+      margin-bottom: 22px;
     }
-
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ff5722;
-      box-shadow: 0 0 10px #ff5722;
-    }
+    .pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff5722; animation: st-pulse 2.4s ease-in-out infinite; }
 
     .hero-title {
-      font-size: 52px;
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -1.5px;
-      margin-bottom: 20px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
+      font-size: clamp(34px, 4.6vw, 56px);
+      font-weight: 800; line-height: 1.12; letter-spacing: -1.6px;
+      margin-bottom: 8px;
     }
+    .hero-title .hl { background: var(--grad-text); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: st-shimmer 5s linear infinite; }
 
-    .hero-title .highlight-orange {
-      background: linear-gradient(135deg, #ff7043 0%, #ee4d2d 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .hero-thread { display: block; width: min(72%, 460px); margin: 2px 0 14px; }
+    .hero-thread path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: st-draw 1.3s ease .55s forwards; }
 
-    .hero-title .highlight-violet {
-      background: linear-gradient(135deg, #c084fc 0%, #8b5cf6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .hero-desc { font-size: clamp(15px, 1.4vw, 17.5px); color: var(--muted); max-width: 540px; margin-bottom: 30px; }
+    .hero-desc b { color: var(--text); }
 
-    .hero-desc {
-      font-size: 18px;
-      color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 36px;
-      line-height: 1.6;
-    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 34px; }
 
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 50px;
-      flex-wrap: wrap;
-    }
+    .hero-stats { display: flex; gap: clamp(20px, 3vw, 38px); flex-wrap: wrap; }
+    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+    .hero-stat b { font-size: 19px; font-weight: 800; letter-spacing: -0.4px; }
+    .hero-stat span { font-size: 12.5px; color: var(--dim); font-weight: 600; }
 
-    /* Video Section */
-    .video-showcase-section {
-      padding: 40px 0 80px;
-    }
+    /* ---- Live caption mockup ---- */
+    .mock-stack { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0; }
 
-    .video-card-wrapper {
-      max-width: 960px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 16px;
+    .mock-card {
+      width: 100%; max-width: 430px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px;
       box-shadow: var(--shadow-card);
-      backdrop-filter: blur(16px);
-      position: relative;
+      backdrop-filter: blur(18px);
+    }
+    .mock-card.threads-mock { z-index: 2; }
+    .mock-card.csv-mock {
+      position: absolute; z-index: 1;
+      width: 78%; max-width: 340px; padding: 14px 16px;
+      right: -6px; top: -46px;
+      transform: rotate(2.4deg);
+      animation: st-bob 6s ease-in-out infinite;
     }
 
-    .video-header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px 16px;
-    }
+    .mock-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .mock-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--grad-brand); display: grid; place-items: center; font-size: 17px; }
+    .mock-user { display: flex; flex-direction: column; line-height: 1.3; }
+    .mock-user b { font-size: 13.5px; }
+    .mock-user span { font-size: 11.5px; color: var(--dim); }
+    .mock-live { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 800; letter-spacing: .8px; color: #34d399; background: rgba(16, 185, 129, .1); border: 1px solid rgba(16, 185, 129, .3); padding: 3px 10px; border-radius: 20px; }
+    .mock-live i { width: 6px; height: 6px; border-radius: 50%; background: #34d399; animation: st-pulse 1.6s ease-in-out infinite; }
 
-    .video-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .mock-caption { font-size: 13.5px; line-height: 1.6; color: #cbd5e1; min-height: 158px; white-space: pre-wrap; font-family: var(--mono); }
+    .mock-caret { display: inline-block; width: 8px; height: 15px; background: var(--orange); vertical-align: -2px; animation: st-blink 1s steps(2) infinite; }
 
-    .video-badge {
-      background: #ff0000;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .mock-foot { display: flex; gap: 16px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--dim); font-size: 12.5px; }
 
-    .video-screen {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%; /* 16:9 Aspect Ratio */
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: #030712;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    .csv-mock .csv-title { display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+    .csv-mock table { width: 100%; border-collapse: collapse; font-size: 11px; font-family: var(--mono); }
+    .csv-mock th { text-align: left; color: var(--dim); font-weight: 600; padding: 5px 8px; border-bottom: 1px solid var(--border); }
+    .csv-mock td { padding: 6px 8px; border-bottom: 1px solid rgba(148, 163, 184, 0.07); color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+    .csv-mock tr td:first-child { color: #ff8a65; font-weight: 600; }
 
-    .video-screen iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
+    /* ============================================================
+       Sections shared
+       ============================================================ */
+    section { padding: clamp(56px, 8vw, 96px) 0; position: relative; }
 
+    .section-head { text-align: center; max-width: 640px; margin: 0 auto clamp(36px, 5vw, 56px); }
+    .kicker {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase;
+      color: #ff8a65; margin-bottom: 14px;
+    }
+    .kicker::before, .kicker::after { content: ''; width: 22px; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255, 106, 61, .6)); }
+    .kicker::after { background: linear-gradient(90deg, rgba(139, 92, 246, .6), transparent); }
+    .section-title { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+    .section-desc { font-size: 15.5px; color: var(--muted); }
+
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,.9,.34,1), transform .7s cubic-bezier(.22,.9,.34,1); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ============================================================
+       Bento features
+       ============================================================ */
+    .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+
+    .bento-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+      backdrop-filter: blur(14px);
+      position: relative; overflow: hidden;
+      transition: transform .3s cubic-bezier(.22,.9,.34,1), border-color .3s, box-shadow .3s;
+    }
+    .bento-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(420px 200px at 20% -10%, rgba(238, 77, 45, 0.1), transparent 60%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .bento-card:hover { transform: translateY(-5px); border-color: var(--border-strong); box-shadow: var(--shadow-card); }
+    .bento-card:hover::before { opacity: 1; }
+
+    .bento-card h3 { font-size: 17.5px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 8px; position: relative; }
+    .bento-card p { font-size: 14px; color: var(--muted); position: relative; }
+    .bento-card p code { font-size: 12.5px; color: #ff8a65; background: rgba(238, 77, 45, .08); padding: 1px 6px; border-radius: 6px; }
+    .bento-icon {
+      width: 46px; height: 46px; border-radius: 14px;
+      display: grid; place-items: center; font-size: 21px;
+      background: rgba(148, 163, 184, 0.07); border: 1px solid var(--border);
+      margin-bottom: 18px; position: relative;
+    }
+    .bento-icon.orange { background: rgba(238, 77, 45, .13); border-color: rgba(238, 77, 45, .3); }
+    .bento-icon.violet { background: rgba(139, 92, 246, .13); border-color: rgba(139, 92, 246, .3); }
+    .bento-icon.emerald { background: rgba(16, 185, 129, .12); border-color: rgba(16, 185, 129, .3); }
+
+    .span-2 { grid-column: span 2; }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+
+    .bento-card.hero-card { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+    .caption-chips { display: flex; flex-wrap: wrap; gap: 8px; position: relative; }
+    .caption-chips span {
+      font-size: 11.5px; font-weight: 600; font-family: var(--mono);
+      color: #c4b5fd; background: rgba(139, 92, 246, .1); border: 1px solid rgba(139, 92, 246, .28);
+      padding: 4px 11px; border-radius: 20px;
+    }
+    .caption-chips span:nth-child(2n) { color: #fdba74; background: rgba(238, 77, 45, .09); border-color: rgba(238, 77, 45, .28); }
+
+    /* ============================================================
+       How it works
+       ============================================================ */
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; position: relative; }
+    .timeline::before {
+      content: ''; position: absolute; top: 27px; left: 6%; right: 6%; height: 2px;
+      background: linear-gradient(90deg, rgba(255, 106, 61, .5), rgba(139, 92, 246, .5));
+      border-radius: 2px;
+    }
+    .step { position: relative; text-align: center; padding: 0 8px; }
+    .step-num {
+      width: 54px; height: 54px; margin: 0 auto 16px;
+      display: grid; place-items: center; position: relative; z-index: 1;
+      border-radius: 50%; font-weight: 800; font-size: 17px;
+      background: var(--card-solid); border: 2px solid rgba(238, 77, 45, .5);
+      color: #ff8a65; box-shadow: 0 0 0 6px rgba(7, 11, 20, 1);
+    }
+    .step h4 { font-size: 15.5px; font-weight: 800; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: var(--muted); }
+    .step p a { color: #ff8a65; text-decoration: underline; }
+
+    /* ============================================================
+       Video + Install split
+       ============================================================ */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 48px); align-items: start; }
+
+    .panel {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 22px;
+      box-shadow: var(--shadow-card); backdrop-filter: blur(14px);
+    }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+    .panel-title { display: flex; align-items: center; gap: 10px; font-size: 14.5px; font-weight: 800; }
+    .badge-yt { background: #ff0000; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .6px; padding: 3px 9px; border-radius: 7px; }
+
+    .video-screen { position: relative; width: 100%; padding-top: 56.25%; border-radius: 14px; overflow: hidden; background: #030712; border: 1px solid var(--border); }
     .video-dummy-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(180deg, rgba(11, 15, 25, 0.3) 0%, rgba(3, 7, 18, 0.85) 100%), 
+      position: absolute; inset: 0; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+      background: linear-gradient(180deg, rgba(11, 15, 25, .3), rgba(3, 7, 18, .85)),
                   url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform .3s;
     }
-
-    .video-dummy-overlay:hover {
-      background-color: rgba(0, 0, 0, 0.5);
+    .video-dummy-overlay:hover { transform: scale(1.015); }
+    .play-emblem {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--grad-brand); color: #fff; font-size: 24px;
+      display: grid; place-items: center; margin-bottom: 10px;
+      box-shadow: 0 10px 30px rgba(238, 77, 45, .55);
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
     }
+    .video-dummy-overlay:hover .play-emblem { transform: scale(1.12); }
+    .play-video-title { font-size: 15.5px; font-weight: 800; text-shadow: 0 2px 10px rgba(0, 0, 0, .8); }
+    .play-video-subtitle { font-size: 12.5px; color: #cbd5e1; }
 
-    .play-emblem-btn {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--primary-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      color: #ffffff;
-      box-shadow: 0 10px 30px rgba(238, 77, 45, 0.6);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      margin-bottom: 16px;
+    .install-steps { display: flex; flex-direction: column; gap: 14px; }
+    .install-step { display: flex; gap: 14px; align-items: flex-start; background: rgba(148, 163, 184, 0.05); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; transition: border-color .25s, background .25s; }
+    .install-step:hover { border-color: rgba(238, 77, 45, .35); background: rgba(238, 77, 45, .05); }
+    .install-step .n {
+      flex: 0 0 30px; height: 30px; display: grid; place-items: center;
+      border-radius: 9px; font-weight: 800; font-size: 13.5px;
+      background: var(--grad-brand); color: #fff;
     }
+    .install-step h5 { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+    .install-step p { font-size: 12.5px; color: var(--muted); }
+    .install-step p code { color: #ff8a65; font-size: 12px; }
+    .install-step p a { color: #ff8a65; text-decoration: underline; }
+    .install-step p b { color: var(--text); }
 
-    .video-dummy-overlay:hover .play-emblem-btn {
-      transform: scale(1.15);
-      box-shadow: 0 15px 40px rgba(238, 77, 45, 0.8);
-    }
-
-    .play-video-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 6px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-    }
-
-    .play-video-subtitle {
-      font-size: 14px;
-      color: #cbd5e1;
-    }
-
-    /* Features Grid */
-    .section-title-wrap {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .section-title {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 12px;
-    }
-
-    .section-desc {
-      font-size: 16px;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-      margin-bottom: 80px;
-    }
-
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
+    /* ============================================================
+       CTA + Footer
+       ============================================================ */
+    .cta {
+      position: relative; overflow: hidden; text-align: center;
+      background: var(--card); border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 32px;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-4px);
-      background: var(--bg-card-hover);
-      border-color: rgba(255, 255, 255, 0.2);
+      padding: clamp(40px, 6vw, 64px) clamp(24px, 5vw, 64px);
       box-shadow: var(--shadow-card);
     }
-
-    .feature-icon-box {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
+    .cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(600px 240px at 50% -20%, rgba(238, 77, 45, .18), transparent 70%),
+                  radial-gradient(500px 220px at 85% 120%, rgba(139, 92, 246, .16), transparent 70%);
+      pointer-events: none;
     }
+    .cta h2 { position: relative; font-size: clamp(24px, 3.2vw, 36px); font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
+    .cta p { position: relative; color: var(--muted); margin-bottom: 28px; }
 
-    .feature-icon-box.orange {
-      background: rgba(238, 77, 45, 0.15);
-      border-color: rgba(238, 77, 45, 0.3);
-      color: #ff7043;
+    footer { border-top: 1px solid var(--border); padding: 40px 0 44px; margin-top: clamp(48px, 6vw, 80px); }
+    .footer-grid { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; margin-bottom: 10px; }
+    .footer-brand img { width: 30px; height: 30px; border-radius: 9px; }
+    .footer-col { font-size: 13px; color: var(--dim); max-width: 460px; }
+    .footer-col a { color: #ff8a65; }
+    .footer-col a:hover { text-decoration: underline; }
+    .footer-meta { font-size: 12px; color: var(--dim); margin-top: 14px; }
+    .fork-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12.5px; font-weight: 700;
+      background: rgba(139, 92, 246, .09); border: 1px solid rgba(139, 92, 246, .3);
+      color: #c4b5fd; padding: 7px 14px; border-radius: 24px;
+      transition: border-color .25s, transform .25s;
     }
+    .fork-chip:hover { border-color: rgba(139, 92, 246, .6); transform: translateY(-1px); }
 
-    .feature-icon-box.violet {
-      background: rgba(139, 92, 246, 0.15);
-      border-color: rgba(139, 92, 246, 0.3);
-      color: #c084fc;
-    }
-
-    .feature-icon-box.emerald {
-      background: rgba(16, 185, 129, 0.15);
-      border-color: rgba(16, 185, 129, 0.3);
-      color: #34d399;
-    }
-
-    .feature-card h3 {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .feature-card p {
-      font-size: 14.5px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* Steps Section */
-    .steps-section {
-      padding: 60px 0 80px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    .step-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      position: relative;
-    }
-
-    .step-number {
-      font-size: 13px;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-color);
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      color: var(--primary-orange);
-      margin-bottom: 16px;
-    }
-
-    .step-card h4 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .step-card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .step-code {
-      font-family: 'Fira Code', monospace;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 4px 8px;
-      border-radius: 6px;
-      color: #38bdf8;
-      font-size: 12.5px;
-    }
-
-    /* CTA Section */
-    .cta-banner {
-      background: linear-gradient(135deg, rgba(238, 77, 45, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: var(--radius-lg);
-      padding: 50px 30px;
-      text-align: center;
-      margin: 60px 0 80px;
-      backdrop-filter: blur(12px);
-    }
-
-    .cta-banner h2 {
-      font-size: 34px;
-      font-weight: 800;
-      margin-bottom: 14px;
-    }
-
-    .cta-banner p {
-      font-size: 16px;
-      color: var(--text-muted);
-      max-width: 540px;
-      margin: 0 auto 28px;
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border-color);
-      padding: 36px 0;
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 14px;
-    }
-
-    footer a {
-      color: var(--text-muted);
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 36px;
-      }
-      .hero-desc {
-        font-size: 16px;
-      }
-      .nav-links {
-        display: none;
-      }
-    }
-  
-    /* ===== Animated hero (ShopiThread MY) ===== */
-    @keyframes st-fade-up { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    /* ============================================================
+       Animations
+       ============================================================ */
     @keyframes st-orb { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(42px, -30px) scale(1.16); } }
     @keyframes st-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
     @keyframes st-draw { to { stroke-dashoffset: 0; } }
-    @keyframes st-pulse { 0%, 100% { box-shadow: 0 0 10px #ff5722; } 50% { box-shadow: 0 0 24px #ff8a65; } }
-
-    .hero { position: relative; overflow: hidden; }
-    .hero-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; z-index: 0; }
-    .hero-orb.o1 { width: 340px; height: 340px; background: rgba(238, 77, 45, .35); top: -60px; left: -80px; animation: st-orb 11s ease-in-out infinite; }
-    .hero-orb.o2 { width: 300px; height: 300px; background: rgba(139, 92, 246, .32); top: 30px; right: -70px; animation: st-orb 13s ease-in-out -4s infinite reverse; }
-    .hero-orb.o3 { width: 220px; height: 220px; background: rgba(255, 138, 101, .26); bottom: -90px; left: 38%; animation: st-orb 15s ease-in-out -8s infinite; }
-    .hero .container { position: relative; z-index: 1; }
+    @keyframes st-pulse { 0%, 100% { box-shadow: 0 0 8px #ff5722; opacity: 1; } 50% { box-shadow: 0 0 20px #ff8a65; opacity: .75; } }
+    @keyframes st-bob { 0%, 100% { transform: rotate(2.4deg) translateY(0); } 50% { transform: rotate(2.4deg) translateY(-10px); } }
+    @keyframes st-blink { 50% { opacity: 0; } }
+    @keyframes st-fade-up { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
 
     .hero .pill-badge { animation: st-fade-up .7s cubic-bezier(.22, .9, .34, 1) both; }
     .hero-title { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .12s both; }
+    .hero-thread { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .22s both; }
     .hero-desc { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .26s both; }
     .hero-actions { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .4s both; }
-
-    .hero-title .highlight-orange, .hero-title .highlight-violet {
-      background-size: 200% auto;
-      animation: st-shimmer 5s linear infinite;
-    }
-    .pill-dot { animation: st-pulse 2.4s ease-in-out infinite; }
-
-    .hero-thread { display: block; max-width: 560px; width: 72%; margin: -4px auto 18px; }
-    .hero-thread path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: st-draw 1.3s ease .55s forwards; }
+    .hero-stats { animation: st-fade-up .8s cubic-bezier(.22, .9, .34, 1) .52s both; }
+    .mock-stack { animation: st-fade-up .9s cubic-bezier(.22, .9, .34, 1) .3s both; }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero-orb, .hero .pill-badge, .hero-title, .hero-desc, .hero-actions,
-      .hero-title .highlight-orange, .hero-title .highlight-violet, .pill-dot { animation: none !important; }
-      .hero-thread path { animation: none !important; stroke-dashoffset: 0 !important; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .hero-thread path { stroke-dashoffset: 0 !important; }
+      .reveal { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .mock-stack { order: -1; margin-bottom: 8px; }
+      .mock-card.csv-mock { right: 0; top: -34px; }
+      .bento { grid-template-columns: repeat(2, 1fr); }
+      .span-2, .span-3, .span-4 { grid-column: span 2; }
+      .timeline { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+      .timeline::before { display: none; }
+      .split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links {
+        position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 4px;
+        background: rgba(7, 11, 20, 0.97); border-bottom: 1px solid var(--border);
+        padding: 14px 24px 18px; display: none;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links .nav-link { padding: 10px 4px; }
+      .nav-toggle { display: inline-block; }
+      .nav-cta { display: none; }
+      .bento { grid-template-columns: 1fr; }
+      .span-2, .span-3, .span-4 { grid-column: span 1; }
+      .timeline { grid-template-columns: 1fr; }
+      .hero-actions .btn { flex: 1 1 100%; }
+      .mock-card.csv-mock { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-      <div class="brand">
-        <div class="brand-icon">🧵</div>
-        <div class="brand-text">Shopi<span>Thread</span> <span style="font-size: 11px; background: rgba(238, 77, 45, 0.18); border: 1px solid rgba(255, 107, 0, 0.4); color: #ff8a65; padding: 2px 8px; border-radius: 20px; font-weight: 800; margin-left: 6px; vertical-align: middle;">MY</span></div>
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <img src="icons/icon48.png" alt="ShopiThread MY logo">
+        Shopi<span style="color: var(--orange);">Thread</span>
+        <span class="my-chip">MY</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link" href="#features">✨ Features</a>
+        <a class="nav-link" href="#how">⚡ How It Works</a>
+        <a class="nav-link" href="#install">🚀 Install</a>
+        <a class="nav-link" href="https://github.com/muhaafidz/shopithread" target="_blank" rel="noopener noreferrer">⭐ GitHub</a>
       </div>
-      <div class="nav-links">
-        <a href="#video-tutorial" class="nav-link">📹 Video Tutorial</a>
-        <a href="#fitur" class="nav-link">✨ Features</a>
-        <a href="#cara-pasang" class="nav-link">🚀 Install</a>
-        <a href="https://github.com/muhaafidz/shopithread" target="_blank" rel="noopener noreferrer" class="nav-link">⭐ GitHub</a>
-      </div>
-      <div>
-        <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 9px 18px; font-size: 13.5px;">
-          ⬇️ Download Extension (.ZIP)
-        </a>
-      </div>
+      <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm nav-cta">
+        ⬇️ Download .ZIP
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- ================= HERO ================= -->
   <header class="hero">
     <div class="hero-orb o1"></div>
     <div class="hero-orb o2"></div>
     <div class="hero-orb o3"></div>
-    <div class="container">
-      <div class="pill-badge">
-        <div class="pill-dot"></div>
-        🇲🇾 Malaysia Edition · Version 1.1.2 Officially Released for Google Chrome!
+    <div class="container hero-grid">
+      <div>
+        <div class="pill-badge">
+          <span class="pill-dot"></span>
+          🇲🇾 Malaysia Edition · v1.1.2 — Free &amp; Open Source
+        </div>
+        <h1 class="hero-title">
+          Turn Shopee Links Into <span class="hl">Viral Threads</span> &amp; <span class="hl">Product CSVs</span>
+        </h1>
+        <svg class="hero-thread" viewBox="0 0 640 44" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="st-thread-grad" x1="0" y1="0" x2="640" y2="0" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#ff7043"/><stop offset=".5" stop-color="#ee4d2d"/><stop offset="1" stop-color="#8b5cf6"/>
+            </linearGradient>
+          </defs>
+          <path d="M8 30 C 120 6, 220 40, 320 22 S 520 4, 560 20 C 600 34, 588 40, 556 34"
+                stroke="url(#st-thread-grad)" stroke-width="6" stroke-linecap="round" pathLength="1"/>
+        </svg>
+        <p class="hero-desc">
+          The all-in-one Chrome extension for <b>Shopee Malaysia affiliates</b>:
+          scrape HD product photos, auto-generate official shortlinks, manage a
+          CSV database, and write <b>Threads captions in Bahasa Melayu</b> — zero broken characters.
+        </p>
+        <div class="hero-actions">
+          <a href="https://github.com/muhaafidz/shopithread/releases/download/v1.1.2/shopee-affiliate-threads-extension-v1.1.2.zip" class="btn btn-primary">
+            📦 Download for Chrome — Free
+          </a>
+          <a href="#how" class="btn btn-ghost">▶️ See How It Works</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>7</b><span>BM caption templates</span></div>
+          <div class="hero-stat"><b>40+</b><span>Malaysia hashtags</span></div>
+          <div class="hero-stat"><b>10</b><span>pages deep scraping</span></div>
+          <div class="hero-stat"><b>100%</b><span>client-side &amp; private</span></div>
+        </div>
       </div>
-      <h1 class="hero-title">
-        Turn Shopee Affiliate Links Into <span class="highlight-violet">Viral Threads Content</span> & <span class="highlight-orange">Product CSVs</span>
-      </h1>
-      <svg class="hero-thread" viewBox="0 0 640 44" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="st-thread-grad" x1="0" y1="0" x2="640" y2="0" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#ff7043"/><stop offset=".5" stop-color="#ee4d2d"/><stop offset="1" stop-color="#8b5cf6"/>
-          </linearGradient>
-        </defs>
-        <path d="M8 30 C 120 6, 220 40, 320 22 S 520 4, 560 20 C 600 34, 588 40, 556 34"
-              stroke="url(#st-thread-grad)" stroke-width="6" stroke-linecap="round" pathLength="1"/>
-      </svg>
-      <p class="hero-desc">
-        All-in-one Google Chrome extension for creators & affiliate marketers: HD photo extraction, official auto-shortlinks, CSV database management (RFC 4180), and a Threads caption generator with zero broken characters — with caption templates in Bahasa Melayu tuned for the Malaysia market.
-      </p>
-      <div class="hero-actions">
-        <a href="https://github.com/muhaafidz/shopithread/releases/download/v1.1.2/shopee-affiliate-threads-extension-v1.1.2.zip" class="btn btn-primary">
-          📦 Download the Ready-to-Import Version (.ZIP)
-        </a>
-        <a href="#video-tutorial" class="btn btn-secondary">
-          ▶️ Watch the Tutorial Video (3 Minutes)
-        </a>
+
+      <div class="mock-stack">
+        <div class="mock-card csv-mock" aria-hidden="true">
+          <div class="csv-title"><span>📊 shopee_products.csv</span><span>RFC 4180</span></div>
+          <table>
+            <thead><tr><th>Product</th><th>Price</th><th>Comm.</th></tr></thead>
+            <tbody>
+              <tr><td>Tas Selempang Premium</td><td>RM 89</td><td>10%</td></tr>
+              <tr><td>Powerbank 20000mAh</td><td>RM 39</td><td>8%</td></tr>
+              <tr><td>Earbuds TWS Pro</td><td>RM 45</td><td>12%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mock-card threads-mock">
+          <div class="mock-head">
+            <div class="mock-avatar">🧵</div>
+            <div class="mock-user"><b>shopee_affiliate_my</b><span>@yourhandle · 1m</span></div>
+            <span class="mock-live"><i></i>LIVE PREVIEW</span>
+          </div>
+          <div class="mock-caption"><span id="typedCaption"></span><span class="mock-caret"></span></div>
+          <div class="mock-foot"><span>🤍 128</span><span>💬 32</span><span>🔁 41</span><span style="margin-left: auto; color: #34d399;">✓ Ready to post</span></div>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Video Tutorial Section -->
-  <section id="video-tutorial" class="video-showcase-section">
+  <!-- ================= FEATURES (BENTO) ================= -->
+  <section id="features">
     <div class="container">
-      <div class="section-title-wrap">
-        <div class="pill-badge" style="margin-bottom: 12px;">
-          <span style="color:#ff4444;">🔴</span> Practical Video Guide
-        </div>
-        <h2 class="section-title">See How It Works in 3 Minutes</h2>
-        <p class="section-desc">
-          Learn how ShopiThread automates Shopee Affiliate product scraping and composes viral Threads captions in seconds.
-        </p>
+      <div class="section-head reveal">
+        <div class="kicker">Features</div>
+        <h2 class="section-title">Everything an Affiliate Needs</h2>
+        <p class="section-desc">One extension, the full workflow — from scraping to posting, without leaving your browser.</p>
       </div>
 
-      <div class="video-card-wrapper">
-        <div class="video-header-bar">
-          <div class="video-title-wrap">
-            <span class="video-badge">▶️ YOUTUBE TUTORIAL</span>
-            <span style="font-weight: 700; font-size: 14px;">Complete ShopiThread v1.1.2 Guide</span>
+      <div class="bento">
+        <div class="bento-card span-4 hero-card reveal">
+          <div>
+            <div class="bento-icon violet">🧵</div>
+            <h3>Threads Caption Generator — in Bahasa Melayu</h3>
+            <p>Native Malaysian copywriting, not translated Indonesian. Spintax engine randomizes every hook so posts never look duplicated, plus a one-click symbol cleaner.</p>
           </div>
-          <div style="font-size: 12.5px; color: var(--text-dim);">
-            ⏱️ Duration: 03:45 | 4K UHD
+          <div class="caption-chips">
+            <span>Casual / Racun Shopee</span><span>Honest Review</span><span>Flash Sale / Diskaun</span>
+            <span>Jom Jimat</span><span>Restock Alert</span><span>Short &amp; Direct</span><span>Lifehack</span>
           </div>
         </div>
 
-        <div class="video-screen" id="video-container">
-          <!-- Interactive Dummy Video Showcase Player -->
-          <div class="video-dummy-overlay" id="video-overlay" onclick="openInstallGuide()">
-            <div class="play-emblem-btn">
-              ▶
-            </div>
+        <div class="bento-card span-2 reveal">
+          <div class="bento-icon orange">⚡</div>
+          <h3>Auto Shortlinks &amp; HD Photos</h3>
+          <p>Auto-clicks <code>Get Link</code> on the affiliate portal and grabs official <code>s.shopee.com.my</code> shortlinks with original-resolution photos.</p>
+        </div>
+
+        <div class="bento-card span-2 reveal">
+          <div class="bento-icon emerald">📊</div>
+          <h3>CSV Product Database</h3>
+          <p>Local product table with search, sort, edit, and RFC 4180 export to CSV, TXT, or a photo ZIP archive.</p>
+        </div>
+
+        <div class="bento-card span-2 reveal">
+          <div class="bento-icon orange">📑</div>
+          <h3>Multi-Page Scraping</h3>
+          <p>Browse up to 10 offer pages automatically with safe, anti-block delays between requests.</p>
+        </div>
+
+        <div class="bento-card span-2 reveal">
+          <div class="bento-icon violet">✍️</div>
+          <h3>Assisted Posting</h3>
+          <p>Fills the Threads composer for you — but <b>never auto-submits</b>. You keep full control before publishing.</p>
+        </div>
+
+        <div class="bento-card span-2 reveal">
+          <div class="bento-icon emerald">🔒</div>
+          <h3>100% Client-Side</h3>
+          <p>No servers, no tracking. Everything lives in your browser's <code>chrome.storage</code>. Free &amp; MIT-licensed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section id="how" style="padding-top: 0;">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="kicker">How It Works</div>
+        <h2 class="section-title">From Shopee to Threads in 4 Steps</h2>
+        <p class="section-desc">Under a minute per batch of products.</p>
+      </div>
+      <div class="timeline">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <h4>Open the Portal</h4>
+          <p>Log in at <a href="https://affiliate.shopee.com.my/offer/product_offer" target="_blank" rel="noopener noreferrer">affiliate.shopee.com.my</a>.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <h4>Scrape Offers</h4>
+          <p>Click the floating <b>📦 Affiliate Tools</b> button, pick pages, and save.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <h4>Generate Captions</h4>
+          <p>Pick a BM template, spin variations, and preview the post live.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">4</div>
+          <h4>Post with Control</h4>
+          <p>Copy or auto-fill the Threads composer — you press post, always.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VIDEO + INSTALL ================= -->
+  <section id="install" style="padding-top: 0;">
+    <div class="container split">
+      <div class="panel reveal">
+        <div class="panel-head">
+          <div class="panel-title"><span class="badge-yt">▶ YOUTUBE</span> Video Tutorial</div>
+          <span style="font-size: 11.5px; color: var(--dim);">Coming soon</span>
+        </div>
+        <div class="video-screen">
+          <div class="video-dummy-overlay" onclick="openInstallGuide()" role="button" tabindex="0" aria-label="Open the installation guide on GitHub">
+            <div class="play-emblem">▶</div>
             <div class="play-video-title">Video Tutorial — Coming Soon</div>
-            <div class="play-video-subtitle">Click here to open the installation guide on GitHub</div>
+            <div class="play-video-subtitle">Click for the written install guide on GitHub</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel reveal">
+        <div class="panel-head">
+          <div class="panel-title">🚀 Install in Under 60 Seconds</div>
+          <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #ff8a65;">All releases ↗</a>
+        </div>
+        <div class="install-steps">
+          <div class="install-step">
+            <span class="n">1</span>
+            <div>
+              <h5>Download the release ZIP</h5>
+              <p>Grab <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer"><code>shopee-affiliate-threads-extension-v1.1.2.zip</code></a> and extract it.</p>
+            </div>
+          </div>
+          <div class="install-step">
+            <span class="n">2</span>
+            <div>
+              <h5>Open Chrome extensions</h5>
+              <p>Go to <code>chrome://extensions</code> and enable <b>Developer mode</b> (top-right).</p>
+            </div>
+          </div>
+          <div class="install-step">
+            <span class="n">3</span>
+            <div>
+              <h5>Load unpacked</h5>
+              <p>Click <b>Load unpacked</b> and select the extracted folder. Done — start scraping!</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
-  <section id="fitur" class="container" style="padding: 40px 24px 60px;">
-    <div class="section-title-wrap">
-      <h2 class="section-title">Best Features for Affiliate Marketers</h2>
-      <p class="section-desc">Everything you need to boost your Shopee Affiliate commissions and Threads engagement.</p>
-    </div>
-
-    <div class="features-grid">
-      <!-- Feature 1 -->
-      <div class="feature-card">
-        <div class="feature-icon-box orange">⚡</div>
-        <h3>Auto Shortlink & HD Scraper</h3>
-        <p>Automatically clicks Shopee's "Get Link" button, grabs the official <code>s.shopee.com.my</code> shortlink, and downloads original-resolution photos without compression.</p>
-      </div>
-
-      <!-- Feature 2 -->
-      <div class="feature-card">
-        <div class="feature-icon-box violet">🧵</div>
-        <h3>Threads Caption Generator</h3>
-        <p>Ready-to-use Bahasa Melayu templates in Malaysian affiliate style, with a Spintax engine (auto word randomizer), a broken-symbol cleaner, and Threads web friendly formatting.</p>
-      </div>
-
-      <!-- Feature 3 -->
-      <div class="feature-card">
-        <div class="feature-icon-box emerald">📊</div>
-        <h3>Dedicated CSV & Product Dashboard</h3>
-        <p>Product database stored locally in your browser. Complete with CRUD, real-time search, RFC 4180 standard CSV export, TXT, and ZIP.</p>
-      </div>
-
-      <!-- Feature 4 -->
-      <div class="feature-card">
-        <div class="feature-icon-box orange">📑</div>
-        <h3>Automatic Multi-Page Scraping</h3>
-        <p>Browse up to 10 pages of Shopee Affiliate offers smoothly, with safe anti-block delays.</p>
-      </div>
-
-      <!-- Feature 5 -->
-      <div class="feature-card">
-        <div class="feature-icon-box violet">✍️</div>
-        <h3>Assisted Posting (100% Control)</h3>
-        <p>Helper to open Threads and fill the caption form without auto-submit, giving you full control to review content before publishing.</p>
-      </div>
-
-      <!-- Feature 6 -->
-      <div class="feature-card">
-        <div class="feature-icon-box emerald">🔒</div>
-        <h3>100% Client-Side & Safe</h3>
-        <p>No third-party servers. All credentials and the product database are safely stored in your device's <code>chrome.storage.local</code>.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- How to Install -->
-  <section id="cara-pasang" class="steps-section">
+  <!-- ================= CTA ================= -->
+  <section style="padding-top: 0;">
     <div class="container">
-      <div class="section-title-wrap">
-        <h2 class="section-title">How to Install the Extension on Google Chrome</h2>
-        <p class="section-desc">It takes less than 1 minute to start using ShopiThread.</p>
-      </div>
-
-      <div class="steps-grid">
-        <div class="step-card">
-          <span class="step-number">STEP 1</span>
-          <h4>Download the Release ZIP File</h4>
-          <p>Download the <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #ff7043; text-decoration: underline;"><code>shopee-affiliate-threads-extension-v1.1.2.zip</code></a> file, then extract it to a folder on your computer.</p>
-        </div>
-
-        <div class="step-card">
-          <span class="step-number">STEP 2</span>
-          <h4>Open the Chrome Extensions Menu</h4>
-          <p>Open the Chrome browser, type <span class="step-code">chrome://extensions</span> in the address bar, and enable the <b>Developer Mode</b> toggle in the top-right corner.</p>
-        </div>
-
-        <div class="step-card">
-          <span class="step-number">STEP 3</span>
-          <h4>Click Load Unpacked</h4>
-          <p>Click the <b>Load unpacked</b> button, then select the extracted folder. The extension is instantly active and ready to use!</p>
-        </div>
-      </div>
-
-      <!-- CTA Banner -->
-      <div class="cta-banner">
-        <h2>Start Maximizing Your Shopee Commissions Now!</h2>
-        <p>Download ShopiThread today and experience how easy it is to create viral affiliate content automatically.</p>
+      <div class="cta reveal">
+        <h2>Start Maximizing Your Shopee Commissions</h2>
+        <p>Free, open source, and everything stays on your machine.</p>
         <a href="https://github.com/muhaafidz/shopithread/releases/latest" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-          🚀 Download ShopiThread Now — Free & Open Source
+          🚀 Download ShopiThread MY
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ================= FOOTER ================= -->
   <footer>
-    <div class="container">
-      <p>
-        Original project by <a href="https://github.com/sodikinnaa" target="_blank" rel="noopener noreferrer">sodikinnaa</a>
-        · Forked &amp; localized for <b>Shopee Malaysia</b> by
-        <a href="https://github.com/muhaafidz" target="_blank" rel="noopener noreferrer">muhaafidz</a>.
-        Open-source under the MIT License.
-      </p>
-      <p style="margin-top: 6px;">
-        <a href="https://github.com/sodikinnaa/shopithread" target="_blank" rel="noopener noreferrer" style="color: #ff7043;">⭐ Forked from the original creator: github.com/sodikinnaa/shopithread</a>
-      </p>
-      <p style="margin-top: 8px; font-size: 12.5px;">Shopee & Meta Threads are trademarks of their respective owners. This extension is an independent tool for content creators.</p>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <img src="icons/icon48.png" alt="ShopiThread MY"> ShopiThread <span style="color: var(--orange);">MY</span>
+        </div>
+        <p>
+          Original project by <a href="https://github.com/sodikinnaa" target="_blank" rel="noopener noreferrer">sodikinnaa</a>
+          · Forked &amp; localized for <b style="color: var(--text);">Shopee Malaysia</b> by
+          <a href="https://github.com/muhaafidz" target="_blank" rel="noopener noreferrer">muhaafidz</a>.
+          Open-source under the MIT License.
+        </p>
+        <p class="footer-meta">
+          Shopee &amp; Meta Threads are trademarks of their respective owners.
+          This extension is an independent tool for content creators.
+        </p>
+      </div>
+      <div>
+        <a class="fork-chip" href="https://github.com/sodikinnaa/shopithread" target="_blank" rel="noopener noreferrer">
+          ⭐ Forked from the original creator: sodikinnaa/shopithread
+        </a>
+      </div>
     </div>
   </footer>
 
   <script>
+    // Navbar scroll state
+    const navbar = document.getElementById('navbar');
+    const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 12);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Mobile nav
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(open));
+      navToggle.textContent = open ? '✕' : '☰';
+    });
+    navLinks.addEventListener('click', (e) => {
+      if (e.target.classList.contains('nav-link')) {
+        navLinks.classList.remove('open');
+        navToggle.textContent = '☰';
+      }
+    });
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Live caption typewriter (BM, Malaysia market)
+    const captions = [
+      `Gila best barang ni! Memang wajib ada! 😍\nDah viral sekarang: Tas Selempang Premium\n\nHarga cuma: RM 89 (Diskaun 40%)\nRating 4.9/5 | 2.4k+ terjual\n\nJom checkout kat sini:\nhttps://s.shopee.com.my/xxxxx\n\n#RacunShopee #RacunShopeeMY #ShopeeMY`,
+      `Pendapat jujur pasal barang ni 🙋\n\nPowerbank 20000mAh\nMemang berbaloi, kualiti lebih dari harga. Tak menyesal beli!\n\nHarga: RM 39 (Diskaun 55%)\nRating 4.8/5 (10k+ terjual)\n\nNak beli? Link rasmi kat sini:\nhttps://s.shopee.com.my/xxxxx\n\n#BarangViral #JomBeli #MurahGila`,
+      `RESTOCK ALERT! 🚨\n\nEarbuds TWS Pro\nSebelum ni sold out, sekarang dah balik!\n\nHarga sekarang: RM 45\n5k+ terjual | Rating 4.9/5\n\nLink restock kat sini:\nhttps://s.shopee.com.my/xxxxx\n\n#ShopeeHaul #FYP #DiskaunShopee`
+    ];
+    const typedEl = document.getElementById('typedCaption');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
+      typedEl.textContent = captions[0];
+    } else {
+      let ci = 0, pos = 0, deleting = false;
+      (function tick() {
+        const full = captions[ci];
+        if (!deleting) {
+          typedEl.textContent = full.slice(0, ++pos);
+          if (pos >= full.length) { deleting = true; return setTimeout(tick, 3400); }
+          setTimeout(tick, 22 + Math.random() * 26);
+        } else {
+          typedEl.textContent = full.slice(0, --pos);
+          if (pos <= 0) { deleting = false; ci = (ci + 1) % captions.length; return setTimeout(tick, 500); }
+          setTimeout(tick, 8);
+        }
+      })();
+    }
+
+    // Video placeholder -> install guide
     function openInstallGuide() {
-      const container = document.getElementById('video-container');
-      // Replace dummy overlay with YouTube video embed
       window.open('https://github.com/muhaafidz/shopithread#-how-to-download--install-the-extension-ready-to-import', '_blank');
     }
   </script>
