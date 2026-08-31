@@ -8,6 +8,8 @@
 > Shopee Malaysia market (RM currency, MY hashtags, `shopee.com.my` wiring),
 > an English interface, and several bug/security fixes.
 
+**📱 Phone workflow:** [ShopiThread MY Mobile PWA](https://muhaafidz.github.io/shopithread-mobile/) · repo: [muhaafidz/shopithread-mobile](https://github.com/muhaafidz/shopithread-mobile) · cross-session plan: [PLAN.md](https://github.com/muhaafidz/shopithread-mobile/blob/main/PLAN.md)
+
 [![CI/CD & Release Package](https://github.com/muhaafidz/shopithread/actions/workflows/ci-cd-release.yml/badge.svg)](https://github.com/muhaafidz/shopithread/actions/workflows/ci-cd-release.yml)
 [![Latest Release](https://img.shields.io/github/v/release/muhaafidz/shopithread?color=orange&label=Release)](https://github.com/muhaafidz/shopithread/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
