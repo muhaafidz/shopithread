@@ -11,6 +11,18 @@
   'use strict';
 
   /**
+   * Shared market configuration.
+   * Prefers the global from libs/market-config.js (loaded first in the extension),
+   * falls back to a Node require, then to safe defaults so the object always exists.
+   */
+  let MARKET_SHARED = null;
+  if (typeof root !== 'undefined' && root.ShopiThreadMarket) {
+    MARKET_SHARED = root.ShopiThreadMarket;
+  } else if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
+    try { MARKET_SHARED = require('./market-config.js'); } catch (_) {}
+  }
+
+  /**
    * Runtime Message Action Types
    * Used for communication between Content Scripts, Popup, Dashboard, and Service Worker.
    */
@@ -256,9 +268,9 @@
   ];
 
   /**
-   * Market Configuration (synced with libs/market-config.js)
+   * Market Configuration (single source of truth: libs/market-config.js)
    */
-  const MARKET = {
+  const MARKET = MARKET_SHARED || {
     country: 'MY',
     locale: 'ms-MY',
     currency: 'RM',

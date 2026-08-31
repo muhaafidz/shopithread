@@ -58,6 +58,16 @@
         "content.css"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.threads.net/*",
+        "*://threads.net/*"
+      ],
+      "js": [
+        "threads-content.js"
+      ],
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [

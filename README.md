@@ -1,9 +1,9 @@
 # 🧵 ShopiThread — Shopee Affiliate & Threads AutoCraft
 
-[![CI/CD & Release Package](https://github.com/sodikinnaa/shopithread/actions/workflows/ci-cd-release.yml/badge.svg)](https://github.com/sodikinnaa/shopithread/actions/workflows/ci-cd-release.yml)
-[![Latest Release](https://img.shields.io/github/v/release/sodikinnaa/shopithread?color=orange&label=Release)](https://github.com/sodikinnaa/shopithread/releases/latest)
+[![CI/CD & Release Package](https://github.com/muhaafidz/shopithread/actions/workflows/ci-cd-release.yml/badge.svg)](https://github.com/muhaafidz/shopithread/actions/workflows/ci-cd-release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/muhaafidz/shopithread?color=orange&label=Release)](https://github.com/muhaafidz/shopithread/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Landing Page](https://img.shields.io/badge/Website-Landing%20Page-ff5722.svg)](https://sodikinnaa.github.io/shopithread/)
+[![Landing Page](https://img.shields.io/badge/Website-Landing%20Page-ff5722.svg)](https://muhaafidz.github.io/shopithread/)
 
 > **ShopiThread** is an all-in-one Google Chrome extension for Shopee Malaysia affiliate creators & marketers: scrape original HD photos, auto-generate official shortlinks (`s.shopee.com.my`), manage a CSV database (RFC 4180), and generate viral Meta Threads captions in **Bahasa Melayu** — free of broken characters.
 
@@ -13,11 +13,11 @@
 
 ## 📹 Video Tutorial & Usage Demo
 
-[![ShopiThread Video Tutorial Demo](https://img.shields.io/badge/YouTube-Video%20Tutorial%203%20Minutes-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+`📹 Video tutorial: coming soon — will be linked here once published.`
 
-[![Watch the tutorial](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
-> 💡 **Watch the short tutorial:** learn the full flow from installation, multi-page Shopee scraping, CSV export, to generating ready-to-post Threads captions!
+
+> 💡 **Learn the full flow** from installation, multi-page Shopee scraping, CSV export, to generating ready-to-post Threads captions — see the guide below and the User Guide tab inside the dashboard.
 
 ---
 
@@ -54,7 +54,7 @@
 ## 🚀 How to Download & Install the Extension (Ready to Import)
 
 ### Method 1: Download the Ready-to-Import Release (Recommended)
-1. Open the **[Latest Release](https://github.com/sodikinnaa/shopithread/releases/latest)** page.
+1. Open the **[Latest Release](https://github.com/muhaafidz/shopithread/releases/latest)** page.
 2. Download the **`shopee-affiliate-threads-extension-v1.0.0.zip`** asset file.
 3. Extract the ZIP file to a folder on your computer.
 4. Open Google Chrome and go to: `chrome://extensions`.

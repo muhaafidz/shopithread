@@ -172,9 +172,31 @@
     : { currency: 'RM', locale: 'ms-MY' };
 
   function parsePriceNumber(priceStr) {
+    if (priceStr === 0) return 0;
     if (!priceStr) return 0;
-    const clean = String(priceStr).replace(/[^0-9]/g, '');
-    return parseInt(clean, 10) || 0;
+    let s = String(priceStr).replace(/[^\d.,]/g, '');
+    if (!s) return 0;
+    const hasComma = s.includes(',');
+    const hasDot = s.includes('.');
+    if (hasComma && hasDot) {
+      // Whichever separator appears last is the decimal point
+      if (s.lastIndexOf(',') > s.lastIndexOf('.')) {
+        s = s.replace(/\./g, '').replace(',', '.');
+      } else {
+        s = s.replace(/,/g, '');
+      }
+    } else if (hasComma) {
+      const parts = s.split(',');
+      // "1,50" = decimal; "1,299" or "1,299,000" = thousands separators
+      if (parts.length === 2 && parts[1].length <= 2) s = parts.join('.');
+      else s = s.replace(/,/g, '');
+    } else if (hasDot) {
+      const parts = s.split('.');
+      // "89.90" = decimal; "1.299" or "1.299.000" = thousands separators
+      if (!(parts.length === 2 && parts[1].length <= 2)) s = s.replace(/\./g, '');
+    }
+    const num = parseFloat(s);
+    return isNaN(num) ? 0 : Math.round(num * 100) / 100;
   }
 
   function formatRM(num) {
@@ -308,6 +330,7 @@
           <td>
             <div class="table-actions-cell">
               <button class="btn-action-icon btn-threads-prod" data-id="${id}" title="🧵 Create Threads Content">🧵</button>
+              <button class="btn-action-icon btn-queue-prod" data-id="${id}" title="🚀 Add to Poster Panel Queue">🚀</button>
               <button class="btn-action-icon btn-dl-img" data-img="${imageUrl}" data-title="${escapeHtml(title)}" title="Download HD Photo">📥</button>
               <button class="btn-action-icon btn-edit-prod" data-id="${id}" title="Edit Data">✏️</button>
               <button class="btn-action-icon danger btn-del-prod" data-id="${id}" title="Delete Product">🗑️</button>
@@ -359,6 +382,30 @@
       btn.onclick = () => {
         const id = btn.getAttribute('data-id');
         openThreadsGeneratorForProduct(id);
+      };
+    });
+
+    // 2c. Add to Poster Panel Queue Button
+    document.querySelectorAll('.btn-queue-prod').forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.getAttribute('data-id');
+        const product = state.products.find(p => p.id === id);
+        if (!product) return;
+
+        if (typeof chrome === 'undefined' || !chrome.runtime || !chrome.runtime.sendMessage) {
+          showToast('Queue is only available inside the extension runtime.', false);
+          return;
+        }
+
+        chrome.runtime.sendMessage({ action: 'ADD_TO_QUEUE', products: [product] }, (res) => {
+          if (chrome.runtime.lastError || !res || !res.success) {
+            showToast('Failed to add product to the Poster Panel queue.', false);
+            return;
+          }
+          showToast(res.queueAdded > 0
+            ? `🚀 Added to Poster Panel queue! (${res.queueTotal} queued)`
+            : 'Already in the Poster Panel queue.');
+        });
       };
     });
 

@@ -301,11 +301,11 @@
         const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
         submitBtn = result.singleNodeValue;
       } catch (e) {
-        Logger.dom('XPath query evaluasi error: ' + e.message);
+        Logger.dom('XPath query evaluation error: ' + e.message);
       }
 
       if (submitBtn) {
-        Logger.dom('Submit button ditemukan melalui primary XPath.', {
+        Logger.dom('Submit button found via primary XPath.', {
           text: (submitBtn.textContent || '').trim()
         });
       } else {
@@ -313,11 +313,13 @@
         submitBtn = Array.from((dialog || document).querySelectorAll('[role="button"]'))
           .find(b => {
             const t = (b.textContent || '').trim().toLowerCase();
-            return t === 'kirim' || t === 'post' || t === 'posting';
+            const aria = (b.getAttribute('aria-label') || (b.querySelector('svg[aria-label]') && b.querySelector('svg[aria-label]').getAttribute('aria-label')) || '').toLowerCase();
+            const textOrAria = t || aria;
+            return textOrAria === 'post' || textOrAria === 'publish' || textOrAria === 'kirim' || textOrAria === 'posting' || aria === 'post' || aria === 'publish' || aria === 'kirim';
           });
 
         if (submitBtn) {
-          Logger.dom(`Submit button ditemukan melalui fallback button text: "${(submitBtn.textContent || '').trim()}"`);
+          Logger.dom(`Submit button found via fallback text/aria matching: "${(submitBtn.textContent || submitBtn.getAttribute('aria-label') || '').trim()}"`);
         } else {
           Logger.dom('Submit button NOT found in the dialog nor document!');
         }
@@ -332,11 +334,11 @@
      */
     static clickSubmitButton(submitBtn) {
       if (!submitBtn) {
-        Logger.error('ThreadsDOM', 'clickSubmitButton dipanggil dengan submitBtn bernilai null');
+        Logger.error('ThreadsDOM', 'clickSubmitButton called with a null submitBtn');
         return;
       }
 
-      Logger.dom('Menjalankan dispatch event sequence ke submit button: pointerdown -> mousedown -> pointerup -> mouseup -> click...');
+      Logger.dom('Dispatching event sequence to submit button: pointerdown -> mousedown -> pointerup -> mouseup -> click...');
       const clickOpts = { bubbles: true, cancelable: true, view: window };
       submitBtn.dispatchEvent(new PointerEvent('pointerdown', clickOpts));
       submitBtn.dispatchEvent(new MouseEvent('mousedown', clickOpts));
@@ -873,7 +875,7 @@
                 console.error(`❌ [ThreadsPostController] Error listener message: ${err.message}`);
                 sendResponse({
                   success: false,
-                  error: err.message || 'Terjadi kesalahan saat memposting di Threads'
+                  error: err.message || 'An error occurred while posting to Threads'
                 });
               });
 
