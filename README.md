@@ -1,4 +1,12 @@
-# 🧵 ShopiThread — Shopee Affiliate & Threads AutoCraft
+# 🧵 ShopiThread MY — Shopee Affiliate & Threads AutoCraft (Malaysia Edition)
+
+> [!NOTE]
+> **Fork notice:** This is a Malaysia-localized fork of the original
+> [**ShopiThread** by **sodikinnaa**](https://github.com/sodikinnaa/shopithread)
+> (MIT License). All credit for the original architecture goes to the original
+> creator — this fork adds Bahasa Melayu caption generation tuned for the
+> Shopee Malaysia market (RM currency, MY hashtags, `shopee.com.my` wiring),
+> an English interface, and several bug/security fixes.
 
 [![CI/CD & Release Package](https://github.com/muhaafidz/shopithread/actions/workflows/ci-cd-release.yml/badge.svg)](https://github.com/muhaafidz/shopithread/actions/workflows/ci-cd-release.yml)
 [![Latest Release](https://img.shields.io/github/v/release/muhaafidz/shopithread?color=orange&label=Release)](https://github.com/muhaafidz/shopithread/releases/latest)
@@ -56,7 +64,7 @@
 
 ### Method 1: Download the Ready-to-Import Release (Recommended)
 1. Open the **[Latest Release](https://github.com/muhaafidz/shopithread/releases/latest)** page.
-2. Download the **`shopee-affiliate-threads-extension-v1.1.0.zip`** asset file.
+2. Download the **`shopee-affiliate-threads-extension-v1.1.1.zip`** asset file.
 3. Extract the ZIP file to a folder on your computer.
 4. Open Google Chrome and go to: `chrome://extensions`.
 5. Enable **Developer mode** in the top-right corner.
