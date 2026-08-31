@@ -36,7 +36,7 @@
       const rows = products.map((p, idx) => {
         const title = (p.title || p.rawTitle || '').replace(/"/g, '""');
         const price = (p.price || '-').replace(/"/g, '""');
-        const commission = (p.commission || '10%').replace(/"/g, '""');
+        const commission = (p.commission || '-').replace(/"/g, '""');
         const sold = (p.sold || '-').replace(/"/g, '""');
         const shortLink = (p.shortLink || p.link || '').replace(/"/g, '""');
         const longLink = (p.longLink || p.url || '').replace(/"/g, '""');
@@ -60,70 +60,153 @@
     },
 
     /**
-     * Parse CSV string into product objects with RFC 4180 quote escaping support
-     * @param {string} csvText 
+     * Parse CSV string into product objects.
+     * RFC 4180 compliant: supports quoted fields containing commas, escaped
+     * quotes (""), and multi-line values. When the first row is a recognized
+     * header, columns are mapped by name (English & Indonesian variants);
+     * otherwise the legacy positional mapping is used.
+     * @param {string} csvText
      * @returns {Array<Object>} Parsed products array
      */
     parseCSV(csvText) {
       if (!csvText || typeof csvText !== 'string') return [];
-      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
-      if (lines.length <= 1) return [];
+      const records = this._parseCSVRecords(csvText);
+      if (records.length === 0) return [];
+
+      // Treat the first record as a header only when it maps to a plausible
+      // title+price column pair (avoids false positives on data rows that
+      // merely contain words like "Product").
+      const colMap = this._mapHeaderRow(records[0]);
+      const isHeader = colMap.title !== undefined && colMap.price !== undefined;
+
+      let rows = records;
+      let map = null;
+      if (isHeader) {
+        map = colMap;
+        rows = records.slice(1);
+      }
 
       const parsedItems = [];
-      const headerLine = lines[0].toLowerCase();
-      const isHeader = ['nama', 'produk', 'title', 'product', 'name', 'price', 'harga'].some(k => headerLine.includes(k));
-      const startIdx = isHeader ? 1 : 0;
+      rows.forEach((cols, i) => {
+        if (!cols.some(c => String(c).trim().length > 0)) return;
 
-      for (let i = startIdx; i < lines.length; i++) {
-        const line = lines[i];
-        const cols = [];
-        let cur = '';
-        let inQuotes = false;
+        const pick = (mappedIdx, fallback) => (
+          mappedIdx !== undefined && cols[mappedIdx] !== undefined && String(cols[mappedIdx]).trim() !== ''
+        ) ? String(cols[mappedIdx]).trim() : fallback;
 
-        for (let c = 0; c < line.length; c++) {
-          const ch = line[c];
+        let title, price, commission, sold, shortLink, longLink, image;
+        if (map) {
+          title = pick(map.title, cols[1] || cols[0] || 'Imported Product');
+          price = pick(map.price, '-');
+          commission = pick(map.commission, '-');
+          sold = pick(map.sold, MARKET.defaultSold);
+          shortLink = pick(map.shortLink, '') || cols.find(c => c.startsWith('http')) || MARKET.fallbackShortlink;
+          longLink = pick(map.longLink, '');
+          image = pick(map.image, '') || cols.find(c => c.includes('.jpg') || c.includes('.png') || c.includes('susercontent')) || '';
+        } else {
+          // Legacy positional mapping: No, Title, Price, Commission, Sold, Shortlink, Long Link, Image
+          title = cols[1] || cols[0] || 'Imported Product';
+          price = cols[2] || '-';
+          commission = cols[3] || '-';
+          sold = cols[4] || MARKET.defaultSold;
+          shortLink = cols[5] || cols.find(c => c.startsWith('http')) || MARKET.fallbackShortlink;
+          longLink = cols[6] || '';
+          image = cols[7] || cols.find(c => c.includes('.jpg') || c.includes('.png') || c.includes('susercontent')) || '';
+        }
+
+        parsedItems.push({
+          id: `import_${Date.now()}_${i}`,
+          title,
+          rawTitle: title,
+          price,
+          commission,
+          sold,
+          shortLink,
+          longLink,
+          image,
+          cleanImgUrl: image,
+          createdAt: new Date().toISOString()
+        });
+      });
+
+      return parsedItems;
+    },
+
+    /**
+     * Split raw CSV text into records (arrays of cell strings), honoring
+     * quoted fields with embedded commas, escaped quotes and newlines.
+     * @private
+     * @param {string} text
+     * @returns {Array<Array<string>>}
+     */
+    _parseCSVRecords(text) {
+      const records = [];
+      let row = [];
+      let cur = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
           if (ch === '"') {
-            if (inQuotes && line[c + 1] === '"') {
+            if (text[i + 1] === '"') {
               cur += '"';
-              c++;
+              i++;
             } else {
-              inQuotes = !inQuotes;
+              inQuotes = false;
             }
-          } else if (ch === ',' && !inQuotes) {
-            cols.push(cur.trim());
-            cur = '';
           } else {
             cur += ch;
           }
-        }
-        cols.push(cur.trim());
-
-        if (cols.length >= 2) {
-          const title = cols[1] || cols[0] || 'Imported Product';
-          const price = cols[2] || '-';
-          const commission = cols[3] || '10%';
-          const sold = cols[4] || MARKET.defaultSold;
-          const shortLink = cols[5] || cols.find(c => c.startsWith('http')) || MARKET.fallbackShortlink;
-          const longLink = cols[6] || '';
-          const image = cols[7] || cols.find(c => c.includes('.jpg') || c.includes('.png') || c.includes('susercontent')) || '';
-
-          parsedItems.push({
-            id: `import_${Date.now()}_${i}`,
-            title,
-            rawTitle: title,
-            price,
-            commission,
-            sold,
-            shortLink,
-            longLink,
-            image,
-            cleanImgUrl: image,
-            createdAt: new Date().toISOString()
-          });
+        } else if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          row.push(cur.trim());
+          cur = '';
+        } else if (ch === '\n' || ch === '\r') {
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+          row.push(cur.trim());
+          cur = '';
+          if (row.length > 1 || (row[0] && row[0] !== '')) records.push(row);
+          row = [];
+        } else {
+          cur += ch;
         }
       }
 
-      return parsedItems;
+      row.push(cur.trim());
+      if (row.length > 1 || (row[0] && row[0] !== '')) records.push(row);
+      return records;
+    },
+
+    /**
+     * Map a header row to column indexes (English & Indonesian variants).
+     * @private
+     * @param {Array<string>} headerCols
+     * @returns {Object} e.g. { title: 1, price: 2, ... }
+     */
+    _mapHeaderRow(headerCols) {
+      const map = {};
+      headerCols.forEach((h, idx) => {
+        const n = String(h).trim().toLowerCase();
+        if (!n || n === 'no' || n === '#') return;
+        if (['title', 'product name', 'nama produk', 'product', 'nama', 'name'].includes(n)) {
+          if (map.title === undefined) map.title = idx;
+        } else if (['price', 'harga'].includes(n)) {
+          if (map.price === undefined) map.price = idx;
+        } else if (['commission', 'komisi', 'comm', 'estimasi komisi'].includes(n)) {
+          if (map.commission === undefined) map.commission = idx;
+        } else if (['sold', 'terjual', 'sales'].includes(n)) {
+          if (map.sold === undefined) map.sold = idx;
+        } else if (['affiliate link', 'shortlink', 'short link', 'link affiliate', 'link singkat', 'link'].includes(n)) {
+          if (map.shortLink === undefined) map.shortLink = idx;
+        } else if (['original product link', 'long link', 'link produk', 'original link', 'product link', 'link produk asli'].includes(n)) {
+          if (map.longLink === undefined) map.longLink = idx;
+        } else if (['image url', 'url foto', 'image', 'foto', 'photo', 'gambar', 'url foto hd'].includes(n)) {
+          if (map.image === undefined) map.image = idx;
+        }
+      });
+      return map;
     },
 
     /**

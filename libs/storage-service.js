@@ -19,6 +19,32 @@
   const STORAGE_KEY = 'shopee_products';
   const LEGACY_KEY = 'threads_queue';
 
+  // Market currency for the legacy "Rp" price relabel (falls back safely in Node)
+  const MARKET = (typeof self !== 'undefined' && self.ShopiThreadMarket) || { currency: 'RM' };
+
+  /**
+   * One-time-style migration: legacy Indonesian-market rows store prices with an
+   * "Rp" prefix. This market targets Shopee Malaysia, so relabel them to the
+   * market currency on read (idempotent — rows without "Rp" pass through).
+   * Note: numeric values are kept as-is; Shopee MY also uses dot-grouped numbers.
+   * @private
+   * @param {Array<Object>} products
+   * @returns {Array<Object>}
+   */
+  function migrateLegacyCurrency(products) {
+    if (!Array.isArray(products)) return products;
+    const cur = MARKET.currency || 'RM';
+    let changed = false;
+    const migrated = products.map(p => {
+      if (p && typeof p.price === 'string' && /^rp\s*/i.test(p.price)) {
+        changed = true;
+        return { ...p, price: `${cur} ${p.price.replace(/^rp\s*/i, '')}` };
+      }
+      return p;
+    });
+    return changed ? migrated : products;
+  }
+
   /**
    * Check if Chrome extension API context is currently alive and valid
    * @returns {boolean}
@@ -59,7 +85,7 @@
               } else if (res && LEGACY_KEY in res && Array.isArray(res[LEGACY_KEY]) && res[LEGACY_KEY].length > 0) {
                 list = res[LEGACY_KEY];
               }
-              resolve(list);
+              resolve(migrateLegacyCurrency(list));
             });
           } catch (err) {
             console.warn('[StorageService] Context invalidated, using localStorage fallback:', err);
@@ -173,15 +199,16 @@
      * Fallback for browser testing environments & invalidated contexts
      * @private
      */
-    _getLocalStorageFallback() {
-      try {
-        if (typeof localStorage !== 'undefined') {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? JSON.parse(raw) : [];
-        }
-      } catch (_) {}
-      return [];
-    },
+  _getLocalStorageFallback() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        return migrateLegacyCurrency(Array.isArray(list) ? list : []);
+      }
+    } catch (_) {}
+    return [];
+  },
 
     /**
      * @private

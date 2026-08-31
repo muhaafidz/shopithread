@@ -31,8 +31,9 @@
 ### 2. 📊 Dedicated Dashboard & CSV Management (RFC 4180)
 - **Interactive Table**: Preview product photos, prices, commissions, total sold, and link status.
 - **Flexible Export**: 1-click export to **CSV**, **TXT**, or a **ZIP** archive of product photos.
-- **CSV Import**: Drag & drop a product CSV file into the dashboard database.
+- **CSV Import**: Drag & drop a product CSV file into the dashboard database. Imports are **header-aware** (English & Indonesian column names) with full RFC 4180 support (quoted commas, escaped quotes, multi-line cells); falls back to positional columns for headerless files.
 - **Full CRUD**: Add, edit product details, 1-click copy links, and delete data with anti-corruption storage protection.
+- **Legacy price migration**: old rows with `Rp` prices are relabeled to `RM` on load (values kept as-is).
 
 ### 3. 🧵 Threads Content Generator (Clean & Non Auto-Posting)
 - **Bahasa Melayu Copywriting Templates** (Malaysian casual "rojak" style):

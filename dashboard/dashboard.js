@@ -246,7 +246,7 @@
       }
     });
 
-    const avgComm = commissionCount > 0 ? (commissionSum / commissionCount).toFixed(1) + '%' : '10.0%';
+    const avgComm = commissionCount > 0 ? (commissionSum / commissionCount).toFixed(1) + '%' : '-';
 
     if (dom.statTotalProducts) dom.statTotalProducts.textContent = totalCount;
     if (dom.statTotalValue) dom.statTotalValue.textContent = formatRM(totalValue);
@@ -298,7 +298,7 @@
       const title = p.title || p.rawTitle || 'Shopee Product';
       const imageUrl = p.image || p.cleanImgUrl || (Array.isArray(p.images) && p.images[0]) || '';
       const price = p.price ? (String(p.price).toLowerCase().startsWith(MARKET.currency.toLowerCase()) ? p.price : `${MARKET.currency} ${p.price}`) : '-';
-      const commission = p.commission || '10%';
+      const commission = p.commission || '-';
       const sold = p.sold || '1k+ terjual';
       const shortLink = p.shortLink || p.link || 'https://s.shopee.com.my';
       const longLink = p.longLink || p.url || `https://affiliate.shopee.com.my/offer/product_offer/${p.shopeeId || ''}`;
@@ -859,7 +859,7 @@
           title: dom.editProductTitle.value.trim(),
           rawTitle: dom.editProductTitle.value.trim(),
           price: dom.editProductPrice.value.trim(),
-          commission: dom.editProductCommission.value.trim() || '10%',
+          commission: dom.editProductCommission.value.trim() || '-',
           sold: dom.editProductSold.value.trim() || '1k+ terjual',
           image: dom.editProductImage.value.trim(),
           cleanImgUrl: dom.editProductImage.value.trim(),
