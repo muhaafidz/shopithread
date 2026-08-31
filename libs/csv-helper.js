@@ -217,7 +217,7 @@
         setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
         return true;
       } catch (err) {
-        console.error('[CSVHelper] Gagal memicu download CSV:', err);
+        console.error('[CSVHelper] Failed to trigger CSV download:', err);
         return false;
       }
     }

@@ -137,11 +137,11 @@
    */
   function normalizeQueueItem(raw) {
     if (!raw || typeof raw !== 'object') {
-      throw new Error('Data antrean tidak valid');
+      throw new Error('Invalid queue data');
     }
 
     const id = raw.id || generateId('queue');
-    const title = (raw.title || raw.rawTitle || raw.name || raw.product_name || 'Produk Shopee').trim();
+    const title = (raw.title || raw.rawTitle || raw.name || raw.product_name || 'Produk Pilihan Shopee').trim();
     const price = (raw.price || raw.harga || '-').toString().trim();
     const discount = (raw.discount || raw.diskon || '').toString().trim();
     const rating = (raw.rating || '⭐ 4.9').toString().trim();
@@ -217,7 +217,7 @@
    */
   function normalizeTemplateItem(raw) {
     if (!raw || typeof raw !== 'object' || (!raw.template && !raw.content)) {
-      throw new Error('Format template caption tidak valid');
+      throw new Error('Invalid caption template format');
     }
 
     const id = raw.id || generateId('tmpl');
@@ -250,7 +250,7 @@
     const id = raw.id || generateId('log');
     const timestamp = raw.timestamp || raw.created_at || raw.createdAt || new Date().toISOString();
     const productId = String(raw.productId || raw.product_id || raw.shopeeId || raw.shopee_id || '');
-    const title = raw.title || raw.rawTitle || raw.name || raw.product_name || 'Produk Shopee';
+    const title = raw.title || raw.rawTitle || raw.name || raw.product_name || 'Produk Pilihan Shopee';
     const price = raw.price || raw.harga || '-';
     const shortLink = raw.shortLink || raw.short_link || raw.url || raw.link || '';
     const threadsUrl = raw.threadsUrl || raw.threads_url || null;
@@ -526,7 +526,7 @@
      * @returns {Promise<Object>}
      */
     async updateQueueItem(id, updates = {}) {
-      if (!id) throw new Error('ID antrean wajib diisi');
+      if (!id) throw new Error('Queue ID is required');
       const list = await this.getQueue();
       const idx = list.findIndex(it => it.id === id);
 
@@ -554,7 +554,7 @@
         merged.error = null;
         merged.errorMessage = null;
       } else if (merged.status === QUEUE_STATUS.FAILED) {
-        merged.error = updates.error || updates.errorMessage || current.error || 'Gagal memposting ke Threads';
+        merged.error = updates.error || updates.errorMessage || current.error || 'Failed to post to Threads';
         merged.errorMessage = merged.error;
         merged.retry_count = (current.retry_count || 0) + 1;
         merged.retryCount = merged.retry_count;
@@ -834,7 +834,7 @@
      */
     async updateSettings(settingsObj) {
       if (!settingsObj || typeof settingsObj !== 'object') {
-        throw new Error('Data pengaturan tidak valid');
+        throw new Error('Invalid settings data');
       }
 
       const current = await this.getSettings();
@@ -1055,7 +1055,7 @@
      */
     async addProduct(product) {
       if (!product || typeof product !== 'object') {
-        throw new Error('Data produk tidak valid');
+        throw new Error('Invalid product data');
       }
 
       const list = await this.getProducts(5000);
@@ -1477,7 +1477,7 @@
      */
     async importDatabaseJSON(jsonData) {
       if (!jsonData || typeof jsonData !== 'object') {
-        throw new Error('Data JSON backup tidak valid');
+        throw new Error('Invalid JSON backup data');
       }
 
       if (Array.isArray(jsonData.queue)) {

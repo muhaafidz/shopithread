@@ -76,7 +76,7 @@
     }
     const countEl = document.getElementById('dl-count-num');
     if (countEl) {
-      countEl.textContent = `${detectedItems.length} (Hal. ${currentPage})`;
+      countEl.textContent = `${detectedItems.length} (Pg. ${currentPage})`;
     }
   }
 
@@ -99,14 +99,14 @@
           📦 Shopee <span style="color: #ff7337;">Affiliate Tools</span>
         </h3>
         <div class="shopee-dl-header-actions">
-          <button id="dl-refresh-btn" class="shopee-dl-icon-btn" title="Scan Ulang Produk">🔄</button>
-          <button id="dl-close-btn" class="shopee-dl-icon-btn" title="Tutup">✕</button>
+          <button id="dl-refresh-btn" class="shopee-dl-icon-btn" title="Rescan Products">🔄</button>
+          <button id="dl-close-btn" class="shopee-dl-icon-btn" title="Close">✕</button>
         </div>
       </div>
-      
+
       <div class="shopee-dl-stats">
-        <span>Produk di Halaman Ini:</span>
-        <b id="dl-count-num">${detectedItems.length} (Hal. ${currentPage})</b>
+        <span>Products on this page:</span>
+        <b id="dl-count-num">${detectedItems.length} (Pg. ${currentPage})</b>
       </div>
 
       <div class="shopee-dl-progress-track">
@@ -114,44 +114,44 @@
       </div>
 
       <div id="dl-status" class="shopee-dl-status">
-        Siap scrape produk, simpan ke Dashboard, atau download ZIP.
+        Ready to scrape products, save to Dashboard, or download the ZIP.
       </div>
 
       <div class="shopee-dl-controls">
         <button id="dl-save-dash-btn" class="shopee-dl-btn-primary">
-          💾 Simpan ke Dashboard & CSV (${detectedItems.length})
+          💾 Save to Dashboard & CSV (${detectedItems.length})
         </button>
 
         <button id="dl-start-zip-btn" class="shopee-dl-btn-primary" style="background: linear-gradient(135deg, #3b82f6, #6366f1); margin-top: 6px;">
-          ⚡ Generate ZIP & Download Foto
+          ⚡ Generate ZIP & Download Photos
         </button>
 
         <button id="dl-open-dash-btn" class="shopee-dl-btn-stop" style="display: flex; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); color: #f1f5f9; margin-top: 6px;">
-          📊 Buka Dashboard Produk & CSV
+          📊 Open Products & CSV Dashboard
         </button>
 
         <button id="dl-stop-btn" class="shopee-dl-btn-stop">
-          🛑 Batalkan Proses
+          🛑 Cancel Process
         </button>
       </div>
 
       <div class="shopee-dl-options">
         <div class="shopee-dl-option-row">
-          <span>📄 Target Scraping Halaman:</span>
+          <span>📄 Pages to scrape:</span>
           <select id="dl-pages-select">
-            <option value="1" selected>Halaman Saat Ini Saja (1 Hal)</option>
-            <option value="2">Scrape 2 Halaman Otomatis</option>
-            <option value="3">Scrape 3 Halaman Otomatis</option>
-            <option value="5">Scrape 5 Halaman Otomatis</option>
-            <option value="10">Scrape 10 Halaman Otomatis</option>
+            <option value="1" selected>Current page only (1 page)</option>
+            <option value="2">Auto-scrape 2 pages</option>
+            <option value="3">Auto-scrape 3 pages</option>
+            <option value="5">Auto-scrape 5 pages</option>
+            <option value="10">Auto-scrape 10 pages</option>
           </select>
         </div>
         <div class="shopee-dl-option-row">
-          <span>⏱️ Jeda Scraping per Produk:</span>
+          <span>⏱️ Delay per product:</span>
           <select id="dl-delay-select">
-            <option value="400">Cepat (400ms)</option>
+            <option value="400">Fast (400ms)</option>
             <option value="600" selected>Normal (600ms)</option>
-            <option value="1000">Aman (1000ms)</option>
+            <option value="1000">Safe (1000ms)</option>
           </select>
         </div>
       </div>
@@ -180,7 +180,7 @@
     refreshBtn.onclick = () => {
       updateDetectedCount();
       const pageNum = ScraperService ? ScraperService.getCurrentPageNumber() : 1;
-      statusText.textContent = `Ditemukan ${detectedItems.length} produk di halaman ${pageNum}.`;
+      statusText.textContent = `Found ${detectedItems.length} products on page ${pageNum}.`;
       setProgressBarPercent(0);
     };
 
@@ -191,7 +191,7 @@
 
     stopBtn.onclick = () => {
       isCancelled = true;
-      statusText.textContent = '🛑 Menghentikan proses...';
+      statusText.textContent = '🛑 Stopping process...';
       stopBtn.style.display = 'none';
       saveDashBtn.style.display = 'flex';
       startZipBtn.style.display = 'flex';
@@ -216,18 +216,18 @@
         isCancelled: () => isCancelled,
         onProgress: (info) => {
           if (info.phase === 'page_start') {
-            statusText.textContent = `📄 Memproses Halaman ${info.pageNum} (${info.pageItemCount} produk)...`;
+            statusText.textContent = `📄 Processing page ${info.pageNum} (${info.pageItemCount} products)...`;
           } else if (info.phase === 'item_start') {
             const titleCut = (info.product.safeTitle || info.product.title || '').substring(0, 15);
-            statusText.textContent = `[Hal ${info.pageNum} | Item ${info.itemIndex}/${info.pageItemCount}] Ambil link: ${titleCut}...`;
+            statusText.textContent = `[Pg ${info.pageNum} | Item ${info.itemIndex}/${info.pageItemCount}] Getting link: ${titleCut}...`;
           } else if (info.phase === 'item_complete') {
             const totalTarget = Math.max(1, maxPages * info.pageItemCount);
             const pct = Math.min(85, Math.round((info.totalProcessed / totalTarget) * 85));
             setProgressBarPercent(pct);
           } else if (info.phase === 'switching_page') {
-            statusText.textContent = `➡️ Berpindah otomatis ke Halaman ${info.nextPageNum}...`;
+            statusText.textContent = `➡️ Auto-moving to page ${info.nextPageNum}...`;
           } else if (info.phase === 'switch_failed') {
-            statusText.textContent = `⚠️ Halaman berikutnya tidak tersedia atau gagal dimuat.`;
+            statusText.textContent = `⚠️ Next page unavailable or failed to load.`;
           }
         }
       });
@@ -239,7 +239,7 @@
 
       detectedItems = ScraperService ? ScraperService.findProductItems() : [];
       if (detectedItems.length === 0) {
-        alert('⚠️ Tidak ditemukan produk Shopee di halaman ini. Buka halaman penawaran affiliate.');
+        alert('⚠️ No Shopee products found on this page. Open the affiliate offer page.');
         return;
       }
 
@@ -256,12 +256,12 @@
         const scraped = await runScrapeOperation();
 
         if (scraped.length > 0 && !isCancelled) {
-          statusText.textContent = '💾 Menyimpan data produk ke Dashboard...';
+          statusText.textContent = '💾 Saving products to Dashboard...';
           setProgressBarPercent(92);
 
           if (Storage) {
             const result = await Storage.mergeProducts(scraped);
-            statusText.textContent = `🎉 Sukses! ${scraped.length} produk disimpan ke Dashboard (${result.addedCount} baru).`;
+            statusText.textContent = `🎉 Success! ${scraped.length} products saved to Dashboard (${result.addedCount} new).`;
           } else {
             // Fallback direct storage
             await new Promise((resolve) => {
@@ -277,21 +277,21 @@
                 resolve(scraped);
               }
             });
-            statusText.textContent = `🎉 Sukses! ${scraped.length} produk disimpan ke Dashboard.`;
+            statusText.textContent = `🎉 Success! ${scraped.length} products saved to Dashboard.`;
           }
 
           setProgressBarPercent(100);
-          showInPageToast(`💾 ${scraped.length} produk berhasil disimpan ke Dashboard!`);
+          showInPageToast(`💾 ${scraped.length} products saved to Dashboard!`);
         } else if (isCancelled) {
-          statusText.textContent = `🛑 Proses dihentikan (${scraped.length} produk diproses).`;
+          statusText.textContent = `🛑 Process stopped (${scraped.length} products processed).`;
         }
       } catch (err) {
         console.error(err);
         if (err.message && err.message.includes('Extension context invalidated')) {
-          statusText.textContent = `⚠️ Ekstensi baru saja diperbarui. Silakan refresh (F5) halaman ini.`;
-          alert('⚠️ Ekstensi baru saja di-reload. Silakan muat ulang / refresh (F5) halaman Shopee ini agar ekstensi terhubung kembali.');
+          statusText.textContent = `⚠️ The extension was just updated. Please refresh (F5) this page.`;
+          alert('⚠️ The extension was just reloaded. Please refresh (F5) this Shopee page so the extension can reconnect.');
         } else {
-          statusText.textContent = `❌ Terjadi kesalahan: ${err.message}`;
+          statusText.textContent = `❌ Error: ${err.message}`;
         }
       }
 
@@ -308,7 +308,7 @@
 
       detectedItems = ScraperService ? ScraperService.findProductItems() : [];
       if (detectedItems.length === 0) {
-        alert('⚠️ Tidak ditemukan produk Shopee di halaman ini. Buka halaman penawaran affiliate.');
+        alert('⚠️ No Shopee products found on this page. Open the affiliate offer page.');
         return;
       }
 
@@ -325,7 +325,7 @@
         const scraped = await runScrapeOperation();
 
         if (scraped.length > 0 && !isCancelled) {
-          statusText.textContent = '📦 Mengompilasi foto & file ke dalam ZIP...';
+          statusText.textContent = '📦 Compiling photos & files into ZIP...';
 
           if (CSV) {
             await CSV.downloadZIP(scraped, {
@@ -333,22 +333,22 @@
               onProgress: (curr, total) => {
                 const zipPct = 85 + Math.round((curr / Math.max(1, total)) * 15);
                 setProgressBarPercent(zipPct);
-                statusText.textContent = `📦 Mengompres gambar [${curr}/${total}]...`;
+                statusText.textContent = `📦 Compressing images [${curr}/${total}]...`;
               }
             });
           }
 
           setProgressBarPercent(100);
-          statusText.textContent = `🎉 Selesai! ${scraped.length} produk tersimpan di ZIP.`;
-          showInPageToast(`File ZIP berhasil diunduh (${scraped.length} produk).`);
+          statusText.textContent = `🎉 Done! ${scraped.length} products saved in ZIP.`;
+          showInPageToast(`ZIP file downloaded successfully (${scraped.length} products).`);
         }
       } catch (err) {
         console.error(err);
         if (err.message && err.message.includes('Extension context invalidated')) {
-          statusText.textContent = `⚠️ Ekstensi baru saja diperbarui. Silakan refresh (F5) halaman ini.`;
-          alert('⚠️ Ekstensi baru saja di-reload. Silakan muat ulang / refresh (F5) halaman Shopee ini agar ekstensi terhubung kembali.');
+          statusText.textContent = `⚠️ The extension was just updated. Please refresh (F5) this page.`;
+          alert('⚠️ The extension was just reloaded. Please refresh (F5) this Shopee page so the extension can reconnect.');
         } else {
-          statusText.textContent = `❌ Terjadi kesalahan: ${err.message}`;
+          statusText.textContent = `❌ Error: ${err.message}`;
         }
       }
 
@@ -385,5 +385,5 @@
     });
   }
 
-  console.log('📦 [ShopeeAffiliateDL] Content script siap digunakan di Shopee (Modular Architecture)!');
+  console.log('📦 [ShopeeAffiliateDL] Content script is ready on Shopee (Modular Architecture)!');
 })();

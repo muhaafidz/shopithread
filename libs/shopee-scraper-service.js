@@ -8,12 +8,21 @@
 
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
+    let market = null;
+    try { market = require('./market-config.js'); } catch (_) {}
+    module.exports = factory(market);
   } else {
-    root.ShopeeScraperService = factory();
+    root.ShopeeScraperService = factory(root.ShopiThreadMarket || null);
   }
-})(typeof self !== 'undefined' ? self : this, function () {
+})(typeof self !== 'undefined' ? self : this, function (MARKET) {
   'use strict';
+
+  MARKET = MARKET || {
+    currency: 'RM',
+    shopeeDomain: 'shopee.com.my',
+    fallbackShortlink: 'https://s.shopee.com.my',
+    defaultSold: '1k+ terjual'
+  };
 
   const ShopeeScraperService = {
     /**
@@ -155,15 +164,15 @@
         cleanImgUrl = imgEl.src.replace(/@resize_[^.\s]+/, '').split('?')[0];
       }
 
-      let rawTitle = nameEl ? nameEl.textContent.trim() : (imgEl?.alt || `produk_${index}`);
+      let rawTitle = nameEl ? nameEl.textContent.trim() : (imgEl?.alt || `product_${index}`);
       rawTitle = rawTitle.replace(/^Product card:\s*/i, '');
-      
-      const safeTitle = rawTitle.replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_').substring(0, 40) || `produk_${index}`;
+
+      const safeTitle = rawTitle.replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_').substring(0, 40) || `product_${index}`;
       const priceText = priceEl ? priceEl.textContent.trim() : '-';
       const commission = commEl ? commEl.textContent.trim() : '-';
-      const soldText = soldEl ? soldEl.textContent.trim() : '1rb+ terjual';
+      const soldText = soldEl ? soldEl.textContent.trim() : MARKET.defaultSold;
 
-      const linkEl = item.querySelector('a[href*="/offer/product_offer/"]') || item.querySelector('a[href*="shopee.co.id"]');
+      const linkEl = item.querySelector('a[href*="/offer/product_offer/"]') || item.querySelector(`a[href*="${MARKET.shopeeDomain}"]`);
       let shopeeId = '';
       let longLink = '';
       if (linkEl && linkEl.href) {
@@ -182,7 +191,7 @@
         safeTitle,
         cleanImgUrl,
         image: cleanImgUrl,
-        price: priceText.startsWith('Rp') ? priceText : (priceText !== '-' ? `Rp ${priceText}` : '-'),
+        price: priceText.startsWith(MARKET.currency) ? priceText : (priceText !== '-' ? `${MARKET.currency} ${priceText}` : '-'),
         commission,
         rating: '⭐ 4.9',
         sold: soldText,
@@ -192,29 +201,29 @@
     },
 
     /**
-     * Extract affiliate short link by clicking "Buat Link / Dapatkan Link" button
-     * @param {HTMLElement} itemElement 
+     * Extract affiliate short link by clicking "Get Link / Create Link" button
+     * @param {HTMLElement} itemElement
      * @returns {Promise<string>} Short URL or fallback URL
      */
     async fetchShortLink(itemElement) {
       if (!itemElement) return '';
-      const btn = itemElement.querySelector('.AffiliateItemCard__getlinkBtn') 
-               || itemElement.querySelector('button.ant-btn') 
+      const btn = itemElement.querySelector('.AffiliateItemCard__getlinkBtn')
+               || itemElement.querySelector('button.ant-btn')
                || Array.from(itemElement.querySelectorAll('button, a')).find(b => {
                     const text = (b.textContent || '').trim();
-                    return text.includes('Buat Link') || text.includes('Dapatkan Link') || text.includes('Get Link') || text.includes('Bagikan');
+                    return text.includes('Get Link') || text.includes('Create Link') || text.includes('Dapatkan Link') || text.includes('Buat Link') || text.includes('Share') || text.includes('Kongsi');
                   });
 
       const currentUrl = (typeof window !== 'undefined' && window.location) ? window.location.href : '';
 
       if (!btn) {
-        return itemElement.querySelector('a[href*="/offer/"], a[href*="shopee.co.id"]')?.href || currentUrl;
+        return itemElement.querySelector(`a[href*="/offer/"], a[href*="${MARKET.shopeeDomain}"]`)?.href || currentUrl;
       }
 
       try {
         btn.click();
       } catch (e) {
-        console.warn('[ShopeeScraperService] Gagal klik tombol buat link:', e);
+        console.warn('[ShopeeScraperService] Failed to click get-link button:', e);
       }
 
       let extractedShortLink = '';
@@ -230,7 +239,7 @@
         const modal = document.querySelector('.ant-modal-root, .ant-modal, [role="dialog"]');
         if (modal) {
           const inputs = Array.from(modal.querySelectorAll('input, textarea'));
-          const linkInput = inputs.find(i => i.value && (i.value.includes('http') || i.value.includes('shopee') || i.value.includes('shope.ee') || i.value.includes('s.shopee.co.id')));
+          const linkInput = inputs.find(i => i.value && (i.value.includes('http') || i.value.includes('shopee') || i.value.includes('shope.ee') || i.value.includes('s.shopee.com.my')));
           
           if (linkInput && linkInput.value) {
             extractedShortLink = linkInput.value.trim();
@@ -250,7 +259,7 @@
               const bgOverlay = document.querySelector('.ant-modal-wrap, .ant-modal-mask');
               if (bgOverlay) bgOverlay.click();
             }
-            // Delay pelan 500ms agar modal & backdrop Ant Design benar-benar menghilang
+            // Small 500ms delay so the Ant Design modal & backdrop fully disappear
             await new Promise(r => setTimeout(r, 500));
             break;
           }
@@ -258,7 +267,7 @@
       }
 
       if (!extractedShortLink) {
-        return itemElement.querySelector('a[href*="/offer/"], a[href*="shopee.co.id"]')?.href || currentUrl;
+        return itemElement.querySelector(`a[href*="/offer/"], a[href*="${MARKET.shopeeDomain}"]`)?.href || currentUrl;
       }
 
       return extractedShortLink;
@@ -334,7 +343,7 @@
             });
           }
 
-          // Jeda pelan 600ms antar item agar DOM Shopee stabil
+          // Small delay between items so the Shopee DOM stays stable
           await new Promise(r => setTimeout(r, delayMs));
         }
 

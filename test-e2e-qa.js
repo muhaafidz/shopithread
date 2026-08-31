@@ -457,14 +457,14 @@ async function runTestSuite() {
     const template = '{Rekomendasi|Spill}: {nama_produk}\nHarga: {harga} {diskon}\nLink: {link_affiliate}\n{hashtag_random}';
     const vars = {
       nama_produk: 'Mouse Wireless RGB',
-      harga: 'Rp 75.000',
-      diskon: '(Diskon 30%)',
-      link_affiliate: 'https://s.shopee.co.id/xyz123'
+      harga: 'RM 75.00',
+      diskon: '(Diskaun 30%)',
+      link_affiliate: 'https://s.shopee.com.my/xyz123'
     };
     const caption = spintax.generateCaption(template, vars, null, 3);
     assert(caption.includes('Mouse Wireless RGB'));
-    assert(caption.includes('Rp 75.000 (Diskon 30%)'));
-    assert(caption.includes('https://s.shopee.co.id/xyz123'));
+    assert(caption.includes('RM 75.00 (Diskaun 30%)'));
+    assert(caption.includes('https://s.shopee.com.my/xyz123'));
     assert(caption.includes('#'));
     assert.strictEqual(caption.match(/#/g).length, 3);
   });
@@ -477,25 +477,25 @@ async function runTestSuite() {
       {
         shopeeId: '1001',
         title: 'Tas Ransel Laptop Anti Air',
-        price: 'Rp 149.000',
+        price: 'RM 149.00',
         rating: '⭐ 4.9',
-        sold: '5rb+ terjual',
+        sold: '5k+ terjual',
         commission: '10%',
-        shortLink: 'https://s.shopee.co.id/backpack01',
-        primaryImage: 'https://cf.shopee.co.id/file/test_img_1.jpg',
-        imageUrls: ['https://cf.shopee.co.id/file/test_img_1.jpg', 'https://cf.shopee.co.id/file/test_img_2.jpg'],
-        caption: 'Tas Ransel Keren banget! Beli di: https://s.shopee.co.id/backpack01 #RacunShopee'
+        shortLink: 'https://s.shopee.com.my/backpack01',
+        primaryImage: 'https://cf.shopee.com.my/file/test_img_1.jpg',
+        imageUrls: ['https://cf.shopee.com.my/file/test_img_1.jpg', 'https://cf.shopee.com.my/file/test_img_2.jpg'],
+        caption: 'Tas Ransel Keren banget! Beli di: https://s.shopee.com.my/backpack01 #RacunShopee'
       },
       {
         shopeeId: '1002',
         title: 'Headset Gaming 7.1 Surround',
-        price: 'Rp 220.000',
+        price: 'RM 220.00',
         rating: '⭐ 4.8',
-        sold: '2rb+ terjual',
+        sold: '2k+ terjual',
         commission: '8%',
-        shortLink: 'https://s.shopee.co.id/headset02',
-        primaryImage: 'https://cf.shopee.co.id/file/test_img_3.jpg',
-        caption: 'Headset gaming super jernih! Cek: https://s.shopee.co.id/headset02 #GadgetMurah'
+        shortLink: 'https://s.shopee.com.my/headset02',
+        primaryImage: 'https://cf.shopee.com.my/file/test_img_3.jpg',
+        caption: 'Headset gaming super jernih! Cek: https://s.shopee.com.my/headset02 #GadgetMurah'
       }
     ];
 
@@ -630,8 +630,8 @@ async function runTestSuite() {
     const singlePostResult = await threadsContent.postingThreads({
       id: 'queue_1001',
       title: 'Tas Ransel Laptop Anti Air',
-      caption: 'Tas Ransel Keren banget! Beli di: https://s.shopee.co.id/backpack01 #RacunShopee',
-      imageUrls: ['https://cf.shopee.co.id/file/test_img_1.jpg']
+      caption: 'Tas Ransel Keren banget! Beli di: https://s.shopee.com.my/backpack01 #RacunShopee',
+      imageUrls: ['https://cf.shopee.com.my/file/test_img_1.jpg']
     });
 
     assert.strictEqual(singlePostResult.success, true);
@@ -714,8 +714,8 @@ async function runTestSuite() {
     await db.addQueueItem({
       shopeeId: '1003',
       title: 'Smartwatch AMOLED Bluetooth Call',
-      price: 'Rp 399.000',
-      shortLink: 'https://s.shopee.co.id/watch03',
+      price: 'RM 399.00',
+      shortLink: 'https://s.shopee.com.my/watch03',
       status: 'PENDING'
     });
 
@@ -732,7 +732,7 @@ async function runTestSuite() {
   await itAsync('Should gracefully catch unknown actions without throwing uncaught exceptions', async () => {
     const res = await background.messageRouter.dispatch({ action: 'NON_EXISTENT_ACTION' });
     assert.strictEqual(res.success, false);
-    assert(res.error.includes('tidak dikenali'));
+    assert(res.error.includes('unrecognized'));
   });
 
   await itAsync('Should handle invalid or corrupted payload in ADD_TO_QUEUE gracefully', async () => {
@@ -741,7 +741,7 @@ async function runTestSuite() {
       products: []
     });
     assert.strictEqual(res.success, false);
-    assert(res.error.includes('Tidak ada data produk yang valid'));
+    assert(res.error.includes('No valid product data'));
   });
 
   await itAsync('Should safely export and import entire database JSON backup', async () => {
@@ -767,8 +767,8 @@ async function runTestSuite() {
   // --------------------------------------------------------------------------
   it('Should generate valid CSV string and parse back into product objects', () => {
     const sampleItems = [
-      { id: '1', title: 'Produk A, Spesial', price: 'Rp 50.000', shortLink: 'https://s.shopee.co.id/a', caption: 'Caption A' },
-      { id: '2', title: 'Produk B "Best"', price: 'Rp 100.000', shortLink: 'https://s.shopee.co.id/b', caption: 'Caption B' }
+      { id: '1', title: 'Produk A, Spesial', price: 'Rp 50.000', shortLink: 'https://s.shopee.com.my/a', caption: 'Caption A' },
+      { id: '2', title: 'Produk B "Best"', price: 'Rp 100.000', shortLink: 'https://s.shopee.com.my/b', caption: 'Caption B' }
     ];
 
     const csvStr = csvHelper.generateCSVString(sampleItems);

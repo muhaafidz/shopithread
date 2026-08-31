@@ -3,7 +3,7 @@
   "name": "ShopiThread - Shopee Affiliate & Threads AutoCraft",
   "short_name": "ShopiThread",
   "version": "1.0.0",
-  "description": "Ekstensi all-in-one Shopee Affiliate: Scrape foto HD, auto shortlink resmi, manajemen database CSV & generator konten Threads viral.",
+  "description": "All-in-one Shopee Malaysia affiliate toolkit: scrape HD product photos & official shortlinks, manage a CSV product database, and generate clean Threads captions in Bahasa Melayu.",
   "author": "sodikinnaa",
   "icons": {
     "16": "icons/icon16.png",
@@ -28,11 +28,9 @@
     "tabs"
   ],
   "host_permissions": [
-    "*://affiliate.shopee.co.id/*",
-    "*://*.shopee.co.id/*",
-    "*://shopee.co.id/*",
-    "*://*.shopee.com/*",
-    "*://shopee.com/*",
+    "*://affiliate.shopee.com.my/*",
+    "*://*.shopee.com.my/*",
+    "*://shopee.com.my/*",
     "*://*.susercontent.com/*",
     "*://*.shopeemobile.com/*",
     "*://*.threads.net/*",
@@ -44,14 +42,13 @@
   "content_scripts": [
     {
       "matches": [
-        "*://affiliate.shopee.co.id/*",
-        "*://*.shopee.co.id/*",
-        "*://shopee.co.id/*",
-        "*://*.shopee.com/*",
-        "*://shopee.com/*"
+        "*://affiliate.shopee.com.my/*",
+        "*://*.shopee.com.my/*",
+        "*://shopee.com.my/*"
       ],
       "js": [
         "libs/jszip.min.js",
+        "libs/market-config.js",
         "libs/storage-service.js",
         "libs/csv-service.js",
         "libs/shopee-scraper-service.js",

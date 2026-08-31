@@ -132,95 +132,104 @@
   };
 
   /**
-   * Preset Spintax Templates
+   * Preset Spintax Templates - Bahasa Melayu (Malaysia market, casual rojak)
    */
   const PRESET_TEMPLATES = [
     {
       id: 'preset_racun_viral',
-      name: '🔥 Racun Shopee Viral (High Engagement)',
+      name: 'Racun Shopee Viral (Rojak)',
       category: 'viral',
       isDefault: true,
       is_default: true,
-      template: `{Gila sih ini|Keren parah|Gak nyangka sebagus ini|Wajib punya nih}! 😍🔥\n{Lagi viral banget|Banyak yang cari|Rekomendasi terbaik hari ini}: {nama_produk}\n\n💸 {Harga cuma|Dapet harga|Cuma}: {harga} {diskon}\n⭐ Rating: {rating} | {terjual} terjual\n\n🔗 {Beli di sini yuk|Cek checkout di sini|Link official promo|Spill link tokonya}:\n{link_affiliate}\n\n{hashtag_random}`
+      template: `{Gila best barang ni!|Memang wajib ada!|Tak sangka sebagus ni!|Cantik sangat sampai nak share!}\n{Dah viral sekarang|Ramai yang cari|Pilihan paling hot masa ni}: {nama_produk}\n\nHarga: {harga} {diskon}\nRating {rating}/5 | {terjual} terjual\n\n{Jom checkout kat sini|Link kat sini, jangan tak tahu|Sini saya kongsi linknya}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'preset_aesthetic_review',
-      name: '✨ Aesthetic & Honest Review',
+      name: 'Honest Review (Rojak)',
       category: 'home_living',
       isDefault: false,
       is_default: false,
-      template: `{Spill barang aesthetic check ✨|Honest review produk ini 🤍|Hidden gem Shopee yang wajib kamu tahu 🌿}\n\n{nama_produk}\n{Bener-bener worth to buy|Kualitasnya di luar ekspektasi|Desainnya cakep dan multifungsi banget}!\n\n💰 {Harga normal vs promo}: {harga}\n🌟 {Review rating}: {rating} ({terjual} terjual)\n\n🛒 {Tautan produk original|Link pembelian resmi}:\n{link_affiliate}\n\n{hashtag_random}`
+      template: `{Pendapat jujur pasal barang ni|Dah try sendiri, ni review jujur|Ni bukan iklan, review betul-betul}\n\n{nama_produk}\n\n{Memang berbaloi, kualiti lebih dari harga|Kualiti cantik, harga jimat|Sangat berbaloi, guna hari-hari}. {Tak menyesal beli|Repeat order pun ok}.\n\nHarga: {harga} {diskon}\nRating {rating}/5 ({terjual} terjual)\n\n{Nak beli? Link rasmi kat sini|Sesiapa nak link, sini saya letak}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'preset_diskon_promo',
-      name: '🚨 Flash Sale & Promo Alert',
+      name: 'Flash Sale & Diskaun Alert',
       category: 'viral',
       isDefault: false,
       is_default: false,
-      template: `🚨 {PROMO ALERT|FLASH SALE ALERT|DROP PRICE}! 🚨\n{nama_produk}\n\n⚡ {Lagi diskon gede|Harga anjlok parah|Lagi turun harga banget}!\n🏷️ {Sekarang cuma}: {harga} {diskon}\n✨ {Terjual}: {terjual} | Rating {rating}\n\n👇 {Buruan klaim vouchernya sebelum kehabisan|Klik link di bawah ini|Link promo Shopee}:\n{link_affiliate}\n\n{hashtag_random}`
+      template: `PROMO SHOPEE MALAYSIA!\n{nama_produk}\n\n{Diskaun besar tengah jalan|Harga dah jatuh gila murah|Promo terhad masa je ni}!\nSekarang cuma: {harga} {diskon}\n{terjual} terjual | Rating {rating}/5\n\n{Jom grab sebelum habis|Checkout laju-laju sebelum balik ke harga asal}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'preset_solusi_lifehack',
-      name: '💡 Solusi Praktis & Lifehack',
+      name: 'Practical & Lifehack',
       category: 'elektronik',
       isDefault: false,
       is_default: false,
-      template: `{Solusi buat kamu yang lagi cari ini|Lifehack barang berguna yang bikin hidup makin gampang|Nyesel baru tahu barang ini sekarang}! 🙌\n\n📌 {nama_produk}\n{Fungsinya beneran ngebantu banget|Praktis, awet, dan harganya super terjangkau}.\n\n💵 {Harga}: {harga}\n⭐ {Kepuasan pembeli}: {rating} ({terjual} terjual)\n\n👉 {Info & Pembelian|Tautan resmi promo}:\n{link_affiliate}\n\n{hashtag_random}`
+      template: `{Barang ni memang selesaikan hidup|Lifehack: barang wajib ada kat rumah|Penyelesaian untuk masalah harian korang}\n\n{nama_produk}\n\n{Fungsinya memang membantu, guna setiap hari|Praktikal, tahan lama & harga berbaloi}.\n\nHarga: {harga} {diskon}\nRating {rating}/5 ({terjual} terjual)\n\n{Nak tengok detail? Kat sini|Pautan produk kat bawah}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'preset_simple_direct',
-      name: '🎯 Simple & Direct CTA',
+      name: 'Short & Direct CTA',
       category: 'viral',
       isDefault: false,
       is_default: false,
-      template: `{nama_produk}\n\n{Spill link belinya ya guys|Yang dari kemarin nanyain link belinya nih|Langsung checkout sebelum restock abis}:\n👉 {link_affiliate}\n\n💸 {Harga}: {harga} | ⭐ Rating: {rating} ({terjual})\n\n{hashtag_random}`
+      template: `{nama_produk}\n\n{Ramai tanya link ni - sini saya kongsi|Link beli kat sini|Checkout terus sebelum habis}:\n{link_affiliate}\n\nHarga: {harga} {diskon} | Rating {rating}/5 ({terjual} terjual)\n\n{hashtag_random}`
+    },
+    {
+      id: 'preset_jimat_budget',
+      name: 'Jom Jimat / Budget Finds',
+      category: 'viral',
+      isDefault: false,
+      is_default: false,
+      template: `{Jom jimat! Barang cantik harga murah|Belanja sikit, dapat barang best|Murah tapi bukan murahan}\n\n{nama_produk}\n\n{Harga sejimat ni memang taknak lepas|Singgah je Shopee, terserempak barang ni - tak rugi beli}.\n\nHarga cuma: {harga} {diskon}\nRating {rating}/5 | {terjual} terjual\n\n{Korang pun boleh jimat, link kat sini|Sini link untuk yang nak jimat sama}:\n{link_affiliate}\n\n{hashtag_random}`
+    },
+    {
+      id: 'preset_restock_alert',
+      name: 'Ramai Tanya / Restock Alert',
+      category: 'viral',
+      isDefault: false,
+      is_default: false,
+      template: `{RESTOCK ALERT!|Stok dah masuk balik!|Yang tanya link tu, stok baru dah ada ni}\n\n{nama_produk}\n\n{Sebelum ni sold out, sekarang dah balik|Ramai tunggu barang ni, cepat grab}.\n\nHarga sekarang: {harga} {diskon}\n{terjual} terjual | Rating {rating}/5\n\n{Link restock kat sini|Jangan cakap takde link, sini}:\n{link_affiliate}\n\n{hashtag_random}`
     }
   ];
 
   /**
-   * Categorized Hashtag Bank
+   * Categorized Hashtag Bank - Malaysia market
    */
   const HASHTAG_BANK = {
     viral: [
-      '#RacunShopee', '#ShopeeHaul', '#SpillBawaBerkah', '#ShopeeAffiliateID',
-      '#RacunShopeeCheck', '#ShopeeLook', '#BarangViral', '#TikTokShopFinds',
-      '#ShopeeFinds', '#MurahLebay', '#FlashSaleShopee', '#DiskonShopee',
-      '#ShopeeRacunKu', '#RekomendasiShopee', '#SpillProduk', '#ShopeeID',
-      '#RacunBelanja', '#ShopeeFav', '#BeliDiShopee', '#PromoShopee'
+      '#RacunShopee', '#RacunShopeeMY', '#ShopeeMY', '#ShopeeMalaysia',
+      '#ShopeeHaul', '#ShopeeCheck', '#ShopeeLook', '#JomShopee',
+      '#MurahGila', '#BorongShopee', '#DiskaunShopee', '#BarangViral',
+      '#RacunBelanja', '#JomBeli', '#PromoShopee', '#ShopeeFinds',
+      '#FYP', '#TikTokMalaysia'
     ],
     fashion: [
-      '#OOTDIndo', '#FashionShopee', '#OutfitInspo', '#RacunFashion',
-      '#KoreanStyle', '#HijabStyle', '#StyleInspiration', '#ShopeeHaulFashion',
-      '#CasualLook', '#LocalBrandIndo', '#StreetwearIndo', '#DressViral',
-      '#SneakersAddict', '#FashionInspoID', '#OutfitOfTheDay', '#BajuMurahShopee',
-      '#CelanaKulot', '#TasWanita', '#OuterAesthetic', '#GayaKekinian'
+      '#OOTDMalaysia', '#BajuMurah', '#FesyenMurah', '#FesyenViral',
+      '#HijabStyle', '#TudungViral', '#LocalBrandMY', '#DressViral',
+      '#BajuViral', '#KasutViral', '#TasViral', '#OutfitInspo',
+      '#StreetwearMY', '#KoreanStyleMY', '#BajuKekinian', '#ShoppingShopee'
     ],
     elektronik: [
-      '#GadgetMurah', '#RacunGadget', '#SetupInspiration', '#DeskSetup',
-      '#TechReviewID', '#ShopeeElektronik', '#SmartHomeID', '#AksesorisHP',
-      '#GadgetViral', '#TWSMurah', '#PowerbankViral', '#ShopeeTech',
-      '#HeadphoneWireless', '#KeyboardMechanical', '#SmartwatchMurah',
-      '#GamingSetup', '#TechLovers', '#AksesorisKomputer', '#BarangFaedah', '#GadgetIndonesia'
+      '#GadgetMurah', '#GadgetViral', '#TechMY', '#AksesoriPhone',
+      '#PhoneCaseMurah', '#TWSMurah', '#PowerbankViral', '#MechanicalKeyboard',
+      '#GamingSetup', '#SmartHomeMY', '#DeskSetup', '#EarphoneWireless',
+      '#GadgetMY', '#BarangGuna'
     ],
     home_living: [
-      '#DekorasiKamar', '#HomeLiving', '#InspirasiRumah', '#RacunHomeDecor',
-      '#PeralatanDapur', '#EstetikRumah', '#AestheticRoom', '#RumahMinimalis',
-      '#DapurMinimalis', '#ShopeeHome', '#OrganizerMurah', '#PerabotRumah',
-      '#RoomDecorInspo', '#BarangUnikRumah', '#DapurCantik', '#KamarAesthetic',
-      '#PeralatanRumahTangga', '#CleanWithMe', '#RumahImpian', '#MakeoverKamar'
+      '#DekorRumah', '#HomeLivingMY', '#InspirasiRumah', '#DapurCantik',
+      '#RumahCantik', '#AestheticRoom', '#OrganizerMurah', '#PerabotMurah',
+      '#RumahMinimalis', '#MakeoverRumah', '#BarangDapur', '#RumahImpian'
     ],
     beauty: [
-      '#SkincareViral', '#RacunSkincare', '#MakeupTutorial', '#GlowUpTips',
-      '#SkincareRoutine', '#BeautyHacks', '#ShopeeBeauty', '#LipstikViral',
-      '#SunscreenReview', '#SkincareLokal', '#MakeupInspo', '#SerumViral',
-      '#MoisturizerMurah', '#BeautyReviewID', '#TipsKecantikan', '#CushionViral',
-      '#SkincareRemaja', '#AcneProneSkin', '#GlowingSkinTips', '#MakeupMurah'
+      '#SkincareViral', '#RacunSkincare', '#MakeupViral', '#BeautyMY',
+      '#GlowUpTips', '#SkincareRoutine', '#LipstikViral', '#SunscreenReview',
+      '#SkincareMurah', '#CushionViral', '#TipsCantik', '#GlowingSkin'
     ],
     food_snack: [
-      '#KulinerViral', '#SnackShopee', '#CamilanEnak', '#FoodieID',
-      '#JajananViral', '#RacunCamilan', '#MakananPedas', '#MukbangIndo',
-      '#ShopeeFoodies', '#CamilanPedas', '#SnackMurah', '#MakananEnak',
-      '#KeripikKaca', '#BasoAci', '#FrozenFoodMurah', '#JajananKekinian'
+      '#MakananViral', '#SnekViral', '#SnackMurah', '#FoodieMY',
+      '#JajanViral', '#MakananPedas', '#FrozenFood', '#KuihViral',
+      '#MakananEnak', '#JajanShopee', '#SnekMurah', '#MukbangMY'
     ]
   };
 
@@ -247,6 +256,25 @@
   ];
 
   /**
+   * Market Configuration (synced with libs/market-config.js)
+   */
+  const MARKET = {
+    country: 'MY',
+    locale: 'ms-MY',
+    currency: 'RM',
+    shopeeDomain: 'shopee.com.my',
+    affiliateOfferUrl: 'https://affiliate.shopee.com.my/offer/product_offer',
+    shortlinkHosts: ['s.shopee.com.my', 'shope.ee'],
+    fallbackShortlink: 'https://s.shopee.com.my',
+    defaultProductTitle: 'Produk Pilihan Shopee',
+    defaultSold: '1k+ terjual',
+    defaultRating: '4.9',
+    discountLabel: 'Diskaun',
+    soldLabel: 'terjual',
+    timezoneLabel: 'MYT'
+  };
+
+  /**
    * Unified Constants Container
    */
   const CONSTANTS = {
@@ -259,7 +287,9 @@
     PRESET_TEMPLATES,
     HASHTAG_BANK,
     DEFAULT_HASHTAGS: HASHTAG_BANK,
-    QUEUE_COLUMNS
+    QUEUE_COLUMNS,
+    MARKET,
+    Market: MARKET
   };
 
   // Export for CommonJS (Node.js)
@@ -277,6 +307,8 @@
     module.exports.HASHTAG_BANK = HASHTAG_BANK;
     module.exports.DEFAULT_HASHTAGS = HASHTAG_BANK;
     module.exports.QUEUE_COLUMNS = QUEUE_COLUMNS;
+    module.exports.MARKET = MARKET;
+    module.exports.Market = MARKET;
   }
 
   // Export to global scope (Browser Window, Content Script, Service Worker)
@@ -293,6 +325,8 @@
     root.HASHTAG_BANK = HASHTAG_BANK;
     root.DEFAULT_HASHTAGS = HASHTAG_BANK;
     root.QUEUE_COLUMNS = QUEUE_COLUMNS;
+    root.MARKET = MARKET;
+    root.Market = MARKET;
   }
 })(typeof globalThis !== 'undefined' ? globalThis
   : typeof self !== 'undefined' ? self

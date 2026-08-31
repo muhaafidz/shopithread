@@ -5,83 +5,97 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Landing Page](https://img.shields.io/badge/Website-Landing%20Page-ff5722.svg)](https://sodikinnaa.github.io/shopithread/)
 
-> **ShopiThread** adalah ekstensi Google Chrome all-in-one untuk kreator konten & affiliate marketer Shopee: Scrape foto HD asli, auto shortlink resmi (`s.shopee.co.id`), manajemen database CSV (RFC 4180), dan generator materi caption Meta Threads viral bebas karakter rusak.
+> **ShopiThread** is an all-in-one Google Chrome extension for Shopee Malaysia affiliate creators & marketers: scrape original HD photos, auto-generate official shortlinks (`s.shopee.com.my`), manage a CSV database (RFC 4180), and generate viral Meta Threads captions in **Bahasa Melayu** — free of broken characters.
+
+**Interface language:** English • **Generated caption language:** Bahasa Melayu (Malaysia market, RM currency)
 
 ---
 
-## 📹 Video Tutorial & Demo Penggunaan
+## 📹 Video Tutorial & Usage Demo
 
-[![ShopiThread Video Tutorial Demo](https://img.shields.io/badge/YouTube-Video%20Tutorial%203%20Menit-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[![ShopiThread Video Tutorial Demo](https://img.shields.io/badge/YouTube-Video%20Tutorial%203%20Minutes-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 [![Watch the tutorial](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
-> 💡 **Tonton Tutorial Singkat:** Pelajari alur lengkap mulai dari instalasi, scraping multi-halaman Shopee, ekspor CSV, hingga generate caption Threads siap posting!
+> 💡 **Watch the short tutorial:** learn the full flow from installation, multi-page Shopee scraping, CSV export, to generating ready-to-post Threads captions!
 
 ---
 
-## ✨ Fitur Unggulan
+## ✨ Key Features
 
-### 1. 🔍 Scraper Multi-Halaman & Foto HD Shopee Affiliate
-- **Auto Detect & Pagination**: Otomatis menjelajah hingga 10 halaman penawaran produk Shopee Affiliate ([https://affiliate.shopee.co.id/offer/product_offer](https://affiliate.shopee.co.id/offer/product_offer)).
-- **Ekstraksi Shortlink Resmi**: Mengklik tombol *"Buat Link"*, mengambil shortlink `s.shopee.co.id` / `shope.ee`, dan menutup modal secara otomatis.
-- **Pembersihan Foto HD**: Mengunduh foto asli resolusi penuh tanpa kompresi `@resize`.
+### 1. 🔍 Multi-Page Scraper & HD Shopee Affiliate Photos
+- **Auto Detect & Pagination**: Automatically browses up to 10 pages of Shopee Affiliate product offers ([https://affiliate.shopee.com.my/offer/product_offer](https://affiliate.shopee.com.my/offer/product_offer)).
+- **Official Shortlink Extraction**: Clicks the *"Get Link"* button, grabs the `s.shopee.com.my` / `shope.ee` shortlink, and closes the modal automatically.
+- **HD Photo Cleanup**: Downloads original full-resolution photos without `@resize` compression.
 
-### 2. 📊 Dedicated Dashboard & Manajemen CSV (RFC 4180)
-- **Tabel Interaktif**: Preview foto produk, harga, komisi, total terjual, dan status link.
-- **Ekspor Fleksibel**: 1-Klik ekspor ke file **CSV**, **TXT**, atau arsip **ZIP** foto produk.
-- **Impor CSV**: Drag & drop file CSV produk untuk dimasukkan ke database dashboard.
-- **CRUD Penuh**: Tambah, edit detail produk, salin link 1-klik, dan hapus data dengan proteksi storage anti-corrupt.
+### 2. 📊 Dedicated Dashboard & CSV Management (RFC 4180)
+- **Interactive Table**: Preview product photos, prices, commissions, total sold, and link status.
+- **Flexible Export**: 1-click export to **CSV**, **TXT**, or a **ZIP** archive of product photos.
+- **CSV Import**: Drag & drop a product CSV file into the dashboard database.
+- **Full CRUD**: Add, edit product details, 1-click copy links, and delete data with anti-corruption storage protection.
 
-### 3. 🧵 Generator Konten Threads (Clean & Non Auto-Posting)
-- **Format Teks Bersih**: Bebas dari broken icon/emoji unicode yang sering gagal di-render oleh Threads web.
-- **Template Copywriting Variatif**:
-  - *Gaya Santai / Racun Shopee (High Viral)*
-  - *Gaya Review Jujur / Honest Review*
-  - *Gaya Promo Diskon / Flash Sale Alert*
-  - *Gaya Solusi Praktis & Lifehack*
-  - *Gaya Singkat & To The Point*
-- **Engine Spintax**: Mengacak variasi kata & hook secara otomatis (`🎲 Acak Variasi`).
-- **Pembersih Simbol**: Tombol 1-klik `🧹 Bersihkan Simbol` untuk memastikan teks caption 100% kompatibel.
-- **Assisted Posting**: Tombol `📋 Salin Caption Threads`, `🔗 Buka Threads.net`, dan `✍️ Isi ke Threads Tab` (tanpa klik kirim otomatis, menjaga kontrol penuh kreator).
-
----
-
-## 🚀 Cara Download & Pasang Ekstensi (Siap Import)
-
-### Metode 1: Download Versi Rilis Siap Import (Rekomendasi)
-1. Buka halaman **[Releases Terbaru](https://github.com/sodikinnaa/shopithread/releases/latest)**.
-2. Download file asset **`shopee-affiliate-threads-extension-v1.0.0.zip`**.
-3. Ekstrak file ZIP tersebut di folder komputer Anda.
-4. Buka Google Chrome lalu masuk ke URL: `chrome://extensions`.
-5. Aktifkan **Developer mode** (Mode Pengembang) di pojok kanan atas.
-6. Klik tombol **Load unpacked** (Muat yang belum dibongkar), lalu pilih folder hasil ekstrak tadi.
-7. Ekstensi siap digunakan! 🎉
+### 3. 🧵 Threads Content Generator (Clean & Non Auto-Posting)
+- **Bahasa Melayu Copywriting Templates** (Malaysian casual "rojak" style):
+  - *Casual / Racun Shopee (Rojak)*
+  - *Honest Review (Rojak)*
+  - *Flash Sale / Diskaun Alert*
+  - *Practical & Lifehack*
+  - *Short & Direct CTA*
+  - *Jom Jimat / Budget Finds*
+  - *Ramai Tanya / Restock Alert*
+- **Malaysia Hashtag Banks**: Category-based hashtags used by real MY affiliates (#RacunShopee, #ShopeeMY, #MurahGila, #JomShopee, #FYP, ...).
+- **Clean Text Format**: Free from the broken icon/emoji unicode that often fails to render on Threads web.
+- **Spintax Engine**: Automatically randomizes words & hooks (`🎲 Spin Variation`).
+- **Symbol Cleaner**: 1-click `🧹 Clean Symbols` button to keep captions 100% compatible.
+- **Assisted Posting**: `📋 Copy Threads Caption`, `🔗 Open Threads.net`, and `✍️ Fill into Threads Tab` buttons (no auto-submit click, keeping full creator control).
 
 ---
 
-## 📁 Struktur Modul Project (Clean Architecture)
+## 🚀 How to Download & Install the Extension (Ready to Import)
+
+### Method 1: Download the Ready-to-Import Release (Recommended)
+1. Open the **[Latest Release](https://github.com/sodikinnaa/shopithread/releases/latest)** page.
+2. Download the **`shopee-affiliate-threads-extension-v1.0.0.zip`** asset file.
+3. Extract the ZIP file to a folder on your computer.
+4. Open Google Chrome and go to: `chrome://extensions`.
+5. Enable **Developer mode** in the top-right corner.
+6. Click **Load unpacked**, then select the extracted folder.
+7. The extension is ready to use! 🎉
+
+---
+
+## 📁 Project Module Structure (Clean Architecture)
 
 ```
 .
-├── index.html                      # Landing Page resmi ShopiThread
-├── docs/                           # Dokumentasi & GitHub Pages deployment
+├── index.html                      # Official ShopiThread landing page
+├── docs/                           # Documentation & GitHub Pages deployment
 ├── .github/workflows/
 │   └── ci-cd-release.yml           # CI/CD pipeline & automated release zip packaging
 ├── libs/
-│   ├── csv-service.js              # Layanan generator/parser CSV RFC 4180, TXT & ZIP
-│   ├── storage-service.js          # Abstraksi chrome.storage.local dengan fallback localStorage
-│   ├── shopee-scraper-service.js   # Scraper DOM multi-halaman & shortlink extractor
-│   ├── threads-content-service.js  # Generator caption Threads, spintax, & text cleaner
-│   └── jszip.min.js                # Library JSZip kompresi gambar
+│   ├── market-config.js            # Market configuration (currency, domains, content defaults)
+│   ├── csv-service.js              # RFC 4180 CSV generator/parser, TXT & ZIP services
+│   ├── storage-service.js          # chrome.storage.local abstraction with localStorage fallback
+│   ├── shopee-scraper-service.js   # Multi-page DOM scraper & shortlink extractor
+│   ├── threads-content-service.js  # Threads caption generator (BM), spintax, & text cleaner
+│   ├── constants.js                # Central constants, presets, hashtag banks
+│   ├── spintax.js                  # Nested spintax parser & dynamic caption engine
+│   ├── db.js                       # Queue/settings/product database layer
+│   └── jszip.min.js                # JSZip image compression library
 ├── dashboard/
-│   ├── dashboard.html              # Dedicated Dashboard UI (Tabel Produk, Threads Generator, CSV)
-│   ├── dashboard.css               # Styling Glassmorphism modern
-│   └── dashboard.js                # Controller & event listener dashboard
+│   ├── dashboard.html              # Dedicated Dashboard UI (Products Table, Threads Generator, CSV)
+│   ├── dashboard.css               # Modern glassmorphism styling
+│   └── dashboard.js                # Dashboard controller & event listeners
+├── panel/
+│   ├── poster-panel.html           # Threads single-post controller panel
+│   ├── poster-panel.css            # Panel styling
+│   └── poster-panel.js             # Poster panel controller & live debug console
 ├── popup/
 │   ├── popup.html                  # Toolbar mini popup
 │   ├── popup.css                   # Toolbar styling
 │   └── popup.js                    # Quick trigger controller
-├── content.js                      # In-page orchestrator & floating UI pada Shopee
+├── content.js                      # In-page orchestrator & floating UI on Shopee
+├── threads-content.js              # Threads auto-post engine (queue, composer injection)
 ├── content.css                     # Floating panel styling
 ├── background.js                   # Service Worker background message router
 ├── manifest.json                   # Chrome Extension Manifest V3
@@ -90,16 +104,17 @@
 
 ---
 
-## 🧪 Validasi Sintaks & Testing
+## 🧪 Syntax Validation & Testing
 
-Untuk menjalankan pengujian otomatis:
+To run the automated tests:
 ```bash
 npm test
-# atau
+# or
 node -c libs/*.js content.js dashboard/dashboard.js popup/popup.js background.js && node test-dashboard.js
 ```
 
 ---
 
-## 📄 Lisensi
-Didistribusikan di bawah Lisensi MIT. Bebas digunakan dan dikembangkan untuk komunitas affiliate marketing.
+## 📄 License
+
+Distributed under the MIT License. Free to use and develop for the affiliate marketing community.

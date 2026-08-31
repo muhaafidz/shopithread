@@ -197,10 +197,10 @@ async function testPosterPanel() {
 
   // Verify step-by-step terminal logs are recorded cleanly
   const logMessages = debugConsole.logs.map(l => l.message);
-  assert(logMessages.some(m => m.includes('⏳ Membuka form Utas Baru Threads...')), 'Step 1 log should exist');
-  assert(logMessages.some(m => m.includes('✍️ Mengetik caption produk...')), 'Step 2 log should exist');
-  assert(logMessages.some(m => m.includes('🔘 Mengklik tombol Kirim via XPath...')), 'Step 3 log should exist');
-  assert(logMessages.some(m => m.includes('🎉 SUKSES DIPOSTING! 🔗 Link: https://www.threads.net/@user/post/test12345')), 'Step 4 success log should exist');
+  assert(logMessages.some(m => m.includes('⏳ Opening the New Thread form on Threads...')), 'Step 1 log should exist');
+  assert(logMessages.some(m => m.includes('✍️ Typing the product caption...')), 'Step 2 log should exist');
+  assert(logMessages.some(m => m.includes('🔘 Clicking the Post button via XPath...')), 'Step 3 log should exist');
+  assert(logMessages.some(m => m.includes('🎉 POSTED SUCCESSFULLY! 🔗 Link: https://www.threads.net/@user/post/test12345')), 'Step 4 success log should exist');
 
   // Verify item status transitioned to POSTED
   const postedItem = qm.getItemById('test_1');
@@ -221,7 +221,7 @@ async function testPosterPanel() {
   assert.strictEqual(failRes.success, false);
   const updatedItem3 = qm.getItemById('test_3');
   assert.strictEqual(updatedItem3.status, 'FAILED');
-  assert(debugConsole.logs.some(l => l.message.includes('❌ GAGAL DIPOSTING:')), 'Error log should exist');
+  assert(debugConsole.logs.some(l => l.message.includes('❌ POST FAILED:')), 'Error log should exist');
   shouldSimulateTabFailure = false;
   console.log('  ✅ Single Post failure handling verified!');
 

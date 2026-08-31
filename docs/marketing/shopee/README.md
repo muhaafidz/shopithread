@@ -1,126 +1,127 @@
-# 🛍️ Template Judul & Deskripsi Produk Gratis di Shopee (Freebies / Digital / Giveaway)
+# 🛍️ Free Product Title & Description Templates for Shopee (Freebies / Digital / Giveaway)
 
-![Cover Produk Shopee](cover.jpg)
+![Shopee Product Cover](cover.jpg)
 
-Panduan dan kumpulan template copywriting siap pakai untuk listing **Produk Gratis / Freebie / Digital Tools / Panduan** di Shopee guna memancing traffic, follower toko, dan ulasan bintang 5.
+A guide and collection of ready-to-use copywriting templates for listing **Free Products / Freebies / Digital Tools / Guides** on Shopee — built to attract traffic, store followers, and 5-star reviews.
 
----
-
-## 📌 Rekomendasi Struktur Judul Produk (SEO Shopee)
-
-> **Rumus Judul:** `[GRATIS / FREE] [Kategori / Jenis Produk] [Nama Produk / Brand] [Fitur Utama / Manfaat] [Bonus / Garansi]`
-
-### Opsi Judul Siap Pakai:
-1. **Opsi 1 (Digital Tools / Ekstensi Chrome):**
-   ```text
-   [GRATIS] ShopiThread Chrome Extension - Tool Scraper Shopee Affiliate & Auto Caption Threads 1 Klik
-   ```
-2. **Opsi 2 (Panduan / Ebook / Template):**
-   ```text
-   [FREE] Ebook Panduan Rahasia Banjir Order Shopee Affiliate + Template Caption Threads Viral (Gratis Akses)
-   ```
-3. **Opsi 3 (Universal / Akses Free Trial & Komunitas):**
-   ```text
-   [PROMO GRATIS Rp0] Software ShopiThread Scraper & Generator Konten Otomatis Shopee Affiliate Terbaru
-   ```
-4. **Opsi 4 (Voucher / Digital Bonus):**
-   ```text
-   [GRATIS] Lisensi ShopiThread Extension Full Version - Optimasi Komisi Shopee Affiliate & Scraping Produk
-   ```
+> Note: The example listings below are written in **Bahasa Melayu** because they target Shopee Malaysia buyers. Headings and instructions are in English.
 
 ---
 
-## 📝 Template Deskripsi Produk Siap Pakai
+## 📌 Recommended Product Title Structure (Shopee SEO)
+
+> **Title Formula:** `[FREE] [Category / Product Type] [Product / Brand Name] [Main Feature / Benefit] [Bonus / Guarantee]`
+
+### Ready-to-Use Title Options:
+1. **Option 1 (Digital Tools / Chrome Extension):**
+   ```text
+   [PERCUMA] ShopiThread Chrome Extension - Shopee Affiliate Scraper Tool & Auto Threads Caption 1 Klik
+   ```
+2. **Option 2 (Guide / Ebook / Template):**
+   ```text
+   [FREE] Ebook Rahsia Banjir Order Shopee Affiliate + Template Caption Threads Viral (Akses Percuma)
+   ```
+3. **Option 3 (Universal / Free Trial & Community Access):**
+   ```text
+   [PROMO PERCUMA RM0] Software ShopiThread Scraper & Auto Content Generator Shopee Affiliate Terkini
+   ```
+4. **Option 4 (Voucher / Digital Bonus):**
+   ```text
+   [PERCUMA] Lesen ShopiThread Extension Full Version - Optimasi Komisi Shopee Affiliate & Scraping Produk
+   ```
 
 ---
 
-### Template 1: Khusus Produk Digital / Tools (ShopiThread Extension)
+## 📝 Ready-to-Use Product Description Templates
+
+---
+
+### Template 1: Digital Products / Tools (ShopiThread Extension)
 
 ```text
-[PROMO SPESIAL GRATIS / RP 0] - SHOPIHREAD CHROME EXTENSION
-Solusi all-in-one untuk kamu para Kreator Konten & Affiliate Marketer Shopee!
+[PERCUMA / RM 0] - SHOPIHREAD CHROME EXTENSION
+Solusi all-in-one untuk Kreator Konten & Affiliate Marketer Shopee!
 
-Mau bikin konten promosi produk Shopee Affiliate tapi capek scrape foto manual dan bikin caption satu per satu? 
-Gunakan ShopiThread sekarang juga — 100% GRATIS!
+Nak buat konten promosi produk Shopee Affiliate tapi penat scrape foto satu-satu dan taip caption manual?
+Gunakan ShopiThread sekarang - 100% PERCUMA!
 
 ---
 
-FITUR UNGGULAN:
+FITUR UTAMA:
 - Scraper Produk & Foto HD: Ambil gambar asli beresolusi tinggi tanpa watermark / blur.
-- Auto Generate Shortlink Resmi: Otomatis buat link affiliate resmi (s.shopee.co.id) tanpa repot.
-- Ekspor & Database CSV: Kelola ribuan data produk dengan rapi dan terstruktur.
-- Generator Caption Meta Threads: Buat teks promosi viral siap posting bebas typo dan karakter rusak.
-- 100% Aman & Ringan di Browser.
+- Auto Generate Shortlink Rasmi: Buat link affiliate rasmi (s.shopee.com.my) secara automatik.
+- Ekspor & Database CSV: Urus ribuan data produk dengan kemas dan tersusun.
+- Generator Caption Meta Threads: Cipta teks promosi viral siap post, bebas typo & karakter rosak.
+- 100% Selamat & Ringan dalam Browser.
 
 ---
 
-APA YANG KAMU DAPATKAN:
-1. File Installer Ekstensi Chrome (ShopiThread).
-2. Panduan Lengkap Instalasi & Cara Penggunaan (Video & PDF).
-3. Template Copywriting Threads Siap Pakai.
-4. Akses Update Fitur Terbaru.
+APA YANG ANDA DAPAT:
+1. File Installer Extension Chrome (ShopiThread).
+2. Panduan Lengkap Pemasangan & Cara Guna (Video & PDF).
+3. Template Copywriting Threads Siap Guna (Bahasa Melayu).
+4. Akses Update Fitur Terkini.
 
 ---
 
-CARA KLAIM / PENGIRIMAN PRODUK:
-1. Checkout produk ini seperti biasa (Harga promo / Gratis).
-2. Setelah pesanan terkonfirmasi, cantumkan ALAMAT EMAIL kamu di catatan order atau kirim via Chat Shopee.
-3. Link download dan panduan akses akan langsung dikirimkan ke Email / Chat dalam hitungan menit.
-4. Konfirmasi "Pesanan Diterima" dan berikan ulasan bintang 5 ya kak!
+CARA CLAIM / PENGHANTARAN PRODUK:
+1. Checkout produk ini seperti biasa (Harga promo / Percuma).
+2. Selepas order disahkan, masukkan ALAMAT EMAIL anda dalam nota order atau hantar melalui Chat Shopee.
+3. Link download dan panduan akses akan dihantar ke Email / Chat dalam beberapa minit.
+4. Confirm "Pesanan Diterima" dan bagi review bintang 5 ya kak!
 
 ---
 
-CATATAN PENTING:
-- Produk ini merupakan PRODUK DIGITAL (non-fisik), tidak ada pengiriman kurir fisik.
-- Layanan bantuan / konsultasi gratis jika mengalami kendala saat instalasi.
+NOTA PENTING:
+- Produk ini adalah PRODUK DIGITAL (bukan fizikal), tiada penghantaran kurier fizikal.
+- Bantuan / konsultasi percuma jika menghadapi masalah semasa pemasangan.
 ```
 
 ---
 
-### Template 2: Khusus Ebook / File Materi / Template Gratis
+### Template 2: Ebook / Content Files / Free Templates
 
 ```text
 [FREEBIES] EBOOK PANDUAN & TEMPLATE AFFILIATE VIRAL
 
-Ingin mulai affiliate tapi bingung cara riset produk dan merangkai kata-kata jualan yang memikat? Dapatkan panduan lengkap ini secara GRATIS!
+Nak mula affiliate tapi tak tahu cara research produk dan susun kata-kata jualan yang menarik? Dapatkan panduan lengkap ini PERCUMA!
 
 ---
 
-ISI MATERI & TEMPLATE:
-- Cara mencari produk dengan komisi tertinggi & konversi tinggi di Shopee.
+KANDUNGAN MATERI & TEMPLATE:
+- Cara cari produk dengan komisi tertinggi & conversion tinggi di Shopee.
 - Formula copywriting viral untuk Threads, Instagram, dan TikTok.
-- Tips menghindari pembatasan / link error.
-- Checklist harian konsistensi posting.
+- Tips elak link error / sekatan.
+- Checklist konsistensi posting harian.
 
 ---
 
-CARA ORDER & PENGIRIMAN:
+CARA ORDER & PENGHANTARAN:
 1. Klik "Beli Sekarang" & selesaikan transaksi.
-2. Tuliskan EMAIL kamu di kolom catatan atau Chat Toko.
-3. File PDF + Spreadsheet template akan langsung dikirim ke email kamu.
+2. Tulis EMAIL anda dalam kolom nota atau Chat Kedai.
+3. File PDF + Spreadsheet template akan terus dihantar ke email anda.
 
-Mohon dukung toko kami dengan ulasan bintang 5 ya kak! Terima kasih banyak!
+Support kedai kami dengan review bintang 5 ya kak! Terima kasih banyak!
 ```
 
 ---
 
-## ⚙️ Tips Praktis Setting Produk Gratis di Shopee Seller Centre
+## ⚙️ Practical Tips for Setting Up Free Products in Shopee Seller Centre
 
-1. **Pengaturan Harga:**
-   - Shopee memiliki batasan harga minimum (biasanya Rp100 - Rp1.000 tergantung kategori).
-   - *Solusi 1:* Pasang harga minimum (misal Rp100 / Rp1.000) dan buat Voucher Diskon / Cashback Toko 100%.
-   - *Solusi 2:* Gunakan fitur **Hadiah Gratis (Add-on Deals / Free Gift)** yang dipasangkan ke produk lain.
-2. **Kategori Produk:**
-   - Gunakan kategori `Voucher & Jasa` atau `Buku & Majalah > E-Book / Buku Digital` (atau kategori Digital jika toko sudah membuka opsi fitur Non-Fisik).
-3. **Pengaturan Berat & Dimensi Paket (Wajib di Seller Centre):**
-   | Parameter | Nilai Rekomendasi | Catatan / Alasan |
+1. **Price Settings:**
+   - Shopee has a minimum price limit (usually RM1 - RM10 depending on the category).
+   - *Solution 1:* Set the minimum price (e.g. RM1 / RM10) and create a 100% Shop Discount Voucher / Cashback.
+   - *Solution 2:* Use the **Free Gift (Add-on Deals)** feature attached to other products.
+2. **Product Category:**
+   - Use the `Vouchers & Services` category or `Books & Magazines > E-Book / Digital Book` (or the Digital category if your store has enabled the Non-Physical option).
+3. **Weight & Package Dimensions Settings (Mandatory in Seller Centre):**
+   | Parameter | Recommended Value | Notes / Reason |
    |---|---|---|
-   | **Berat Produk** | `10 gram` (atau `1 - 50 gram`) | Isi seminimal mungkin agar tarif ongkir terendah / tidak membebani pembeli. |
-   | **Dimensi (P x L x T)** | `1 cm x 1 cm x 1 cm` | Dimensi terkecil agar terhindar dari perhitungan berat volumetrik kurir. |
-   | **Dikirim dalam (Pre-Order)** | `Tidak (Kirim Instan)` | Agar toko dinilai cepat memproses pesanan. |
-4. **Metode Pengiriman:**
-   - **Opsi Utama (Terbaik):** Aktifkan fitur **"Termasuk Ongkos Kirim" (Rp 0)** agar transaksi 100% digital tanpa biaya pengiriman.
-   - **Opsi Alternatif (Jika Kurir Fisik Wajib):** Aktifkan kurir hemat/reguler dengan berat `10 gram` & cantumkan di deskripsi bahwa invoice/panduan fisik/voucher digital dikirim via amplop mini atau email.
-5. **Optimasi Foto Produk:**
-   - Buat cover utama dengan badge mencolok: `[100% GRATIS]`, `[PENGIRIMAN INSTAN]`, `[KHUSUS HARI INI]`.
-
+   | **Product Weight** | `10 gram` (or `1 - 50 gram`) | Keep it as low as possible so shipping cost is minimal / doesn't burden the buyer. |
+   | **Dimensions (L x W x H)** | `1 cm x 1 cm x 1 cm` | Smallest dimensions to avoid volumetric weight calculation by couriers. |
+   | **Ships in (Pre-Order)** | `No (Instant Shipping)` | So your store is rated as processing orders fast. |
+4. **Shipping Method:**
+   - **Primary Option (Best):** Enable the **"Free Shipping" (RM 0)** option so the transaction is 100% digital with no delivery fee.
+   - **Alternative Option (If a Physical Courier Is Mandatory):** Enable economy/regular courier with `10 gram` weight, and note in the description that the invoice/physical guide/digital voucher is sent via a mini envelope or email.
+5. **Product Photo Optimization:**
+   - Create the main cover with eye-catching badges: `[100% FREE]`, `[INSTANT DELIVERY]`, `[TODAY ONLY]`.

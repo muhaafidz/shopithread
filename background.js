@@ -73,7 +73,7 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
     if (request.action === 'SAVE_PRODUCTS_TO_DASHBOARD' || request.action === 'ADD_TO_QUEUE') {
       const newItems = request.products || request.items || [];
       if (!Array.isArray(newItems) || newItems.length === 0) {
-        sendResponse({ success: false, error: 'Daftar produk kosong' });
+        sendResponse({ success: false, error: 'Empty product list' });
         return true;
       }
 
@@ -143,4 +143,4 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
   });
 }
 
-console.log('📦 [ShopeeAffiliateDL] Background Service Worker siap melayani Dashboard & Scraper.');
+console.log('📦 [ShopeeAffiliateDL] Background Service Worker ready to serve the Dashboard & Scraper.');

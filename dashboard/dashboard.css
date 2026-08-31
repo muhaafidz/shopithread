@@ -1139,6 +1139,11 @@ body {
   font-weight: 600;
 }
 
+.threads-char-counter .status-warn {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
 .threads-char-counter .status-over {
   color: var(--color-red);
   font-weight: 700;

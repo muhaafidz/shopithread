@@ -60,7 +60,7 @@ assert(csvOutput.includes('Sepatu Sneakers Wanita Korean Style ""White Edition""
 console.log('  ✅ CsvService.generateCSV passed!');
 
 const txtOutput = CsvService.generateTXT(mockProducts);
-assert(txtOutput.includes('DAFTAR LINK SINGKAT AFFILIATE SHOPEE'), 'TXT output should contain header');
+assert(txtOutput.includes('SHOPEE MALAYSIA AFFILIATE SHORTLINK LIST'), 'TXT output should contain header');
 assert(txtOutput.includes('https://s.shopee.co.id/xyz123'), 'TXT output should contain link');
 console.log('  ✅ CsvService.generateTXT passed!');
 
@@ -96,11 +96,11 @@ console.log('  ✅ Spintax parser verified with multiple unique variations!');
 // 3c. Test Variable Replacement & Hashtags
 const testProduct = {
   title: 'Jam Tangan Pria Waterproof Original Sport Watch',
-  price: 'Rp 189.000',
+  price: 'RM 189.00',
   discount: '30%',
   rating: '⭐ 4.9',
-  sold: '10rb+ terjual',
-  shortLink: 'https://s.shopee.co.id/testjam123',
+  sold: '10k+ terjual',
+  shortLink: 'https://s.shopee.com.my/testjam123',
   category: 'elektronik'
 };
 
@@ -110,8 +110,8 @@ const generatedCaption = ThreadsService.generateCaption('racun_shopee', testProd
 });
 
 assert(generatedCaption.includes('Jam Tangan Pria Waterproof Original Sport Watch'), 'Generated caption should contain product title');
-assert(generatedCaption.includes('189.000'), 'Generated caption should contain price');
-assert(generatedCaption.includes('https://s.shopee.co.id/testjam123'), 'Generated caption should contain affiliate short link');
+assert(generatedCaption.includes('189.00'), 'Generated caption should contain price');
+assert(generatedCaption.includes('https://s.shopee.com.my/testjam123'), 'Generated caption should contain affiliate short link');
 assert(generatedCaption.includes('#'), 'Generated caption should contain hashtags');
 assert(!generatedCaption.includes('{nama_produk}'), 'Generated caption should not contain unreplaced variable {nama_produk}');
 assert(!generatedCaption.includes('{harga}'), 'Generated caption should not contain unreplaced variable {harga}');

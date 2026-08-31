@@ -1,92 +1,128 @@
 /**
  * @file threads-content-service.js
  * @description Threads Content Service for generating captions, managing spintax variations,
- * formatting clean text for Threads posts without broken icon characters. Pure modular utility with zero auto-loop/scheduler.
- * 
+ * formatting clean text for Threads posts without broken icon characters.
+ * Copy is native Bahasa Melayu (casual rojak style) tuned for the Malaysia market.
+ * Pure modular utility with zero auto-loop/scheduler.
+ *
  * Target: Google Chrome Extension Manifest V3 (Content Script, Popup, Dashboard, Service Worker, Node.js)
- * @author sodikinnaa
  * @license MIT
  */
 
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
+    let market = null;
+    try { market = require('./market-config.js'); } catch (_) {}
+    module.exports = factory(market);
   } else {
-    root.ThreadsContentService = factory();
+    root.ThreadsContentService = factory(root.ShopiThreadMarket || null);
   }
-})(typeof self !== 'undefined' ? self : this, function () {
+})(typeof self !== 'undefined' ? self : this, function (MARKET) {
   'use strict';
+
+  // Market defaults (override via libs/market-config.js)
+  MARKET = MARKET || {
+    currency: 'RM',
+    defaultProductTitle: 'Produk Pilihan Shopee',
+    defaultSold: '1k+ terjual',
+    defaultRating: '4.9',
+    discountLabel: 'Diskaun',
+    soldLabel: 'terjual'
+  };
 
   /**
    * Default Threads Preset Templates - Clean Text Format (No broken icons/emojis)
+   * Tone: casual rojak Bahasa Melayu (Malaysian affiliate style)
    */
   const THREADS_TEMPLATES = [
     {
       id: 'racun_shopee',
-      name: 'Gaya Santai / Racun Shopee (Clean)',
+      name: 'Casual / Racun Shopee (Rojak)',
       category: 'viral',
-      description: 'Gaya santai, menarik perhatian, dan mudah dibaca tanpa icon yang rusak.',
-      template: `{Gila sih ini!|Keren banget!|Gak nyangka sebagus ini!|Wajib punya nih!}\n{Lagi viral banget|Banyak yang cari|Rekomendasi terbaik hari ini}: {nama_produk}\n\n{Harga cuma|Dapet harga|Cuma}: {harga} {diskon}\nRating: {rating}/5 | {terjual} terjual\n\n{Beli di sini yuk|Cek dan checkout di sini|Link official promo|Spill link tokonya}:\n{link_affiliate}\n\n{hashtag_random}`
+      description: 'Hook-first casual style, the highest engagement format for Malaysian affiliate posts.',
+      template: `{Gila best barang ni!|Memang wajib ada!|Tak sangka sebagus ni!|Cantik sangat sampai nak share!}\n{Dah viral sekarang|Ramai yang cari|Pilihan paling hot masa ni}: {nama_produk}\n\n{Harga cuma|Dapat harga murah|Cuma}: {harga} {diskon}\nRating {rating}/5 | {terjual} terjual\n\n{Jom checkout kat sini|Link kat sini, jangan tak tahu|Sini saya kongsi linknya}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'edukasi_review',
-      name: 'Gaya Review Jujur / Honest Review (Clean)',
+      name: 'Honest Review (Rojak)',
       category: 'home_living',
-      description: 'Ulasan jujur, rapi, dan estetis dengan fokus keunggulan produk.',
-      template: `{Review jujur produk ini:|Spill barang recommended:|Rekomendasi produk pilihan:}\n\n{nama_produk}\n\n{Bener-bener worth to buy|Kualitasnya di luar ekspektasi|Desain dan bahannya bagus banget}. Pas banget dipakai sehari-hari.\n\nHarga: {harga} {diskon}\nKepuasan pembeli: {rating}/5 ({terjual} terjual)\n\nLink pembelian resmi:\n{link_affiliate}\n\n{hashtag_random}`
+      description: 'Conversational first-person review that feels like a real recommendation, not an ad.',
+      template: `{Pendapat jujur pasal barang ni|Dah try sendiri, ni review jujur|Ni bukan iklan, review betul-betul}\n\n{nama_produk}\n\n{Memang berbaloi, kualiti lebih dari harga|Kualiti cantik, harga jimat|Sangat berbaloi, guna hari-hari}. {Tak menyesal beli|Repeat order pun ok}.\n\nHarga: {harga} {diskon}\nRating {rating}/5 ({terjual} terjual)\n\n{Nak beli? Link rasmi kat sini|Sesiapa nak link, sini saya letak}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'promo_diskon',
-      name: 'Gaya Promo Diskon / Flash Sale (Clean)',
+      name: 'Flash Sale / Diskaun Alert',
       category: 'viral',
-      description: 'Gaya promo berbatas waktu dan ajakan segera checkout.',
-      template: `PROMO SHOPEE ALERT!\n{nama_produk}\n\n{Lagi diskon besar|Harga turun banget|Promo spesial hari ini}!\nSekarang cuma: {harga} {diskon}\nTotal terjual: {terjual} (Rating {rating}/5)\n\nKlik link di bawah ini sebelum kehabisan:\n{link_affiliate}\n\n{hashtag_random}`
+      description: 'Urgency-driven promo style for limited-time discounts and campaigns.',
+      template: `PROMO SHOPEE MALAYSIA!\n{nama_produk}\n\n{Diskaun besar tengah jalan|Harga dah jatuh gila murah|Promo terhad masa je ni}!\nSekarang cuma: {harga} {diskon}\n{terjual} terjual | Rating {rating}/5\n\n{Jom grab sebelum habis|Checkout laju-laju sebelum balik ke harga asal|Jangan tunggu lama-lama, klik sini}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'solusi_praktis',
-      name: 'Gaya Solusi Praktis & Lifehack (Clean)',
+      name: 'Practical & Lifehack',
       category: 'elektronik',
-      description: 'Menyajikan produk sebagai solusi masalah sehari-hari.',
-      template: `{Solusi buat yang lagi cari barang ini:|Barang berguna yang bikin hidup makin praktis:|Rekomendasi barang fungsional:}\n\n{nama_produk}\n\n{Fungsinya ngebantu banget|Praktis, awet, dan harganya super terjangkau}.\n\nHarga: {harga} {diskon}\nRating: {rating}/5 ({terjual} terjual)\n\nTautan resmi promo:\n{link_affiliate}\n\n{hashtag_random}`
+      description: 'Positions the product as a everyday problem solver worth the money.',
+      template: `{Barang ni memang selesaikan hidup|Lifehack: barang wajib ada kat rumah|Penyelesaian untuk masalah harian korang}\n\n{nama_produk}\n\n{Fungsinya memang membantu, guna setiap hari|Praktikal, tahan lama & harga berbaloi}.\n\nHarga: {harga} {diskon}\nRating {rating}/5 ({terjual} terjual)\n\n{Nak tengok detail? Kat sini|Pautan produk kat bawah}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'simple_direct',
-      name: 'Gaya Singkat & To The Point (Clean)',
+      name: 'Short & Direct CTA',
       category: 'viral',
-      description: 'Singkat, padat, langsung menaruh link pembelian tanpa bertele-tele.',
-      template: `{nama_produk}\n\n{Spill link belinya di sini:|Link pembelian produk original:|Langsung checkout sebelum kehabisan:}\n{link_affiliate}\n\nHarga: {harga} {diskon} | Rating {rating}/5 ({terjual} terjual)\n\n{hashtag_random}`
+      description: 'Short, punchy, link-first. Best for reply-style Threads posts.',
+      template: `{nama_produk}\n\n{Ramai tanya link ni - sini saya kongsi|Link beli kat sini|Checkout terus sebelum habis}:\n{link_affiliate}\n\nHarga: {harga} {diskon} | Rating {rating}/5 ({terjual} terjual)\n\n{hashtag_random}`
+    },
+    {
+      id: 'jimat_budget',
+      name: 'Jom Jimat / Budget Finds',
+      category: 'viral',
+      description: 'Budget-hunter angle: cheap but good, perfect for murah-gila audience.',
+      template: `{Jom jimat! Barang cantik harga murah|Belanja sikit, dapat barang best|Murah tapi bukan murahan}\n\n{nama_produk}\n\n{Harga sejimat ni memang taknak lepas|Singgah je Shopee, terserempak barang ni - tak rugi beli}.\n\nHarga cuma: {harga} {diskon}\nRating {rating}/5 | {terjual} terjual\n\n{Korang pun boleh jimat, link kat sini|Sini link untuk yang nak jimat sama}:\n{link_affiliate}\n\n{hashtag_random}`
+    },
+    {
+      id: 'restock_alert',
+      name: 'Ramai Tanya / Restock Alert',
+      category: 'viral',
+      description: 'Restock / "many asked for the link" format that drives fast clicks.',
+      template: `{RESTOCK ALERT!|Stok dah masuk balik!|Yang tanya link tu, stok baru dah ada ni}\n\n{nama_produk}\n\n{Sebelum ni sold out, sekarang dah balik|Ramai tunggu barang ni, cepat grab}.\n\nHarga sekarang: {harga} {diskon}\n{terjual} terjual | Rating {rating}/5\n\n{Link restock kat sini|Jangan cakap takde link, sini}:\n{link_affiliate}\n\n{hashtag_random}`
     }
   ];
 
   /**
-   * Default Hashtag Pool
+   * Default Hashtag Pool - Malaysia market
    */
   const HASHTAG_BANKS = {
     viral: [
-      '#RacunShopee', '#ShopeeHaul', '#SpillBawaBerkah', '#ShopeeAffiliateID',
-      '#RacunShopeeCheck', '#ShopeeLook', '#BarangViral', '#TikTokShopFinds',
-      '#ShopeeFinds', '#MurahLebay', '#FlashSaleShopee', '#DiskonShopee',
-      '#ShopeeRacunKu', '#RekomendasiShopee', '#SpillProduk', '#ShopeeID',
-      '#RacunBelanja', '#ShopeeFav', '#BeliDiShopee', '#PromoShopee'
+      '#RacunShopee', '#RacunShopeeMY', '#ShopeeMY', '#ShopeeMalaysia',
+      '#ShopeeHaul', '#ShopeeCheck', '#ShopeeLook', '#JomShopee',
+      '#MurahGila', '#BorongShopee', '#DiskaunShopee', '#BarangViral',
+      '#RacunBelanja', '#JomBeli', '#PromoShopee', '#ShopeeFinds',
+      '#FYP', '#TikTokMalaysia'
     ],
     fashion: [
-      '#OOTDIndo', '#FashionShopee', '#OutfitInspo', '#RacunFashion',
-      '#KoreanStyle', '#HijabStyle', '#StyleInspiration', '#ShopeeHaulFashion',
-      '#CasualLook', '#LocalBrandIndo', '#StreetwearIndo', '#DressViral'
+      '#OOTDMalaysia', '#BajuMurah', '#FesyenMurah', '#FesyenViral',
+      '#HijabStyle', '#TudungViral', '#LocalBrandMY', '#DressViral',
+      '#BajuViral', '#KasutViral', '#TasViral', '#OutfitInspo',
+      '#StreetwearMY', '#KoreanStyleMY', '#BajuKekinian', '#ShoppingShopee'
     ],
     elektronik: [
-      '#GadgetMurah', '#RacunGadget', '#SetupInspiration', '#DeskSetup',
-      '#TechReviewID', '#ShopeeElektronik', '#SmartHomeID', '#AksesorisHP',
-      '#GadgetViral', '#TWSMurah', '#PowerbankViral', '#ShopeeTech'
+      '#GadgetMurah', '#GadgetViral', '#TechMY', '#AksesoriPhone',
+      '#PhoneCaseMurah', '#TWSMurah', '#PowerbankViral', '#MechanicalKeyboard',
+      '#GamingSetup', '#SmartHomeMY', '#DeskSetup', '#EarphoneWireless',
+      '#GadgetMY', '#BarangGuna'
     ],
     home_living: [
-      '#DekorasiKamar', '#HomeLiving', '#InspirasiRumah', '#RacunHomeDecor',
-      '#PeralatanDapur', '#EstetikRumah', '#AestheticRoom', '#RumahMinimalis',
-      '#DapurMinimalis', '#ShopeeHome', '#OrganizerMurah', '#PerabotRumah'
+      '#DekorRumah', '#HomeLivingMY', '#InspirasiRumah', '#DapurCantik',
+      '#RumahCantik', '#AestheticRoom', '#OrganizerMurah', '#PerabotMurah',
+      '#RumahMinimalis', '#MakeoverRumah', '#BarangDapur', '#RumahImpian'
     ],
     beauty: [
-      '#SkincareViral', '#RacunSkincare', '#MakeupTutorial', '#GlowUpTips',
-      '#SkincareRoutine', '#BeautyHacks', '#ShopeeBeauty', '#LipstikViral'
+      '#SkincareViral', '#RacunSkincare', '#MakeupViral', '#BeautyMY',
+      '#GlowUpTips', '#SkincareRoutine', '#LipstikViral', '#SunscreenReview',
+      '#SkincareMurah', '#CushionViral', '#TipsCantik', '#GlowingSkin'
+    ],
+    food_snack: [
+      '#MakananViral', '#SnekViral', '#SnackMurah', '#FoodieMY',
+      '#JajanViral', '#MakananPedas', '#FrozenFood', '#KuihViral',
+      '#MakananEnak', '#JajanShopee', '#SnekMurah', '#MukbangMY'
     ]
   };
 
@@ -96,7 +132,7 @@
   const SYSTEM_VARIABLES = new Set([
     'nama_produk', 'product_name', 'judul', 'title', 'name',
     'harga', 'price',
-    'diskon', 'discount',
+    'diskon', 'discount', 'diskaun',
     'link_affiliate', 'short_link', 'shortlink', 'link', 'url', 'affiliate_link',
     'rating', 'stars', 'rate',
     'terjual', 'sold', 'sales',
@@ -122,7 +158,7 @@
 
     /**
      * Remove emojis and non-standard symbols to ensure clean plain text
-     * @param {string} str 
+     * @param {string} str
      * @returns {string} Clean string
      */
     stripEmojis(str) {
@@ -138,7 +174,7 @@
     /**
      * Parse nested spintax {A|B|C}
      * Safe against system variables like {nama_produk}
-     * @param {string} text 
+     * @param {string} text
      * @returns {string}
      */
     parseSpintax(text) {
@@ -171,8 +207,8 @@
 
     /**
      * Pick N unique hashtags randomly from category
-     * @param {string} category 
-     * @param {number} count 
+     * @param {string} category
+     * @param {number} count
      * @returns {string}
      */
     getRandomHashtags(category = 'viral', count = 3) {
@@ -183,9 +219,9 @@
 
     /**
      * Replace all variable placeholders in text with sanitized product details
-     * @param {string} text 
-     * @param {Object} product 
-     * @param {Object} [options] 
+     * @param {string} text
+     * @param {Object} product
+     * @param {Object} [options]
      * @returns {string}
      */
     replaceVariables(text, product, options = {}) {
@@ -195,16 +231,18 @@
       const category = options.category || p.category || p.kategori || 'viral';
       const hashtagCount = options.hashtagCount !== undefined ? options.hashtagCount : 3;
 
-      const title = (p.title || p.rawTitle || p.name || p.product_name || 'Produk Rekomendasi Shopee').trim();
+      const title = (p.title || p.rawTitle || p.name || p.product_name || MARKET.defaultProductTitle).trim();
 
+      const currency = MARKET.currency || 'RM';
       let price = (p.price || p.harga || '-').toString().trim();
-      if (price !== '-' && !price.toLowerCase().startsWith('rp')) {
-        price = `Rp ${price}`;
+      if (price !== '-' && !price.toLowerCase().startsWith(currency.toLowerCase())) {
+        price = `${currency} ${price.replace(/^Rp\s*/i, '')}`;
       }
 
-      let discount = (p.discount || p.diskon || '').toString().trim();
-      if (discount && !discount.includes('%') && !discount.toLowerCase().includes('diskon')) {
-        discount = `(Diskon ${discount}%)`;
+      const discountLabel = MARKET.discountLabel || 'Diskaun';
+      let discount = (p.discount || p.diskon || p.diskaun || '').toString().trim();
+      if (discount && !discount.includes('%') && !/disk[oa]n/i.test(discount)) {
+        discount = `(${discountLabel} ${discount}%)`;
       } else if (discount && !discount.startsWith('(') && !discount.endsWith(')')) {
         discount = `(${discount})`;
       }
@@ -212,16 +250,15 @@
       const shortLink = (p.shortLink || p.short_link || p.affiliate_link || p.link || p.url || '').trim();
 
       // Clean rating: remove any existing emoji symbol and format as pure number
-      let rawRating = (p.rating || p.rating_star || '4.9').toString();
-      let ratingNumber = rawRating.replace(/[^0-9.]/g, '').trim() || '4.9';
+      let rawRating = (p.rating || p.rating_star || MARKET.defaultRating).toString();
+      let ratingNumber = rawRating.replace(/[^0-9.]/g, '').trim() || (MARKET.defaultRating || '4.9');
 
       // Clean sold: remove redundant word 'terjual' to prevent '510 terjual terjual'
-      let rawSold = (p.sold || p.terjual || '1rb+').toString().trim();
-      let cleanSold = rawSold.replace(/terjual/gi, '').trim();
-      if (!cleanSold) cleanSold = '1rb+';
+      let rawSold = (p.sold || p.terjual || MARKET.defaultSold).toString().trim();
+      let cleanSold = rawSold.replace(/terjual/gi, '').replace(/\bjuta\b/gi, '').trim() || '1k+';
 
       const commission = (p.commission || p.comm_rate || p.komisi || '-').toString().trim();
-      const categoryName = (p.category || p.kategori || 'Rekomendasi').toString().trim();
+      const categoryName = (p.category || p.kategori || 'Pilihan').toString().trim();
 
       const randomHashtags = typeof options.randomHashtags === 'string'
         ? options.randomHashtags
@@ -238,6 +275,7 @@
         '{price}': price,
 
         '{diskon}': discount,
+        '{diskaun}': discount,
         '{discount}': discount,
 
         '{link_affiliate}': shortLink,
@@ -277,7 +315,7 @@
 
     /**
      * Clean and format paragraphs nicely for Threads
-     * @param {string} text 
+     * @param {string} text
      * @returns {string}
      */
     formatParagraphs(text) {
@@ -290,15 +328,15 @@
 
     /**
      * Generate complete ready-to-use Threads post caption
-     * @param {string|Object} templateInput 
-     * @param {Object} product 
-     * @param {Object} [options] 
+     * @param {string|Object} templateInput
+     * @param {Object} product
+     * @param {Object} [options]
      * @returns {string}
      */
     generateCaption(templateInput, product, options = {}) {
       let rawTemplate = '';
       if (typeof templateInput === 'string') {
-        const found = this.getTemplateById(templateInput);
+        const found = this.templates.find(t => t.id === templateInput);
         rawTemplate = found ? found.template : templateInput;
       } else if (templateInput && typeof templateInput.template === 'string') {
         rawTemplate = templateInput.template;
@@ -318,7 +356,7 @@
 
     /**
      * Get character count and limit stats
-     * @param {string} text 
+     * @param {string} text
      * @returns {{ length: number, remaining: number, isOverLimit: boolean, max: number }}
      */
     getCharacterStats(text) {
@@ -333,7 +371,7 @@
 
     /**
      * Generate standard Threads web intent URL for 1-click opening with pre-filled text
-     * @param {string} text 
+     * @param {string} text
      * @returns {string}
      */
     getThreadsIntentUrl(text) {

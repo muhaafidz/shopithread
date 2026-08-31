@@ -7,13 +7,13 @@
  * 1. Single-Item Post Workflow (1 per 1):
  *    - Prominent "🚀 Post Item Ini Sekarang" hero action button.
  *    - Clear active product preview: HD Photos, Title, IDR Price, Affiliate Link, Editable Spintax Caption.
- *    - Sequential queue navigation (⬅️ Item Sebelumnya, ➡️ Item Berikutnya).
+ *    - Sequential queue navigation (⬅️ Previous Item, ➡️ Next Item).
  *    - Minimized / secondary auto-post mode to prioritize stable single-item posting.
  * 2. Clear, Step-by-Step Terminal Logging:
- *    - Step 1: ⏳ Membuka form Utas Baru Threads...
- *    - Step 2: ✍️ Mengetik caption produk...
- *    - Step 3: 🔘 Mengklik tombol Kirim via XPath...
- *    - Step 4: 🎉 SUKSES DIPOSTING! 🔗 Link: https://www.threads.net/@user/post/...
+ *    - Step 1: ⏳ Opening the New Thread form on Threads...
+ *    - Step 2: ✍️ Typing the product caption...
+ *    - Step 3: 🔘 Clicking the Post button via XPath...
+ *    - Step 4: 🎉 POSTED SUCCESSFULLY! 🔗 Link: https://www.threads.net/@user/post/...
  * 3. Robust Integration & Synchronization:
  *    - Real-time status synchronization to chrome.storage.local (PENDING -> POSTING -> POSTED / FAILED).
  *    - Storage listener for cross-tab / cross-context reactivity (Popup, Dashboard, Threads Content Script).
@@ -109,17 +109,19 @@
     },
 
     /**
-     * Format price cleanly as Indonesian Rupiah (Rp)
-     * @param {string|number} price 
+     * Format price cleanly as Malaysian Ringgit (RM)
+     * @param {string|number} price
      * @returns {string}
      */
     formatPrice(price) {
       if (!price && price !== 0) return '-';
+      const MARKET = (typeof self !== 'undefined' && self.ShopiThreadMarket) || { currency: 'RM' };
+      const cur = MARKET.currency || 'RM';
       const str = String(price).trim();
-      if (str.startsWith('Rp') || str.startsWith('rp')) return str;
+      if (str.toLowerCase().startsWith(cur.toLowerCase())) return str;
       const num = parseFloat(str.replace(/[^0-9.-]+/g, ''));
       if (!isNaN(num) && isFinite(num)) {
-        return 'Rp ' + Math.round(num).toLocaleString('id-ID');
+        return cur + ' ' + Math.round(num).toLocaleString(MARKET.locale || 'ms-MY');
       }
       return str || '-';
     },
@@ -153,8 +155,9 @@
      */
     formatDateTime(date = new Date()) {
       try {
+        const MARKET = (typeof self !== 'undefined' && self.ShopiThreadMarket) || { locale: 'ms-MY' };
         const d = date instanceof Date ? date : new Date(date);
-        return d.toLocaleString('id-ID', {
+        return d.toLocaleString(MARKET.locale || 'ms-MY', {
           day: '2-digit',
           month: 'short',
           year: 'numeric',
@@ -266,14 +269,14 @@
     fillTemplateVariables(template, product = {}) {
       if (!template) return '';
       let text = template;
-      const title = product.title || product.name || 'Produk Rekomendasi Shopee';
+      const title = product.title || product.name || 'Produk Pilihan Shopee';
       const price = PanelUtils.formatPrice(product.price || '-');
-      const discount = product.discount ? `(Diskon ${String(product.discount).replace(/[^0-9%]/g, '')})` : '';
+      const discount = product.discount ? `(Diskaun ${String(product.discount).replace(/[^0-9%]/g, '')})` : '';
       const shortLink = product.shortLink || product.short_link || product.url || '';
       const rating = product.rating || '⭐ 4.9';
       const sold = product.sold ? `${product.sold} terjual` : '';
       const commission = product.commission || product.comm_rate || '-';
-      const hashtags = product.hashtags || '#RacunShopee #ShopeeHaul #BarangViral #ShopeeAffiliateID';
+      const hashtags = product.hashtags || '#RacunShopee #RacunShopeeMY #ShopeeMY #BarangViral';
 
       const replacements = {
         '{nama_produk}': title,
@@ -342,7 +345,7 @@
 
       const id = String(raw.id || PanelUtils.generateId(`item_${idx}`));
       const productId = String(raw.productId || raw.product_id || raw.shopeeId || raw.shopee_id || id);
-      const title = (raw.title || raw.rawTitle || raw.name || raw.product_name || 'Produk Shopee').trim();
+      const title = (raw.title || raw.rawTitle || raw.name || raw.product_name || 'Produk Pilihan Shopee').trim();
       const price = raw.price || raw.harga || '-';
       const originalPrice = raw.originalPrice || raw.original_price || raw.hargaCoret || '';
       const discount = raw.discount || raw.diskon || '';
@@ -873,7 +876,7 @@
             const captionVal = this.dom.captionEditor.value;
             this.manager.updateItemCaption(activeItem.id, captionVal);
             if (this.debugConsole) {
-              this.debugConsole.info(`💾 Draft caption tersimpan untuk item: "${PanelUtils.truncate(activeItem.title, 30)}"`);
+              this.debugConsole.info(`💾 Caption draft saved for item: "${PanelUtils.truncate(activeItem.title, 30)}"`);
             }
           }
         });
@@ -907,7 +910,7 @@
           if (link) {
             const ok = await PanelUtils.copyToClipboard(link);
             if (ok && this.debugConsole) {
-              this.debugConsole.info(`📋 Link Shopee disalin: ${link}`);
+              this.debugConsole.info(`📋 Shopee link copied: ${link}`);
             }
           }
         });
@@ -932,7 +935,7 @@
         this.dom.btnPrevItem.addEventListener('click', () => {
           const item = this.manager.selectPrevItem();
           if (item && this.debugConsole) {
-            this.debugConsole.debug(`⬅️ Beralih ke item sebelumnya: "${PanelUtils.truncate(item.title, 25)}"`);
+            this.debugConsole.debug(`⬅️ Switched to previous item: "${PanelUtils.truncate(item.title, 25)}"`);
           }
         });
       }
@@ -941,7 +944,7 @@
         this.dom.btnNextItem.addEventListener('click', () => {
           const item = this.manager.selectNextItem();
           if (item && this.debugConsole) {
-            this.debugConsole.debug(`➡️ Beralih ke item berikutnya: "${PanelUtils.truncate(item.title, 25)}"`);
+            this.debugConsole.debug(`➡️ Switched to next item: "${PanelUtils.truncate(item.title, 25)}"`);
           }
         });
       }
@@ -960,7 +963,7 @@
         this.dom.btnRefreshQueue.addEventListener('click', async () => {
           await this.manager.loadQueue();
           if (this.debugConsole) {
-            this.debugConsole.info('🔄 Antrean produk dimuat ulang dari storage.');
+            this.debugConsole.info('🔄 Product queue reloaded from storage.');
           }
         });
       }
@@ -979,14 +982,14 @@
 
       // Handle Empty State
       if (!item) {
-        if (this.dom.title) this.dom.title.textContent = 'Belum ada produk di antrean Shopee';
+        if (this.dom.title) this.dom.title.textContent = 'No products in the Shopee queue yet';
         if (this.dom.price) this.dom.price.textContent = '-';
         if (this.dom.originalPrice) this.dom.originalPrice.textContent = '';
         if (this.dom.discount) this.dom.discount.textContent = '';
         if (this.dom.affiliateUrlInput) this.dom.affiliateUrlInput.value = '';
         if (this.dom.captionEditor) this.dom.captionEditor.value = '';
-        if (this.dom.mainImg) this.dom.mainImg.src = 'https://via.placeholder.com/600x600?text=Antrean+Shopee+Kosong';
-        if (this.dom.statusLabel) this.dom.statusLabel.textContent = 'STATUS: ANTREAN KOSONG';
+        if (this.dom.mainImg) this.dom.mainImg.src = 'https://via.placeholder.com/600x600?text=Shopee+Queue+Empty';
+        if (this.dom.statusLabel) this.dom.statusLabel.textContent = 'STATUS: QUEUE EMPTY';
         if (this.dom.itemIdDisplay) this.dom.itemIdDisplay.textContent = 'NONE';
         this.updateCharCount(0);
         this.updateQueueDropdown();
@@ -995,7 +998,7 @@
 
       // 1. Product Metadata
       if (this.dom.title) {
-        this.dom.title.textContent = item.title || 'Produk Rekomendasi Shopee';
+        this.dom.title.textContent = item.title || 'Produk Pilihan Shopee';
         this.dom.title.title = item.title || '';
       }
 
@@ -1046,7 +1049,7 @@
       // 3. Status Tag Badge
       if (this.dom.statusLabel && this.dom.statusTag) {
         const st = (item.status || QUEUE_STATUS.PENDING).toUpperCase();
-        this.dom.statusLabel.textContent = `STATUS: ${st === 'POSTED' ? 'SUKSES DIPOSTING' : (st === 'POSTING' ? 'SEDANG MEMPOSTING...' : (st === 'FAILED' ? 'GAGAL DIPOSTING' : 'READY TO POST'))}`;
+        this.dom.statusLabel.textContent = `STATUS: ${st === 'POSTED' ? 'POSTED' : (st === 'POSTING' ? 'POSTING...' : (st === 'FAILED' ? 'POST FAILED' : 'READY TO POST'))}`;
         this.dom.statusTag.className = `product-status-tag status-${st.toLowerCase()}`;
       }
 
@@ -1060,12 +1063,12 @@
       // 5. Image Preview
       const imgUrl = (Array.isArray(item.imageUrls) && item.imageUrls.length > 0)
         ? item.imageUrls[0]
-        : (item.primaryImage || 'https://via.placeholder.com/600x600?text=Foto+Produk+Shopee');
+        : (item.primaryImage || 'https://via.placeholder.com/600x600?text=Shopee+Product+Photo');
 
       if (this.dom.mainImg) {
         this.dom.mainImg.src = imgUrl;
         this.dom.mainImg.onerror = () => {
-          this.dom.mainImg.src = 'https://via.placeholder.com/600x600?text=Gambar+Gagal+Dimuat';
+          this.dom.mainImg.src = 'https://via.placeholder.com/600x600?text=Image+Failed+To+Load';
         };
       }
 
@@ -1107,9 +1110,9 @@
      * @returns {string}
      */
     generateDefaultCaption(item = {}) {
-      const title = item.title || 'Produk Rekomendasi Shopee';
+      const title = item.title || 'Produk Pilihan Shopee';
       const link = item.shortLink || '';
-      return `{Rekomendasi|Spill|Racun} ${title} yang super recommended & aesthetic banget! ✨\n\n💸 Harga: ${PanelUtils.formatPrice(item.price)} ${item.discount ? `(Diskon ${item.discount})` : ''}\n⭐ Rating: ${item.rating || '4.9'} | ${item.sold || 'Terjual ribuan'}\n\n👇 Cek produk & diskon spesial disini:\n${link}\n\n#RacunShopee #ShopeeHaul #ShopeeAffiliateID #RekomendasiRacun`;
+      return `{Gila best|Memang cantik sangat|Tak sangka sebagus ni} ${title} yang memang berbaloi & aesthetic!\n\nHarga: ${PanelUtils.formatPrice(item.price)} ${item.discount ? `(Diskaun ${item.discount})` : ''}\nRating: ${item.rating || '4.9'} | ${item.sold || '1k+ terjual'}\n\n👇 Cek produk & diskaun istimewa kat sini:\n${link}\n\n#RacunShopee #RacunShopeeMY #ShopeeMY #JomBeli`;
     }
 
     /**
@@ -1149,7 +1152,7 @@
       if (!link) return;
 
       if (!this.dom.captionEditor.value.includes(link)) {
-        this.dom.captionEditor.value = `${this.dom.captionEditor.value.trim()}\n\n🔗 Link Produk: ${link}`;
+        this.dom.captionEditor.value = `${this.dom.captionEditor.value.trim()}\n\n🔗 Produk Link: ${link}`;
         this.updateCharCount(this.dom.captionEditor.value.length);
         this.manager.updateItemCaption(item.id, this.dom.captionEditor.value);
       }
@@ -1161,7 +1164,7 @@
     insertHashtags() {
       const item = this.manager.getActiveItem();
       if (!item || !this.dom.captionEditor) return;
-      const hashtags = '#RacunShopee #ShopeeHaul #ShopeeAffiliateID #SpillBarangViral';
+      const hashtags = '#RacunShopee #RacunShopeeMY #ShopeeMY #JomShopee';
 
       if (!this.dom.captionEditor.value.includes('#RacunShopee')) {
         this.dom.captionEditor.value = `${this.dom.captionEditor.value.trim()}\n\n${hashtags}`;
@@ -1181,7 +1184,7 @@
       this.updateCharCount(def.length);
       this.manager.updateItemCaption(item.id, def);
       if (this.debugConsole) {
-        this.debugConsole.info('↺ Caption dikembalikan ke template Spintax default.');
+        this.debugConsole.info('↺ Caption reset to the default Spintax template.');
       }
     }
 
@@ -1228,7 +1231,7 @@
         if (allItems.length === 0) {
           const opt = document.createElement('option');
           opt.value = '';
-          opt.textContent = '(Antrean Kosong)';
+          opt.textContent = '(Queue Empty)';
           this.dom.queueSelect.appendChild(opt);
           return;
         }
@@ -1352,7 +1355,7 @@
       }
 
       this.threadsTabId = newTab ? newTab.id : null;
-      this.updateStatus(true, 'Tab Baru Dibuka (Memuat...)');
+      this.updateStatus(true, 'New Tab Opened (Loading...)');
 
       // Allow page to load content script
       await new Promise(r => setTimeout(r, 3000));
@@ -1369,7 +1372,7 @@
       if (connected) {
         this.updateStatus(true, `Tab ID: #${tab.id} (threads.net)`);
       } else {
-        this.updateStatus(false, 'Belum terhubung ke Threads Web');
+        this.updateStatus(false, 'Not connected to Threads Web');
       }
       return connected;
     }
@@ -1385,10 +1388,10 @@
         this.dom.statusDot.className = `pulsing-status-dot ${isConnected ? 'connected' : 'disconnected'}`;
       }
       if (this.dom.statusText) {
-        this.dom.statusText.textContent = isConnected ? '🟢 Threads Web Terhubung' : '🔴 Threads Web Belum Terbuka';
+        this.dom.statusText.textContent = isConnected ? '🟢 Threads Web Connected' : '🔴 Threads Web Not Open';
       }
       if (this.dom.statusSub) {
-        this.dom.statusSub.textContent = subtext || (isConnected ? 'Siap melakukan posting' : 'Klik "Buka / Fokus Threads"');
+        this.dom.statusSub.textContent = subtext || (isConnected ? 'Ready to post' : 'Click "Open / Focus Threads"');
       }
     }
 
@@ -1400,7 +1403,7 @@
     async injectPost(item) {
       const { tabId } = await this.focusOrOpenThreads(true);
       if (!tabId) {
-        throw new Error('Gagal mendeteksi atau membuka tab Threads');
+        throw new Error('Failed to detect or open the Threads tab');
       }
 
       return new Promise((resolve) => {
@@ -1506,12 +1509,12 @@
      */
     async executePostSingle(item) {
       if (!item) {
-        if (this.debugConsole) this.debugConsole.warn('Pilih produk Shopee dari antrean terlebih dahulu.');
-        return { success: false, error: 'Item tidak ditemukan' };
+        if (this.debugConsole) this.debugConsole.warn('Pick a Shopee product from the queue first.');
+        return { success: false, error: 'Item not found' };
       }
 
       if (this.isPosting) {
-        if (this.debugConsole) this.debugConsole.warn('Sedang ada posting yang berjalan. Mohon tunggu...');
+        if (this.debugConsole) this.debugConsole.warn('A post is already running. Please wait...');
         return { success: false, error: 'Posting in progress' };
       }
 
@@ -1527,7 +1530,7 @@
       await this.manager.updateItemStatus(itemId, QUEUE_STATUS.POSTING);
       
       if (this.debugConsole) {
-        this.debugConsole.info('POST-FLOW', `⏳ Membuka form Utas Baru Threads...`);
+        this.debugConsole.info('POST-FLOW', `⏳ Opening the New Thread form on Threads...`);
       }
 
       try {
@@ -1539,7 +1542,7 @@
         // ---------------------------------------------------------------------
         if (this.debugConsole) {
           const imgCount = Array.isArray(item.imageUrls) ? item.imageUrls.length : (item.primaryImage ? 1 : 0);
-          this.debugConsole.dom('POST-FLOW', `✍️ Mengetik caption produk... (${imgCount} foto dilampirkan)`);
+          this.debugConsole.dom('POST-FLOW', `✍️ Typing the product caption... (${imgCount} photos attached)`);
         }
 
         // Brief delay for visual natural feeling
@@ -1549,7 +1552,7 @@
         // STEP 3: Log clicking submit button via XPath/DOM
         // ---------------------------------------------------------------------
         if (this.debugConsole) {
-          this.debugConsole.dom('POST-FLOW', `🔘 Mengklik tombol Kirim via XPath...`);
+          this.debugConsole.dom('POST-FLOW', `🔘 Clicking the Post button via XPath...`);
         }
 
         // Inject post payload to Threads Content Script
@@ -1570,7 +1573,7 @@
           });
 
           if (this.debugConsole) {
-            this.debugConsole.success('POST-FLOW', `🎉 SUKSES DIPOSTING! 🔗 Link: ${postUrl}`);
+            this.debugConsole.success('POST-FLOW', `🎉 POSTED SUCCESSFULLY! 🔗 Link: ${postUrl}`);
           }
 
           // Notify background service worker
@@ -1588,7 +1591,7 @@
 
           return { success: true, postUrl };
         } else {
-          throw new Error(result?.error || 'Gagal memposting ke Threads');
+          throw new Error(result?.error || 'Failed to post to Threads');
         }
       } catch (err) {
         const errorMsg = err.message || 'Terjadi kesalahan saat memposting';
@@ -1598,7 +1601,7 @@
         });
 
         if (this.debugConsole) {
-          this.debugConsole.error('POST-FLOW', `❌ GAGAL DIPOSTING: ${errorMsg}`);
+          this.debugConsole.error('POST-FLOW', `❌ POST FAILED: ${errorMsg}`);
         }
 
         // Notify background service worker
@@ -1625,7 +1628,7 @@
       const pending = this.manager.getPendingItems();
       if (pending.length === 0) {
         if (this.debugConsole) {
-          this.debugConsole.warn('Antrean pending kosong. Tambahkan produk Shopee terlebih dahulu.');
+          this.debugConsole.warn('Pending queue is empty. Add Shopee products first.');
         }
         return;
       }
@@ -1634,7 +1637,7 @@
       this.updateButtonStates();
 
       if (this.debugConsole) {
-        this.debugConsole.info(`[AUTO-POST] Memulai auto-posting berurutan (${pending.length} item tersisa)...`);
+        this.debugConsole.info(`[AUTO-POST] Starting sequential auto-posting (${pending.length} items remaining)...`);
       }
 
       // Execute first pending item immediately
@@ -1654,7 +1657,7 @@
       const pending = this.manager.getPendingItems();
       if (pending.length === 0) {
         if (this.debugConsole) {
-          this.debugConsole.success('🎉 Seluruh antrean produk telah selesai diposting!');
+          this.debugConsole.success('🎉 The entire product queue has finished posting!');
         }
         this.stopAutoPost();
         return;
@@ -1699,7 +1702,7 @@
       this.countdownSeconds = 0;
       this.updateButtonStates();
       if (this.debugConsole) {
-        this.debugConsole.info('[AUTO-POST] Mode Auto-Posting dihentikan.');
+        this.debugConsole.info('[AUTO-POST] Auto-posting mode stopped.');
       }
       this.updateCountdownUI();
     }
@@ -1735,10 +1738,10 @@
         const titleEl = this.dom.btnPostNow.querySelector('.btn-hero-title');
         const subEl = this.dom.btnPostNow.querySelector('.btn-hero-subtitle');
         if (titleEl) {
-          titleEl.textContent = this.isPosting ? '⏳ Sedang Memposting...' : 'Post Item Ini Sekarang';
+          titleEl.textContent = this.isPosting ? '⏳ Posting Now...' : 'Post This Item Now';
         }
         if (subEl) {
-          subEl.textContent = this.isPosting ? 'Mengirim data ke tab Threads Web...' : 'Eksekusi posting instan ke tab Threads aktif';
+          subEl.textContent = this.isPosting ? 'Sending data to the Threads Web tab...' : 'Instant post to the active Threads tab';
         }
       }
 
@@ -1746,11 +1749,11 @@
         const label = this.dom.btnToggleAuto.querySelector('#autopost-btn-label') || this.dom.btnToggleAuto;
         const icon = this.dom.btnToggleAuto.querySelector('#autopost-btn-icon');
         if (this.isAutoPosting) {
-          if (label) label.textContent = 'Jeda Auto-Post';
+          if (label) label.textContent = 'Pause Auto-Post';
           if (icon) icon.textContent = '⏸';
           this.dom.btnToggleAuto.className = 'btn-autopost-start running';
         } else {
-          if (label) label.textContent = 'Mulai Auto-Post Antrean';
+          if (label) label.textContent = 'Start Auto-Post Queue';
           if (icon) icon.textContent = '▶';
           this.dom.btnToggleAuto.className = 'btn-autopost-start';
         }
@@ -1765,10 +1768,10 @@
           this.dom.autopostStatus.textContent = 'POSTING...';
           this.dom.autopostStatus.className = 'status-label-pill posting';
         } else if (this.isAutoPosting) {
-          this.dom.autopostStatus.textContent = 'AUTO-POST AKTIF';
+          this.dom.autopostStatus.textContent = 'AUTO-POST ACTIVE';
           this.dom.autopostStatus.className = 'status-label-pill active';
         } else {
-          this.dom.autopostStatus.textContent = 'IDLE (SIAP)';
+          this.dom.autopostStatus.textContent = 'IDLE (READY)';
           this.dom.autopostStatus.className = 'status-label-pill idle';
         }
       }
@@ -2174,7 +2177,7 @@
       const text = lines.join('\n');
       const ok = await PanelUtils.copyToClipboard(text);
       if (ok) {
-        this.info('📋 Log terminal disalin ke clipboard!');
+        this.info('📋 Terminal logs copied to clipboard!');
       }
       return ok;
     }
@@ -2276,7 +2279,7 @@
       if (isConnected) {
         this.debugConsole.success('INJECTOR', 'Threads Content Script ping response received: { status: "ready" }');
       } else {
-        this.debugConsole.info('THREADS-TAB', 'Tab Threads belum aktif. Buka tab Threads Web untuk memulai posting.');
+        this.debugConsole.info('THREADS-TAB', 'Threads tab is not active yet. Open the Threads Web tab to start posting.');
       }
 
       // 7. Setup Live Clock & Modals
@@ -2293,21 +2296,22 @@
       }
 
       this.isInitialized = true;
-      console.log('[PosterPanelApp] Dedicated Poster Panel siap digunakan!');
+      console.log('[PosterPanelApp] Dedicated Poster Panel is ready!');
     }
 
     /**
-     * Realtime Clock in WIB (UTC+7)
+     * Realtime Clock in MYT (UTC+8, Malaysia Time)
      */
     setupLiveClock() {
       if (typeof document === 'undefined') return;
       const clockEl = document.getElementById('live-clock');
       if (!clockEl) return;
+      const MARKET = (typeof self !== 'undefined' && self.ShopiThreadMarket) || { timezoneLabel: 'MYT' };
 
       const updateClock = () => {
         const now = new Date();
         const timeStr = PanelUtils.formatTime(now);
-        clockEl.textContent = `${timeStr} WIB`;
+        clockEl.textContent = `${timeStr} ${MARKET.timezoneLabel || 'MYT'}`;
       };
 
       updateClock();

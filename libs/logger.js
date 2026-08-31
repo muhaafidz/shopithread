@@ -54,7 +54,7 @@
         if (path.includes('dashboard')) return 'DASHBOARD';
         if (path.includes('popup')) return 'POPUP';
         if (href.includes('threads.net')) return 'THREADS_CONTENT';
-        if (href.includes('shopee.co.id')) return 'SHOPEE_CONTENT';
+        if (href.includes('shopee.com.my')) return 'SHOPEE_CONTENT';
         return 'WINDOW';
       }
       if (typeof process !== 'undefined' && process.versions && process.versions.node) {

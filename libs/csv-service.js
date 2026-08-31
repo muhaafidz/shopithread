@@ -8,22 +8,31 @@
 
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
+    let market = null;
+    try { market = require('./market-config.js'); } catch (_) {}
+    module.exports = factory(market);
   } else {
-    root.CsvService = factory();
+    root.CsvService = factory(root.ShopiThreadMarket || null);
   }
-})(typeof self !== 'undefined' ? self : this, function () {
+})(typeof self !== 'undefined' ? self : this, function (MARKET) {
   'use strict';
+
+  MARKET = MARKET || {
+    currency: 'RM',
+    fallbackShortlink: 'https://s.shopee.com.my',
+    defaultSold: '1k+ terjual',
+    locale: 'ms-MY'
+  };
 
   const CsvService = {
     /**
      * Generate standard RFC 4180 compliant CSV string from product array
-     * @param {Array<Object>} products 
+     * @param {Array<Object>} products
      * @returns {string} CSV string
      */
     generateCSV(products) {
       if (!Array.isArray(products)) return '';
-      const headers = ['No', 'Nama Produk', 'Harga', 'Komisi', 'Terjual', 'Link Affiliate', 'Link Produk Asli', 'URL Foto', 'Tanggal Disimpan'];
+      const headers = ['No', 'Product Name', 'Price', 'Commission', 'Sold', 'Affiliate Link', 'Original Product Link', 'Image URL', 'Saved Date'];
       const rows = products.map((p, idx) => {
         const title = (p.title || p.rawTitle || '').replace(/"/g, '""');
         const price = (p.price || '-').replace(/"/g, '""');
@@ -62,7 +71,7 @@
 
       const parsedItems = [];
       const headerLine = lines[0].toLowerCase();
-      const isHeader = headerLine.includes('nama') || headerLine.includes('produk') || headerLine.includes('title');
+      const isHeader = ['nama', 'produk', 'title', 'product', 'name', 'price', 'harga'].some(k => headerLine.includes(k));
       const startIdx = isHeader ? 1 : 0;
 
       for (let i = startIdx; i < lines.length; i++) {
@@ -90,11 +99,11 @@
         cols.push(cur.trim());
 
         if (cols.length >= 2) {
-          const title = cols[1] || cols[0] || 'Produk Impor';
+          const title = cols[1] || cols[0] || 'Imported Product';
           const price = cols[2] || '-';
           const commission = cols[3] || '10%';
-          const sold = cols[4] || '1rb+ terjual';
-          const shortLink = cols[5] || cols.find(c => c.startsWith('http')) || 'https://s.shopee.co.id';
+          const sold = cols[4] || MARKET.defaultSold;
+          const shortLink = cols[5] || cols.find(c => c.startsWith('http')) || MARKET.fallbackShortlink;
           const longLink = cols[6] || '';
           const image = cols[7] || cols.find(c => c.includes('.jpg') || c.includes('.png') || c.includes('susercontent')) || '';
 
@@ -125,24 +134,25 @@
     generateTXT(products) {
       if (!Array.isArray(products) || products.length === 0) return '';
       let txt = `==================================================\n`;
-      txt += `DAFTAR LINK SINGKAT AFFILIATE SHOPEE\n`;
-      txt += `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
-      txt += `Total Produk: ${products.length}\n`;
+      txt += `SHOPEE MALAYSIA AFFILIATE SHORTLINK LIST\n`;
+      txt += `Date: ${new Date().toLocaleDateString(MARKET.locale || 'ms-MY')}\n`;
+      txt += `Total Products: ${products.length}\n`;
       txt += `==================================================\n\n`;
 
       products.forEach((p, idx) => {
         const paddedIndex = String(idx + 1).padStart(2, '0');
-        const title = p.rawTitle || p.title || `Produk ${idx + 1}`;
-        const price = p.price ? (String(p.price).startsWith('Rp') ? p.price : `Rp ${p.price}`) : '-';
+        const title = p.rawTitle || p.title || `Product ${idx + 1}`;
+        const currency = MARKET.currency || 'RM';
+        const price = p.price ? (String(p.price).toLowerCase().startsWith(currency.toLowerCase()) ? p.price : `${currency} ${p.price}`) : '-';
         const safeTitle = (p.safeTitle || p.title || title).replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_').substring(0, 40);
         const extMatch = (p.image || p.cleanImgUrl || '').match(/\.(jpg|jpeg|png|webp)/i);
         const ext = extMatch ? extMatch[1] : 'webp';
         const filename = `${paddedIndex}_${safeTitle}.${ext}`;
 
         txt += `[${paddedIndex}] ${title}\n`;
-        txt += `- Harga: ${price}\n`;
-        txt += `- File Foto: foto_produk/${filename}\n`;
-        txt += `- Link Singkat: ${p.shortLink || p.link || '-'}\n`;
+        txt += `- Price: ${price}\n`;
+        txt += `- Image File: product_images/${filename}\n`;
+        txt += `- Shortlink: ${p.shortLink || p.link || '-'}\n`;
         txt += `--------------------------------------------------\n\n`;
       });
       return txt;
@@ -154,7 +164,7 @@
      * @param {string} customFilename 
      */
     downloadCSV(products, customFilename) {
-      if (!products || products.length === 0) throw new Error('Tidak ada produk untuk diekspor.');
+      if (!products || products.length === 0) throw new Error('No products to export.');
       const csvStr = this.generateCSV(products);
       const blob = new Blob(['\uFEFF' + csvStr], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -174,7 +184,7 @@
      * @param {string} customFilename 
      */
     downloadTXT(products, customFilename) {
-      if (!products || products.length === 0) throw new Error('Tidak ada produk untuk diekspor.');
+      if (!products || products.length === 0) throw new Error('No products to export.');
       const txt = this.generateTXT(products);
       const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -198,15 +208,15 @@
      */
     async buildZipBlob(products, options = {}) {
       if (!Array.isArray(products) || products.length === 0) {
-        throw new Error('Tidak ada produk untuk dikompilasi ke ZIP.');
+        throw new Error('No products to compile into ZIP.');
       }
       const JSZipLib = (typeof window !== 'undefined' && window.JSZip) || (typeof global !== 'undefined' && global.JSZip);
       if (!JSZipLib) {
-        throw new Error('Library JSZip belum siap.');
+        throw new Error('JSZip library is not ready.');
       }
 
       const zip = new JSZipLib();
-      const folder = zip.folder('foto_produk');
+      const folder = zip.folder('product_images');
 
       for (let i = 0; i < products.length; i++) {
         if (options.isCancelled && options.isCancelled()) break;
@@ -218,10 +228,10 @@
             const blob = await res.blob();
             const extMatch = imgUrl.match(/\.(jpg|jpeg|png|webp)/i);
             const ext = extMatch ? extMatch[1] : 'jpg';
-            const safeTitle = (p.title || p.safeTitle || p.rawTitle || `produk_${i+1}`).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 35);
+            const safeTitle = (p.title || p.safeTitle || p.rawTitle || `product_${i+1}`).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 35);
             folder.file(`${String(i + 1).padStart(3, '0')}_${safeTitle}.${ext}`, blob);
           } catch (e) {
-            console.warn(`Gagal unduh gambar produk index ${i}:`, e);
+            console.warn(`Failed to download product image index ${i}:`, e);
           }
         }
         if (typeof options.onProgress === 'function') {
@@ -230,8 +240,8 @@
       }
 
       // Add TXT & CSV
-      zip.file('daftar_produk.csv', this.generateCSV(products));
-      zip.file('link_singkat_affiliate.txt', this.generateTXT(products));
+      zip.file('products.csv', this.generateCSV(products));
+      zip.file('affiliate_links.txt', this.generateTXT(products));
 
       return await zip.generateAsync({ type: 'blob' });
     },

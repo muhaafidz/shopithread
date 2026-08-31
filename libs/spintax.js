@@ -19,45 +19,38 @@
    */
   const DEFAULT_HASHTAG_BANK = APP_CONSTANTS.HASHTAG_BANK || {
     viral: [
-      '#RacunShopee', '#ShopeeHaul', '#SpillBawaBerkah', '#ShopeeAffiliateID',
-      '#RacunShopeeCheck', '#ShopeeLook', '#BarangViral', '#TikTokShopFinds',
-      '#ShopeeFinds', '#MurahLebay', '#FlashSaleShopee', '#DiskonShopee',
-      '#ShopeeRacunKu', '#RekomendasiShopee', '#SpillProduk', '#ShopeeID',
-      '#RacunBelanja', '#ShopeeFav', '#BeliDiShopee', '#PromoShopee'
+      '#RacunShopee', '#RacunShopeeMY', '#ShopeeMY', '#ShopeeMalaysia',
+      '#ShopeeHaul', '#ShopeeCheck', '#ShopeeLook', '#JomShopee',
+      '#MurahGila', '#BorongShopee', '#DiskaunShopee', '#BarangViral',
+      '#RacunBelanja', '#JomBeli', '#PromoShopee', '#ShopeeFinds',
+      '#FYP', '#TikTokMalaysia'
     ],
     fashion: [
-      '#OOTDIndo', '#FashionShopee', '#OutfitInspo', '#RacunFashion',
-      '#KoreanStyle', '#HijabStyle', '#StyleInspiration', '#ShopeeHaulFashion',
-      '#CasualLook', '#LocalBrandIndo', '#StreetwearIndo', '#DressViral',
-      '#SneakersAddict', '#FashionInspoID', '#OutfitOfTheDay', '#BajuMurahShopee',
-      '#CelanaKulot', '#TasWanita', '#OuterAesthetic', '#GayaKekinian'
+      '#OOTDMalaysia', '#BajuMurah', '#FesyenMurah', '#FesyenViral',
+      '#HijabStyle', '#TudungViral', '#LocalBrandMY', '#DressViral',
+      '#BajuViral', '#KasutViral', '#TasViral', '#OutfitInspo',
+      '#StreetwearMY', '#KoreanStyleMY', '#BajuKekinian', '#ShoppingShopee'
     ],
     elektronik: [
-      '#GadgetMurah', '#RacunGadget', '#SetupInspiration', '#DeskSetup',
-      '#TechReviewID', '#ShopeeElektronik', '#SmartHomeID', '#AksesorisHP',
-      '#GadgetViral', '#TWSMurah', '#PowerbankViral', '#ShopeeTech',
-      '#HeadphoneWireless', '#KeyboardMechanical', '#SmartwatchMurah',
-      '#GamingSetup', '#TechLovers', '#AksesorisKomputer', '#BarangFaedah', '#GadgetIndonesia'
+      '#GadgetMurah', '#GadgetViral', '#TechMY', '#AksesoriPhone',
+      '#PhoneCaseMurah', '#TWSMurah', '#PowerbankViral', '#MechanicalKeyboard',
+      '#GamingSetup', '#SmartHomeMY', '#DeskSetup', '#EarphoneWireless',
+      '#GadgetMY', '#BarangGuna'
     ],
     home_living: [
-      '#DekorasiKamar', '#HomeLiving', '#InspirasiRumah', '#RacunHomeDecor',
-      '#PeralatanDapur', '#EstetikRumah', '#AestheticRoom', '#RumahMinimalis',
-      '#DapurMinimalis', '#ShopeeHome', '#OrganizerMurah', '#PerabotRumah',
-      '#RoomDecorInspo', '#BarangUnikRumah', '#DapurCantik', '#KamarAesthetic',
-      '#PeralatanRumahTangga', '#CleanWithMe', '#RumahImpian', '#MakeoverKamar'
+      '#DekorRumah', '#HomeLivingMY', '#InspirasiRumah', '#DapurCantik',
+      '#RumahCantik', '#AestheticRoom', '#OrganizerMurah', '#PerabotMurah',
+      '#RumahMinimalis', '#MakeoverRumah', '#BarangDapur', '#RumahImpian'
     ],
     beauty: [
-      '#SkincareViral', '#RacunSkincare', '#MakeupTutorial', '#GlowUpTips',
-      '#SkincareRoutine', '#BeautyHacks', '#ShopeeBeauty', '#LipstikViral',
-      '#SunscreenReview', '#SkincareLokal', '#MakeupInspo', '#SerumViral',
-      '#MoisturizerMurah', '#BeautyReviewID', '#TipsKecantikan', '#CushionViral',
-      '#SkincareRemaja', '#AcneProneSkin', '#GlowingSkinTips', '#MakeupMurah'
+      '#SkincareViral', '#RacunSkincare', '#MakeupViral', '#BeautyMY',
+      '#GlowUpTips', '#SkincareRoutine', '#LipstikViral', '#SunscreenReview',
+      '#SkincareMurah', '#CushionViral', '#TipsCantik', '#GlowingSkin'
     ],
     food_snack: [
-      '#KulinerViral', '#SnackShopee', '#CamilanEnak', '#FoodieID',
-      '#JajananViral', '#RacunCamilan', '#MakananPedas', '#MukbangIndo',
-      '#ShopeeFoodies', '#CamilanPedas', '#SnackMurah', '#MakananEnak',
-      '#KeripikKaca', '#BasoAci', '#FrozenFoodMurah', '#JajananKekinian'
+      '#MakananViral', '#SnekViral', '#SnackMurah', '#FoodieMY',
+      '#JajanViral', '#MakananPedas', '#FrozenFood', '#KuihViral',
+      '#MakananEnak', '#JajanShopee', '#SnekMurah', '#MukbangMY'
     ]
   };
 
@@ -67,43 +60,19 @@
   const DEFAULT_PRESET_TEMPLATES = APP_CONSTANTS.PRESET_TEMPLATES || APP_CONSTANTS.DEFAULT_TEMPLATES || [
     {
       id: 'preset_racun_viral',
-      name: '🔥 Racun Shopee Viral (High Engagement)',
+      name: 'Racun Shopee Viral (Rojak)',
       category: 'viral',
       isDefault: true,
       is_default: true,
-      template: `{Gila sih ini|Keren parah|Gak nyangka sebagus ini|Wajib punya nih}! 😍🔥\n{Lagi viral banget|Banyak yang cari|Rekomendasi terbaik hari ini}: {nama_produk}\n\n💸 {Harga cuma|Dapet harga|Cuma}: {harga} {diskon}\n⭐ Rating: {rating} | {terjual} terjual\n\n🔗 {Beli di sini yuk|Cek checkout di sini|Link official promo|Spill link tokonya}:\n{link_affiliate}\n\n{hashtag_random}`
-    },
-    {
-      id: 'preset_aesthetic_review',
-      name: '✨ Aesthetic & Honest Review',
-      category: 'home_living',
-      isDefault: false,
-      is_default: false,
-      template: `{Spill barang aesthetic check ✨|Honest review produk ini 🤍|Hidden gem Shopee yang wajib kamu tahu 🌿}\n\n{nama_produk}\n{Bener-bener worth to buy|Kualitasnya di luar ekspektasi|Desainnya cakep dan multifungsi banget}!\n\n💰 {Harga normal vs promo}: {harga}\n🌟 {Review rating}: {rating} ({terjual} terjual)\n\n🛒 {Tautan produk original|Link pembelian resmi}:\n{link_affiliate}\n\n{hashtag_random}`
-    },
-    {
-      id: 'preset_diskon_promo',
-      name: '🚨 Flash Sale & Promo Alert',
-      category: 'viral',
-      isDefault: false,
-      is_default: false,
-      template: `🚨 {PROMO ALERT|FLASH SALE ALERT|DROP PRICE}! 🚨\n{nama_produk}\n\n⚡ {Lagi diskon gede|Harga anjlok parah|Lagi turun harga banget}!\n🏷️ {Sekarang cuma}: {harga} {diskon}\n✨ {Terjual}: {terjual} | Rating {rating}\n\n👇 {Buruan klaim vouchernya sebelum kehabisan|Klik link di bawah ini|Link promo Shopee}:\n{link_affiliate}\n\n{hashtag_random}`
-    },
-    {
-      id: 'preset_solusi_lifehack',
-      name: '💡 Solusi Praktis & Lifehack',
-      category: 'elektronik',
-      isDefault: false,
-      is_default: false,
-      template: `{Solusi buat kamu yang lagi cari ini|Lifehack barang berguna yang bikin hidup makin gampang|Nyesel baru tahu barang ini sekarang}! 🙌\n\n📌 {nama_produk}\n{Fungsinya beneran ngebantu banget|Praktis, awet, dan harganya super terjangkau}.\n\n💵 {Harga}: {harga}\n⭐ {Kepuasan pembeli}: {rating} ({terjual} terjual)\n\n👉 {Info & Pembelian|Tautan resmi promo}:\n{link_affiliate}\n\n{hashtag_random}`
+      template: `{Gila best barang ni!|Memang wajib ada!|Tak sangka sebagus ni!|Cantik sangat sampai nak share!}\n{Dah viral sekarang|Ramai yang cari|Pilihan paling hot masa ni}: {nama_produk}\n\nHarga: {harga} {diskon}\nRating {rating}/5 | {terjual} terjual\n\n{Jom checkout kat sini|Link kat sini, jangan tak tahu|Sini saya kongsi linknya}:\n{link_affiliate}\n\n{hashtag_random}`
     },
     {
       id: 'preset_simple_direct',
-      name: '🎯 Simple & Direct CTA',
+      name: 'Short & Direct CTA',
       category: 'viral',
       isDefault: false,
       is_default: false,
-      template: `{nama_produk}\n\n{Spill link belinya ya guys|Yang dari kemarin nanyain link belinya nih|Langsung checkout sebelum restock abis}:\n👉 {link_affiliate}\n\n💸 {Harga}: {harga} | ⭐ Rating: {rating} ({terjual})\n\n{hashtag_random}`
+      template: `{nama_produk}\n\n{Ramai tanya link ni - sini saya kongsi|Link beli kat sini|Checkout terus sebelum habis}:\n{link_affiliate}\n\nHarga: {harga} {diskon} | Rating {rating}/5 ({terjual} terjual)\n\n{hashtag_random}`
     }
   ];
 
@@ -248,25 +217,28 @@
       const hashtagCount = (options.hashtagCount !== undefined) ? options.hashtagCount : 3;
 
       // Extract & sanitize data fields
-      const title = (p.title || p.rawTitle || p.name || p.product_name || p.nama_produk || p.judul || 'Produk Rekomendasi Shopee').trim();
+      const MARKET = (typeof root !== 'undefined' && root.ShopiThreadMarket) || { currency: 'RM', discountLabel: 'Diskaun' };
+      const cur = MARKET.currency || 'RM';
+      const discountLabel = MARKET.discountLabel || 'Diskaun';
+      const title = (p.title || p.rawTitle || p.name || p.product_name || p.nama_produk || p.judul || 'Produk Pilihan Shopee').trim();
 
       let price = (p.price || p.harga || p.formatted_price || '-').toString().trim();
-      if (price !== '-' && !price.toLowerCase().startsWith('rp')) {
-        price = `Rp ${price}`;
+      if (price !== '-' && !price.toLowerCase().startsWith(cur.toLowerCase())) {
+        price = `${cur} ${price}`;
       }
 
-      let discount = (p.discount || p.diskon || '').toString().trim();
-      if (discount && !discount.includes('%') && !discount.toLowerCase().includes('diskon')) {
-        discount = `(Diskon ${discount}%)`;
+      let discount = (p.discount || p.diskon || p.diskaun || '').toString().trim();
+      if (discount && !discount.includes('%') && !/disk[oa]n/i.test(discount)) {
+        discount = `(${discountLabel} ${discount}%)`;
       } else if (discount && !discount.startsWith('(') && !discount.endsWith(')')) {
         discount = `(${discount})`;
       }
 
       const shortLink = (p.short_link || p.shortLink || p.affiliate_link || p.link_affiliate || p.link || p.url || '').trim();
       const rating = (p.rating || p.rating_star || p.stars || '⭐ 4.9').toString().trim();
-      const sold = (p.sold || p.terjual || '1rb+').toString().trim();
+      const sold = (p.sold || p.terjual || '1k+').toString().trim();
       const commRate = (p.comm_rate || p.commission || p.commRate || p.komisi || '-').toString().trim();
-      const categoryName = (p.category || p.kategori || 'Rekomendasi').toString().trim();
+      const categoryName = (p.category || p.kategori || 'Pilihan').toString().trim();
 
       let randomHashtags = '';
       if (typeof options.randomHashtags === 'string') {
@@ -397,12 +369,12 @@
     generatePreview(template, product = {}, count = 3, options = {}) {
       const dummyProduct = {
         title: 'TWS Bluetooth 5.3 Earphone Ultra Bass Wireless Earbuds Waterproof',
-        price: 'Rp 89.000',
-        diskon: 'Diskon 45%',
+        price: 'RM 89',
+        diskon: '45%',
         rating: '⭐ 4.9',
-        terjual: '10rb+ terjual',
+        terjual: '10k+ terjual',
         comm_rate: '12%',
-        short_link: 'https://s.shopee.co.id/sample123',
+        short_link: 'https://s.shopee.com.my/sample123',
         category: 'elektronik',
         ...product
       };

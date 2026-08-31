@@ -221,7 +221,7 @@
       if (dialog) {
         Logger.dom('Modal dialog div[role="dialog"] ditemukan.', { element: dialog.tagName, role: dialog.getAttribute('role') });
       } else {
-        Logger.dom('Modal dialog div[role="dialog"] tidak ditemukan di DOM saat ini.');
+        Logger.dom('Modal dialog div[role="dialog"] not found in the current DOM.');
       }
       return dialog;
     }
@@ -234,7 +234,7 @@
       Logger.info('ThreadsDOM', 'Membuka modal composer Threads...');
       let dialog = this.getComposerDialog();
       if (!dialog) {
-        Logger.dom('Querying selector tombol "Utas baru" / "New thread" / [role="button"]...');
+        Logger.dom('Querying "New thread" / "Utas baru" / [role="button"] trigger buttons...');
         const tombolUtasBaru = Array.from(document.querySelectorAll('[role="button"]'))
           .find(btn => {
             const t = (btn.textContent || '').toLowerCase();
@@ -246,23 +246,23 @@
           });
 
         if (tombolUtasBaru) {
-          Logger.dom('Tombol trigger "Utas baru" / "New thread" ditemukan di DOM.', {
+          Logger.dom('"New thread" / "Utas baru" trigger button found in DOM.', {
             text: (tombolUtasBaru.textContent || '').trim(),
             ariaLabel: tombolUtasBaru.getAttribute('aria-label')
           });
           tombolUtasBaru.click();
-          Logger.dom('Dispatched click event pada tombol "Utas baru". Menunggu rendering modal (1200ms)...');
+          Logger.dom('Dispatched click event on the "New thread" button. Waiting for the modal to render (1200ms)...');
           await new Promise(r => setTimeout(r, 1200));
         } else {
-          Logger.warn('ThreadsDOM', 'Tombol trigger "Utas baru" tidak ditemukan di DOM!');
+          Logger.warn('ThreadsDOM', '"New thread" trigger button not found in DOM!');
         }
         dialog = this.getComposerDialog();
       }
 
       if (dialog) {
-        Logger.dom('Modal composer dialog div[role="dialog"] siap digunakan.');
+        Logger.dom('Composer dialog modal div[role="dialog"] is ready to use.');
       } else {
-        Logger.error('ThreadsDOM', 'Gagal memunculkan modal composer dialog!');
+        Logger.error('ThreadsDOM', 'Failed to open the composer dialog modal!');
       }
 
       return dialog;
@@ -283,7 +283,7 @@
           role: editor.getAttribute('role') || 'none'
         });
       } else {
-        Logger.dom('Editor teks [contenteditable="true"] TIDAK ditemukan!');
+        Logger.dom('Text editor [contenteditable="true"] NOT found!');
       }
       return editor;
     }
@@ -309,7 +309,7 @@
           text: (submitBtn.textContent || '').trim()
         });
       } else {
-        Logger.dom('Submit button XPath null, menjalankan query fallback selector [role="button"] ("kirim" / "post" / "posting")...');
+        Logger.dom('Submit button XPath null, running fallback selector query [role="button"] ("post" / "kirim" / "posting")...');
         submitBtn = Array.from((dialog || document).querySelectorAll('[role="button"]'))
           .find(b => {
             const t = (b.textContent || '').trim().toLowerCase();
@@ -319,7 +319,7 @@
         if (submitBtn) {
           Logger.dom(`Submit button ditemukan melalui fallback button text: "${(submitBtn.textContent || '').trim()}"`);
         } else {
-          Logger.dom('Submit button TIDAK ditemukan pada dialog maupun document!');
+          Logger.dom('Submit button NOT found in the dialog nor document!');
         }
       }
 
@@ -346,7 +346,7 @@
       if (typeof submitBtn.click === 'function') {
         submitBtn.click();
       }
-      Logger.dom('Submit button event sequence selesai di-dispatch.');
+      Logger.dom('Submit button event sequence dispatched.');
     }
   }
 
@@ -378,10 +378,10 @@
 
         if (typeof item === 'string' && (item.startsWith('http://') || item.startsWith('https://') || item.startsWith('blob:') || item.startsWith('data:'))) {
           try {
-            Logger.dom(`[ThreadsMedia] Mengunduh gambar produk (${i + 1}/${maxImages}): ${item.substring(0, 60)}...`);
+            Logger.dom(`[ThreadsMedia] Downloading product image (${i + 1}/${maxImages}): ${item.substring(0, 60)}...`);
             const res = await fetch(item);
             if (!res.ok) {
-              Logger.warn('ThreadsMedia', `HTTP ${res.status} saat fetch gambar: ${item}`);
+              Logger.warn('ThreadsMedia', `HTTP ${res.status} while fetching image: ${item}`);
               continue;
             }
             const blob = await res.blob();
@@ -390,7 +390,7 @@
             const file = new File([blob], filename, { type: blob.type || 'image/jpeg' });
             files.push(file);
           } catch (e) {
-            Logger.warn('ThreadsMedia', `Gagal mengunduh gambar [${item}]: ${e.message}`);
+            Logger.warn('ThreadsMedia', `Failed to download image [${item}]: ${e.message}`);
           }
         }
       }
@@ -406,17 +406,17 @@
      */
     static async attachImageFiles(dialog, imageUrls) {
       if (!imageUrls || imageUrls.length === 0) {
-        Logger.debug('ThreadsMedia', 'Tidak ada URL gambar yang perlu diunggah.');
+        Logger.debug('ThreadsMedia', 'No image URLs to upload.');
         return false;
       }
 
-      Logger.info('ThreadsMedia', `Memulai injeksi ${imageUrls.length} file gambar ke Threads...`);
+      Logger.info('ThreadsMedia', `Starting injection of ${imageUrls.length} image files into Threads...`);
 
       try {
         Logger.dom('Querying selector input file: input[type="file"][accept*="image"], input[type="file"]');
         const fileInput = (dialog || document).querySelector('input[type="file"][accept*="image"], input[type="file"]');
         if (!fileInput) {
-          Logger.warn('ThreadsMedia', 'File input element tidak ditemukan pada dialog Threads!');
+          Logger.warn('ThreadsMedia', 'File input element not found in the Threads dialog!');
           return false;
         }
         Logger.dom('File input element ditemukan di DOM.');
@@ -426,22 +426,22 @@
         if (files.length > 0) {
           const dt = new DataTransfer();
           files.forEach(f => dt.items.add(f));
-          Logger.dom(`DataTransfer file count: ${dt.files.length} file(s) berhasil dimuat ke DataTransfer.`);
+          Logger.dom(`DataTransfer file count: ${dt.files.length} file(s) loaded into DataTransfer.`);
 
           fileInput.files = dt.files;
           fileInput.dispatchEvent(new Event('change', { bubbles: true }));
           fileInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-          Logger.dom('Event change dan input berhasil di-dispatch ke file input. Menunggu thumbnail render (2000ms)...');
+          Logger.dom('Change and input events dispatched to the file input. Waiting for thumbnails to render (2000ms)...');
           // Tunggu thumbnail media selesai ter-render di Threads
           await new Promise(r => setTimeout(r, 2000));
-          Logger.info('ThreadsMedia', `Injeksi ${files.length} media selesai.`);
+          Logger.info('ThreadsMedia', `Injection of ${files.length} media files completed.`);
           return true;
         } else {
-          Logger.warn('ThreadsMedia', 'Tidak ada file gambar yang berhasil diproses ke DataTransfer.');
+          Logger.warn('ThreadsMedia', 'No image files were successfully processed into the DataTransfer.');
         }
       } catch (err) {
-        Logger.error('ThreadsMedia', `Error saat upload gambar: ${err.message}`, { stack: err.stack });
+        Logger.error('ThreadsMedia', `Error while uploading images: ${err.message}`, { stack: err.stack });
       }
       return false;
     }
@@ -463,7 +463,7 @@
         throw new Error(errMsg);
       }
 
-      Logger.info('ThreadsEditor', `Memulai simulasi pengisian teks caption (${text.length} karakter)...`);
+      Logger.info('ThreadsEditor', `Starting caption text simulation (${text.length} characters)...`);
 
       // 1. Focus event
       editor.focus();
@@ -494,7 +494,7 @@
       Logger.dom(`InputEvent "input" di-dispatch (inputType: "insertText", payload data length: ${text.length} chars).`);
 
       await new Promise(r => setTimeout(r, 1200));
-      Logger.info('ThreadsEditor', 'Pengisian teks caption berhasil diselesaikan.');
+      Logger.info('ThreadsEditor', 'Caption text filling completed.');
     }
   }
 
@@ -571,7 +571,7 @@
           if (!isResolved) {
             isResolved = true;
             cleanup();
-            Logger.dom(`Toast observer timeout setelah ${timeoutMs}ms (link notifikasi tidak tertangkap).`);
+            Logger.dom(`Toast observer timeout after ${timeoutMs}ms (notification link not captured).`);
             resolve(null);
           }
         }, timeoutMs);
@@ -646,7 +646,7 @@
     // 2. Cari area editor teks
     const editor = (dialog || document).querySelector('[contenteditable="true"]');
     if (!editor) {
-      console.error("❌ Area teks editor tidak ditemukan!");
+      console.error("❌ Text editor area not found!");
       return { success: false, error: "Area teks editor tidak ditemukan!", timeTakenMs: Date.now() - startTime };
     }
 
@@ -662,7 +662,7 @@
     document.execCommand('insertText', false, textContent);
     editor.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: textContent }));
 
-    console.log("✍️ Teks berhasil diisi!");
+    console.log("✍️ Text filled successfully!");
     await new Promise(r => setTimeout(r, 1000)); // Tunggu tombol Kirim aktif
 
     // 4. Cari tombol Kirim lewat XPath (dengan fallback text 'Kirim')
@@ -677,8 +677,8 @@
     }
 
     if (!submitBtn) {
-      console.error("❌ Tombol Kirim lewat XPath tidak ditemukan!");
-      return { success: false, error: "Tombol Kirim tidak ditemukan", timeTakenMs: Date.now() - startTime };
+      console.error("❌ Post button via XPath not found!");
+      return { success: false, error: "Post button not found", timeTakenMs: Date.now() - startTime };
     }
 
     // 5. Siapkan penangkap link notifikasi Toast ("Diposting -> Lihat")
@@ -715,7 +715,7 @@
       }, 10000);
     });
 
-    console.log("🔘 Tombol Kirim ditemukan via XPath, langsung klik...");
+    console.log("🔘 Post button found via XPath, clicking directly...");
 
     // 6. Eksekusi klik penuh
     const clickOpts = { bubbles: true, cancelable: true, view: window };
@@ -726,7 +726,7 @@
     submitBtn.dispatchEvent(new MouseEvent('click', clickOpts));
     if (typeof submitBtn.click === 'function') submitBtn.click();
 
-    console.log("🚀 Postingan dikirim! Menunggu toast link notifikasi...");
+    console.log("🚀 Post sent! Waiting for the notification link toast...");
 
     // 7. Ambil URL Postingan dari toast
     const postUrl = await tungguToastLink;
@@ -735,9 +735,9 @@
     if (postUrl) {
       console.log("🎉 SUKSES DIPOSTING!");
       console.log("🔗 Link Postingan Kamu:", postUrl);
-      return { success: true, postUrl, timeTakenMs, message: 'Berhasil diposting ke Threads!' };
+      return { success: true, postUrl, timeTakenMs, message: 'Posted successfully to Threads!' };
     } else {
-      console.log("✅ Berhasil dikirim, lek! (Link toast tidak tertangkap dalam batas waktu)");
+      console.log("✅ Sent successfully! (Notification link toast not captured within the time limit)");
       return { success: true, postUrl: "https://www.threads.net", timeTakenMs, message: 'Postingan terkirim.' };
     }
   }
@@ -777,7 +777,7 @@
           throw new Error('Teks caption posting kosong!');
         }
 
-        console.log(`🚀 [ThreadsPostController] Memulai posting 1 item: "${itemData.title || 'Untitled'}" (ID: ${itemData.id || '-'})`);
+        console.log(`🚀 [ThreadsPostController] Starting to post 1 item: "${itemData.title || 'Untitled'}" (ID: ${itemData.id || '-'})`);
 
         // Kumpulkan daftar gambar (URL atau File)
         let rawImages = [];
@@ -796,7 +796,7 @@
         // Siapkan File objects jika ada gambar
         let imageFiles = [];
         if (rawImages.length > 0) {
-          console.log(`🖼️ [ThreadsPostController] Menyiapkan ${rawImages.length} file gambar untuk posting...`);
+          console.log(`🖼️ [ThreadsPostController] Preparing ${rawImages.length} image files for posting...`);
           imageFiles = await ThreadsMedia.fetchFilesFromUrls(rawImages);
         }
 
@@ -805,16 +805,16 @@
         const timeTakenMs = Date.now() - startTime;
 
         if (result && result.success) {
-          console.log(`✅ [ThreadsPostController] Selesai posting item: "${itemData.title || 'Untitled'}" (${timeTakenMs}ms). Link: ${result.postUrl}`);
+          console.log(`✅ [ThreadsPostController] Finished posting item: "${itemData.title || 'Untitled'}" (${timeTakenMs}ms). Link: ${result.postUrl}`);
           return {
             success: true,
             postUrl: result.postUrl || 'https://www.threads.net',
             timeTakenMs,
-            message: 'Postingan berhasil dipublikasikan ke Threads!'
+            message: 'Post published successfully to Threads!'
           };
         } else {
-          const errorMsg = result?.error || 'Gagal memposting ke Threads';
-          console.error(`❌ [ThreadsPostController] Gagal memposting item: ${errorMsg}`);
+          const errorMsg = result?.error || 'Failed to post to Threads';
+          console.error(`❌ [ThreadsPostController] Failed to post item: ${errorMsg}`);
           return {
             success: false,
             error: errorMsg,
@@ -865,7 +865,7 @@
                   success: result.success,
                   postUrl: result.postUrl,
                   timeTakenMs: result.timeTakenMs,
-                  message: result.message || (result.success ? 'Berhasil diposting ke Threads!' : result.error),
+                  message: result.message || (result.success ? 'Posted successfully to Threads!' : result.error),
                   error: result.error
                 });
               })
@@ -1157,7 +1157,7 @@
       return updatedItem;
     }
 
-    async markItemFailed(id, errorMessage = 'Gagal memposting ke Threads') {
+    async markItemFailed(id, errorMessage = 'Failed to post to Threads') {
       const item = this.getItemById(id);
       const retryCount = item ? ((item.retryCount || item.retry_count || 0) + 1) : 1;
       const now = new Date().toISOString();
@@ -1190,11 +1190,11 @@
     }
 
     async updateItem(id, updates = {}) {
-      if (!id) throw new Error('ID antrean wajib diisi');
+      if (!id) throw new Error('Queue ID is required');
 
       const idx = this.queue.findIndex(it => String(it.id) === String(id));
       if (idx === -1) {
-        throw new Error(`Item dengan ID '${id}' tidak ditemukan di antrean`);
+        throw new Error(`Item with ID '${id}' not found in the queue`);
       }
 
       const current = this.queue[idx];
@@ -1323,7 +1323,7 @@
           [STORAGE_KEYS.HISTORY]: trimmed
         });
       } catch (e) {
-        console.warn('[ThreadsQueueSyncService] Gagal merekam log aktivitas:', e);
+        console.warn('[ThreadsQueueSyncService] Failed to record activity log:', e);
       }
     }
   }
@@ -2006,7 +2006,7 @@
       if (!fab) {
         fab = document.createElement('button');
         fab.id = this.FAB_ID;
-        fab.setAttribute('title', 'Buka Antrean Threads Poster');
+        fab.setAttribute('title', 'Open Threads Poster Queue');
         fab.innerHTML = `
           <span class="tw-fab-icon">🧵</span>
           <span class="tw-fab-label">Threads Poster</span>
@@ -2046,10 +2046,10 @@
             </h3>
           </div>
           <div class="tw-header-actions">
-            <button id="tw-btn-refresh" class="tw-icon-btn" title="Refresh Antrean">🔄</button>
-            <button id="tw-btn-panel" class="tw-icon-btn" title="Buka Dedicated Poster Panel">🖥️</button>
-            <button id="tw-btn-dashboard" class="tw-icon-btn" title="Buka Dashboard">📊</button>
-            <button id="tw-btn-close" class="tw-icon-btn" title="Tutup Panel">✕</button>
+            <button id="tw-btn-refresh" class="tw-icon-btn" title="Refresh Queue">🔄</button>
+            <button id="tw-btn-panel" class="tw-icon-btn" title="Open Dedicated Poster Panel">🖥️</button>
+            <button id="tw-btn-dashboard" class="tw-icon-btn" title="Open Dashboard">📊</button>
+            <button id="tw-btn-close" class="tw-icon-btn" title="Close Panel">✕</button>
           </div>
         </div>
 
@@ -2073,10 +2073,10 @@
               <div class="tw-item-meta">
                 <span id="tw-item-price" class="tw-item-price">Rp -</span>
                 <div class="tw-item-link-container">
-                  <a id="tw-item-link" class="tw-item-link-pill" href="#" target="_blank" title="Buka Link Produk">
+                  <a id="tw-item-link" class="tw-item-link-pill" href="#" target="_blank" title="Open Product Link">
                     <span>🔗</span> <span id="tw-item-link-text">shope.ee/...</span>
                   </a>
-                  <button id="threads-btn-copy-link" class="tw-btn-copy" title="Salin Link">📋</button>
+                  <button id="threads-btn-copy-link" class="tw-btn-copy" title="Copy Link">📋</button>
                 </div>
               </div>
             </div>
@@ -2088,7 +2088,7 @@
               <span class="tw-caption-label">Caption Postingan:</span>
               <div class="tw-caption-actions">
                 <button id="threads-btn-edit-caption" class="tw-btn-text-action" title="Edit Caption">✏️ Edit</button>
-                <button id="threads-btn-delete-item" class="tw-btn-text-action tw-btn-danger" title="Hapus Item">🗑️</button>
+                <button id="threads-btn-delete-item" class="tw-btn-text-action tw-btn-danger" title="Delete Item">🗑️</button>
               </div>
             </div>
             <div id="tw-item-caption" class="tw-caption-box">Teks caption belum dimuat...</div>
@@ -2098,7 +2098,7 @@
         <!-- Empty State -->
         <div id="tw-empty-state" class="tw-empty-state">
           <div class="tw-empty-icon">📭</div>
-          <div class="tw-empty-title">Tidak Ada Antrean Pending</div>
+          <div class="tw-empty-title">No Pending Queue</div>
           <div class="tw-empty-desc">Tambahkan produk dari Shopee Affiliate untuk posting ke Threads.</div>
         </div>
 
@@ -2116,7 +2116,7 @@
           <div class="tw-progress-track">
             <div id="tw-progress-bar" class="tw-progress-bar"></div>
           </div>
-          <div id="tw-status-text" class="tw-status-text">Siap posting item ini.</div>
+          <div id="tw-status-text" class="tw-status-text">Ready to post this item.</div>
         </div>
 
         <!-- Single Primary Action Button -->
@@ -2221,7 +2221,7 @@
         if (nextBtn) nextBtn.disabled = true;
         if (editBtn) editBtn.disabled = true;
         if (deleteBtn) deleteBtn.disabled = true;
-        if (indexLabel) indexLabel.textContent = 'Tidak Ada Antrean';
+        if (indexLabel) indexLabel.textContent = 'No Queue';
         return;
       }
 
@@ -2311,10 +2311,10 @@
       // Hitung step aktif (1: Form, 2: Teks, 3: Kirim, 4: Selesai)
       let activeStep = stepNumber;
       if (!activeStep && statusMessage) {
-        if (statusMessage.includes('Buka form') || clamped === 25) activeStep = 1;
-        else if (statusMessage.includes('Isi teks') || statusMessage.includes('media') || clamped === 50) activeStep = 2;
-        else if (statusMessage.includes('Kirim') || clamped === 75) activeStep = 3;
-        else if (statusMessage.includes('Berhasil') || clamped === 100) activeStep = 4;
+        if (statusMessage.includes('Opening the') || statusMessage.includes('Buka form') || clamped === 25) activeStep = 1;
+        else if (statusMessage.includes('Typing') || statusMessage.includes('Isi teks') || statusMessage.includes('media') || clamped === 50) activeStep = 2;
+        else if (statusMessage.includes('Post button') || statusMessage.includes('Kirim') || clamped === 75) activeStep = 3;
+        else if (statusMessage.includes('SUCCESSFULLY') || statusMessage.includes('Berhasil') || clamped === 100) activeStep = 4;
       }
 
       const steps = [1, 2, 3, 4];
@@ -2458,7 +2458,7 @@
       const selector = document.getElementById('threads-queue-selector');
       if (selector) {
         if (totalPending === 0) {
-          selector.innerHTML = '<option disabled selected>(Antrean Kosong / Selesai)</option>';
+          selector.innerHTML = '<option disabled selected>(Queue Empty / Done)</option>';
         } else {
           selector.innerHTML = pendingItems.map((item, idx) => {
             const safeTitle = (item.title || 'Produk').substring(0, 32);
@@ -2484,7 +2484,7 @@
           await this.syncService.loadAll();
           this.updateStats();
           this.render();
-          ThreadsWidgetDOM.showToast('Data antrean diperbarui!');
+          ThreadsWidgetDOM.showToast('Queue data updated!');
         };
       }
 
@@ -2554,8 +2554,8 @@
           const link = currentItem?.shortLink || currentItem?.affiliateLink || currentItem?.url;
           if (link) {
             navigator.clipboard.writeText(link)
-              .then(() => ThreadsWidgetDOM.showToast('Link afiliasi berhasil disalin!'))
-              .catch(() => ThreadsWidgetDOM.showToast('Gagal menyalin link', false));
+              .then(() => ThreadsWidgetDOM.showToast('Affiliate link copied!'))
+              .catch(() => ThreadsWidgetDOM.showToast('Failed to copy link', false));
           }
         };
       }
@@ -2578,9 +2578,9 @@
         deleteBtn.onclick = async () => {
           const pendingItems = this.syncService.getPendingItems();
           const currentItem = pendingItems[this.currentIndex];
-          if (currentItem && confirm(`Hapus "${currentItem.title || 'produk ini'}" dari antrean Threads?`)) {
+          if (currentItem && confirm(`Delete "${currentItem.title || 'this product'}" from the Threads queue?`)) {
             await this.syncService.deleteItem(currentItem.id);
-            ThreadsWidgetDOM.showToast('Item berhasil dihapus dari antrean!');
+            ThreadsWidgetDOM.showToast('Item deleted from the queue!');
             this.updateStats();
             this.render();
           }
@@ -2596,7 +2596,7 @@
           const pendingItems = this.syncService.getPendingItems();
           const currentItem = pendingItems[this.currentIndex];
           if (!currentItem) {
-            ThreadsWidgetDOM.showToast('Tidak ada item antrean yang dipilih!', false);
+            ThreadsWidgetDOM.showToast('No queue item selected!', false);
             return;
           }
 

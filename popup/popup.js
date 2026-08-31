@@ -27,21 +27,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   if (!tab || !tab.url) {
-    statusText.textContent = 'Tidak dapat mendeteksi tab.';
+    statusText.textContent = 'Unable to detect the current tab.';
     return;
   }
 
-  const isShopee = tab.url.includes('shopee.co.id') || tab.url.includes('shopee.com');
+  const isShopee = tab.url.includes('shopee.com.my') || tab.url.includes('affiliate.shopee.com.my');
 
   if (!isShopee) {
     statusDot.className = 'dot warning';
-    statusText.textContent = 'Buka halaman Shopee / Affiliate';
+    statusText.textContent = 'Open the Shopee / Affiliate portal';
     productCount.textContent = '-';
     openPanelBtn.style.display = 'none';
     openShopeeBtn.style.display = 'block';
 
     openShopeeBtn.onclick = () => {
-      chrome.tabs.create({ url: 'https://affiliate.shopee.co.id/offer/product_offer' });
+      chrome.tabs.create({ url: 'https://affiliate.shopee.com.my/offer/product_offer' });
     };
     return;
   }
@@ -50,13 +50,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   chrome.tabs.sendMessage(tab.id, { action: 'GET_STATUS' }, (response) => {
     if (chrome.runtime.lastError || !response) {
       statusDot.className = 'dot warning';
-      statusText.textContent = 'Shopee terbuka (Refresh jika belum aktif)';
+      statusText.textContent = 'Shopee page open (Refresh if not active)';
       productCount.textContent = '0';
       return;
     }
 
     statusDot.className = 'dot active';
-    statusText.textContent = 'Siap digunakan di Shopee';
+    statusText.textContent = 'Ready on Shopee';
     productCount.textContent = response.detectedCount || 0;
   });
 

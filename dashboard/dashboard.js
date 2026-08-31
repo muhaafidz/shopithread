@@ -128,30 +128,58 @@
   // ==========================================================================
   // 1. Toast & UI Notification Helper
   // ==========================================================================
+  let toastTimer = null;
   function showToast(message, isSuccess = true) {
     if (!dom.dashboardToast || !dom.toastMessage) return;
+    if (toastTimer) clearTimeout(toastTimer);
     dom.toastMessage.textContent = message;
     dom.dashboardToast.querySelector('.toast-icon').textContent = isSuccess ? '✅' : '⚠️';
     dom.dashboardToast.style.borderLeftColor = isSuccess ? 'var(--color-emerald)' : 'var(--color-red)';
     dom.dashboardToast.classList.add('show');
 
-    setTimeout(() => {
+    toastTimer = setTimeout(() => {
       dom.dashboardToast.classList.remove('show');
+      toastTimer = null;
     }, 3500);
+  }
+
+  // ==========================================================================
+  // 1b. Clipboard Helper (with fallback for restricted contexts)
+  // ==========================================================================
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (_) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      ta.remove();
+      return ok;
+    }
   }
 
   // ==========================================================================
   // 2. Formatting & Math Utilities
   // ==========================================================================
+  const MARKET = (typeof window !== 'undefined' && window.ShopiThreadMarket)
+    ? window.ShopiThreadMarket
+    : { currency: 'RM', locale: 'ms-MY' };
+
   function parsePriceNumber(priceStr) {
     if (!priceStr) return 0;
     const clean = String(priceStr).replace(/[^0-9]/g, '');
     return parseInt(clean, 10) || 0;
   }
 
-  function formatRupiah(num) {
-    if (isNaN(num) || num === 0) return 'Rp 0';
-    return 'Rp ' + num.toLocaleString('id-ID');
+  function formatRM(num) {
+    if (isNaN(num) || num === 0) return `${MARKET.currency} 0`;
+    return `${MARKET.currency} ` + num.toLocaleString(MARKET.locale || 'ms-MY');
   }
 
   function parseSoldNumber(soldStr) {
@@ -199,10 +227,10 @@
     const avgComm = commissionCount > 0 ? (commissionSum / commissionCount).toFixed(1) + '%' : '10.0%';
 
     if (dom.statTotalProducts) dom.statTotalProducts.textContent = totalCount;
-    if (dom.statTotalValue) dom.statTotalValue.textContent = formatRupiah(totalValue);
+    if (dom.statTotalValue) dom.statTotalValue.textContent = formatRM(totalValue);
     if (dom.statAvgCommission) dom.statAvgCommission.textContent = avgComm;
-    if (dom.statTotalSold) dom.statTotalSold.textContent = totalSold > 1000 ? (totalSold / 1000).toFixed(1) + 'rb+' : `${totalSold}+`;
-    if (dom.sidebarProductCount) dom.sidebarProductCount.textContent = `${totalCount} produk tersimpan`;
+    if (dom.statTotalSold) dom.statTotalSold.textContent = totalSold > 1000 ? (totalSold / 1000).toFixed(1) + 'k+' : `${totalSold}+`;
+    if (dom.sidebarProductCount) dom.sidebarProductCount.textContent = `${totalCount} products saved`;
     if (dom.badgeTotalProducts) dom.badgeTotalProducts.textContent = totalCount;
   }
 
@@ -245,13 +273,13 @@
     if (dom.emptyTableState) dom.emptyTableState.style.display = 'none';
 
     dom.productsTableBody.innerHTML = items.map((p, idx) => {
-      const title = p.title || p.rawTitle || 'Produk Shopee';
+      const title = p.title || p.rawTitle || 'Shopee Product';
       const imageUrl = p.image || p.cleanImgUrl || (Array.isArray(p.images) && p.images[0]) || '';
-      const price = p.price ? (String(p.price).startsWith('Rp') ? p.price : `Rp ${p.price}`) : '-';
+      const price = p.price ? (String(p.price).toLowerCase().startsWith(MARKET.currency.toLowerCase()) ? p.price : `${MARKET.currency} ${p.price}`) : '-';
       const commission = p.commission || '10%';
-      const sold = p.sold || '1rb+ terjual';
-      const shortLink = p.shortLink || p.link || 'https://s.shopee.co.id';
-      const longLink = p.longLink || p.url || `https://affiliate.shopee.co.id/offer/product_offer/${p.shopeeId || ''}`;
+      const sold = p.sold || '1k+ terjual';
+      const shortLink = p.shortLink || p.link || 'https://s.shopee.com.my';
+      const longLink = p.longLink || p.url || `https://affiliate.shopee.com.my/offer/product_offer/${p.shopeeId || ''}`;
       const id = p.id || `prod_${idx}`;
 
       return `
@@ -274,15 +302,15 @@
           <td>
             <div class="table-link-box">
               <span class="table-link-code" title="${escapeHtml(shortLink)}">${escapeHtml(shortLink)}</span>
-              <button class="btn-mini-copy" data-copy="${escapeHtml(shortLink)}" title="Salin link affiliate">📋 Salin</button>
+              <button class="btn-mini-copy" data-copy="${escapeHtml(shortLink)}" title="Copy affiliate link">📋 Copy</button>
             </div>
           </td>
           <td>
             <div class="table-actions-cell">
-              <button class="btn-action-icon btn-threads-prod" data-id="${id}" title="🧵 Buat Konten Threads">🧵</button>
-              <button class="btn-action-icon btn-dl-img" data-img="${imageUrl}" data-title="${escapeHtml(title)}" title="Unduh Foto HD">📥</button>
+              <button class="btn-action-icon btn-threads-prod" data-id="${id}" title="🧵 Create Threads Content">🧵</button>
+              <button class="btn-action-icon btn-dl-img" data-img="${imageUrl}" data-title="${escapeHtml(title)}" title="Download HD Photo">📥</button>
               <button class="btn-action-icon btn-edit-prod" data-id="${id}" title="Edit Data">✏️</button>
-              <button class="btn-action-icon danger btn-del-prod" data-id="${id}" title="Hapus Produk">🗑️</button>
+              <button class="btn-action-icon danger btn-del-prod" data-id="${id}" title="Delete Product">🗑️</button>
             </div>
           </td>
         </tr>
@@ -298,13 +326,17 @@
   function bindTableEvents() {
     // 1. Copy Link Buttons
     document.querySelectorAll('.btn-mini-copy').forEach(btn => {
-      btn.onclick = () => {
+      btn.onclick = async () => {
         const text = btn.getAttribute('data-copy');
         if (text) {
-          navigator.clipboard.writeText(text);
-          btn.textContent = '✅ Disalin!';
-          setTimeout(() => { btn.textContent = '📋 Salin'; }, 1500);
-          showToast('Link affiliate berhasil disalin ke clipboard!');
+          const ok = await copyToClipboard(text);
+          if (ok) {
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => { btn.textContent = '📋 Copy'; }, 1500);
+            showToast('Affiliate link copied to clipboard!');
+          } else {
+            showToast('Failed to copy link. Please copy manually.', false);
+          }
         }
       };
     });
@@ -334,7 +366,7 @@
     document.querySelectorAll('.btn-dl-img').forEach(btn => {
       btn.onclick = async () => {
         const url = btn.getAttribute('data-img');
-        const title = (btn.getAttribute('data-title') || 'produk').replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 30);
+        const title = (btn.getAttribute('data-title') || 'product').replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 30);
         if (url) {
           try {
             const res = await fetch(url);
@@ -347,7 +379,7 @@
             a.click();
             a.remove();
             setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-            showToast('Foto produk berhasil diunduh!');
+            showToast('Product photo downloaded successfully!');
           } catch (e) {
             window.open(url, '_blank');
           }
@@ -370,7 +402,7 @@
     document.querySelectorAll('.btn-del-prod').forEach(btn => {
       btn.onclick = async () => {
         const id = btn.getAttribute('data-id');
-        if (confirm('Apakah Anda yakin ingin menghapus produk ini dari dashboard?')) {
+        if (confirm('Are you sure you want to delete this product from the dashboard?')) {
           if (Storage) {
             state.products = await Storage.deleteProduct(id);
           } else {
@@ -378,7 +410,7 @@
           }
           updateDashboardMetrics();
           renderProductsTable();
-          showToast('Produk berhasil dihapus!');
+          showToast('Product deleted successfully!');
         }
       };
     });
@@ -386,7 +418,7 @@
 
   function openEditModal(product = null) {
     if (product) {
-      dom.modalEditTitle.textContent = '✏️ Edit Data Produk Shopee';
+      dom.modalEditTitle.textContent = '✏️ Edit Shopee Product Data';
       dom.editProductId.value = product.id || '';
       dom.editProductTitle.value = product.title || product.rawTitle || '';
       dom.editProductPrice.value = product.price || '';
@@ -396,7 +428,7 @@
       dom.editProductShortlink.value = product.shortLink || product.link || '';
       dom.editProductLonglink.value = product.longLink || product.url || '';
     } else {
-      dom.modalEditTitle.textContent = '➕ Tambah Produk Manual';
+      dom.modalEditTitle.textContent = '➕ Add Product Manually';
       dom.formProductEdit.reset();
       dom.editProductId.value = `manual_${Date.now()}`;
     }
@@ -409,10 +441,14 @@
   function updateThreadsProductOptions() {
     if (!dom.threadsProductSelect) return;
     const currentVal = dom.threadsProductSelect.value;
-    dom.threadsProductSelect.innerHTML = '<option value="">-- Pilih Produk Shopee --</option>' +
+    if (state.products.length === 0) {
+      dom.threadsProductSelect.innerHTML = '<option value="" disabled selected>-- No products in database yet --</option>';
+      return;
+    }
+    dom.threadsProductSelect.innerHTML = '<option value="">-- Select a Shopee Product --</option>' +
       state.products.map(p => {
-        const title = p.title || p.rawTitle || 'Produk Shopee';
-        const price = p.price ? (String(p.price).startsWith('Rp') ? p.price : `Rp ${p.price}`) : '';
+        const title = p.title || p.rawTitle || 'Shopee Product';
+        const price = p.price ? (String(p.price).toLowerCase().startsWith(MARKET.currency.toLowerCase()) ? p.price : `${MARKET.currency} ${p.price}`) : '';
         const shortTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
         return `<option value="${p.id}">${escapeHtml(shortTitle)} (${escapeHtml(price)})</option>`;
       }).join('');
@@ -445,7 +481,7 @@
     const product = getSelectedThreadsProduct();
     if (!product) {
       if (dom.threadsCaptionEditor) dom.threadsCaptionEditor.value = '';
-      if (dom.previewThreadsText) dom.previewThreadsText.textContent = 'Pilih produk di sebelah kiri untuk melihat live preview postingan Threads...';
+      if (dom.previewThreadsText) dom.previewThreadsText.textContent = 'Pick a product on the left to see the live Threads post preview...';
       if (dom.previewThreadsImageWrap) dom.previewThreadsImageWrap.style.display = 'none';
       if (dom.previewThreadsLinkCard) dom.previewThreadsLinkCard.style.display = 'none';
       updateThreadsCharacterCount('');
@@ -468,7 +504,7 @@
         hashtagCount
       });
     } else {
-      caption = `${product.title || product.rawTitle}\n\n💸 Harga: ${product.price}\n🔗 Link: ${product.shortLink || product.link}\n\n#RacunShopee #ShopeeHaul`;
+      caption = `${product.title || product.rawTitle}\n\nRamai tanya link ni - sini saya kongsi: ${product.shortLink || product.link}\n\nHarga: ${product.price} | ${product.sold || '1k+ terjual'}\n\n#RacunShopee #ShopeeMY`;
     }
 
     state.threadsGeneratedCaption = caption;
@@ -484,7 +520,7 @@
     const prod = product || getSelectedThreadsProduct();
 
     if (dom.previewThreadsText) {
-      dom.previewThreadsText.textContent = captionText || (prod ? prod.title : 'Pilih produk untuk melihat preview...');
+      dom.previewThreadsText.textContent = captionText || (prod ? prod.title : 'Pick a product to see the preview...');
     }
 
     const imgUrl = prod ? (prod.image || prod.cleanImgUrl || (Array.isArray(prod.images) && prod.images[0]) || '') : '';
@@ -500,8 +536,8 @@
     const shortLink = prod ? (prod.shortLink || prod.link || '') : '';
     if (dom.previewThreadsLinkCard && dom.previewLinkTitle && dom.previewLinkSub) {
       if (shortLink) {
-        dom.previewLinkTitle.textContent = prod.title || 'Produk Shopee';
-        dom.previewLinkSub.textContent = `Harga: ${prod.price || '-'} | ${prod.sold || 'Terjual'}`;
+        dom.previewLinkTitle.textContent = prod.title || 'Shopee Product';
+        dom.previewLinkSub.textContent = `Price: ${prod.price || '-'} | ${prod.sold || '1k+ terjual'}`;
         dom.previewThreadsLinkCard.style.display = 'block';
       } else {
         dom.previewThreadsLinkCard.style.display = 'none';
@@ -512,13 +548,16 @@
   function updateThreadsCharacterCount(text) {
     if (!dom.threadsCharCount || !dom.threadsCharStatus) return;
     const len = (text || '').length;
-    dom.threadsCharCount.textContent = `${len} / 500 karakter`;
+    dom.threadsCharCount.textContent = `${len} / 500 characters`;
 
     if (len > 500) {
-      dom.threadsCharStatus.textContent = `⚠️ Melebihi batas (${len - 500} karakter lebih)`;
+      dom.threadsCharStatus.textContent = `⚠️ Over limit by ${len - 500} characters`;
       dom.threadsCharStatus.className = 'status-over';
+    } else if (len >= 450) {
+      dom.threadsCharStatus.textContent = `⚠️ Near limit (${500 - len} left)`;
+      dom.threadsCharStatus.className = 'status-warn';
     } else {
-      dom.threadsCharStatus.textContent = 'Mendukung Threads';
+      dom.threadsCharStatus.textContent = 'Within Threads Limit';
       dom.threadsCharStatus.className = 'status-ok';
     }
   }
@@ -527,8 +566,8 @@
   // 6. CSV File Handler
   // ==========================================================================
   function handleCsvFileSelected(file) {
-    if (!file.name.endsWith('.csv')) {
-      alert('⚠️ Harap pilih file dengan format .csv');
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+      alert('⚠️ Please choose a file with the .csv format');
       return;
     }
 
@@ -537,13 +576,13 @@
       const text = e.target.result;
       const parsed = CSV ? CSV.parseCSV(text) : [];
       if (parsed.length === 0) {
-        alert('⚠️ Format CSV tidak terbaca atau file kosong.');
+        alert('⚠️ CSV format could not be read or the file is empty.');
         return;
       }
 
       state.csvImportPending = parsed;
       dom.csvPreviewFilename.textContent = file.name;
-      dom.csvPreviewCount.textContent = `${parsed.length} Produk Siap Diimpor`;
+      dom.csvPreviewCount.textContent = `${parsed.length} Products Ready to Import`;
 
       dom.csvPreviewTbody.innerHTML = parsed.slice(0, 5).map(p => `
         <tr>
@@ -579,9 +618,9 @@
         if (targetPane) targetPane.classList.add('active');
 
         if (targetTab === 'tab-products') {
-          dom.activeTabTitle.textContent = 'Daftar Produk & CSV';
+          dom.activeTabTitle.textContent = 'Product List & CSV';
         } else if (targetTab === 'tab-threads-generator') {
-          dom.activeTabTitle.textContent = 'Generator Konten Threads';
+          dom.activeTabTitle.textContent = 'Threads Content Generator';
           updateThreadsProductOptions();
           if (!state.selectedThreadsProductId && state.products.length > 0) {
             state.selectedThreadsProductId = state.products[0].id;
@@ -589,9 +628,9 @@
           }
           generateAndRenderThreadsCaption();
         } else if (targetTab === 'tab-import-export') {
-          dom.activeTabTitle.textContent = 'Impor & Ekspor CSV';
+          dom.activeTabTitle.textContent = 'Import & Export CSV';
         } else if (targetTab === 'tab-guide') {
-          dom.activeTabTitle.textContent = 'Panduan Penggunaan';
+          dom.activeTabTitle.textContent = 'User Guide';
         }
       };
     });
@@ -637,7 +676,7 @@
         state.threadsGeneratedCaption = currentText;
         updateThreadsLivePreview(currentText);
         updateThreadsCharacterCount(currentText);
-        showToast('🧹 Simbol dan icon berhasil dibersihkan!');
+        showToast('🧹 Symbols and broken icons cleaned successfully!');
       };
     }
 
@@ -645,11 +684,11 @@
       dom.btnThreadsSpinCaption.onclick = () => {
         const prod = getSelectedThreadsProduct();
         if (!prod) {
-          showToast('Pilih produk Shopee terlebih dahulu!', false);
+          showToast('Pick a Shopee product first!', false);
           return;
         }
         generateAndRenderThreadsCaption();
-        showToast('🎲 Berhasil mengacak variasi spintax caption!');
+        showToast('🎲 Caption spintax variation randomized!');
       };
     }
 
@@ -663,14 +702,14 @@
     }
 
     if (dom.btnThreadsCopyCaption) {
-      dom.btnThreadsCopyCaption.onclick = () => {
+      dom.btnThreadsCopyCaption.onclick = async () => {
         const text = dom.threadsCaptionEditor ? dom.threadsCaptionEditor.value : state.threadsGeneratedCaption;
         if (!text) {
-          showToast('Caption kosong. Pilih produk terlebih dahulu!', false);
+          showToast('Caption is empty. Pick a product first!', false);
           return;
         }
-        navigator.clipboard.writeText(text);
-        showToast('📋 Caption Threads berhasil disalin ke clipboard!');
+        const ok = await copyToClipboard(text);
+        showToast(ok ? '📋 Threads caption copied to clipboard!' : 'Failed to copy caption. Please copy manually.', ok);
       };
     }
 
@@ -681,7 +720,7 @@
           ? ThreadsService.getThreadsIntentUrl(text)
           : 'https://www.threads.net/';
         window.open(url, '_blank');
-        showToast('🔗 Membuka Threads.net (Siap paste manual)...');
+        showToast('🔗 Opening Threads.net (ready for manual paste)...');
       };
     }
 
@@ -689,23 +728,23 @@
       dom.btnThreadsFillTab.onclick = () => {
         const text = dom.threadsCaptionEditor ? dom.threadsCaptionEditor.value : state.threadsGeneratedCaption;
         if (!text) {
-          showToast('Caption kosong. Pilih produk terlebih dahulu!', false);
+          showToast('Caption is empty. Pick a product first!', false);
           return;
         }
 
         // Copy to clipboard as safety guarantee
-        navigator.clipboard.writeText(text);
+        copyToClipboard(text);
 
         if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
           chrome.runtime.sendMessage({
             action: 'OPEN_THREADS_AND_PASTE',
             text: text
           }, (res) => {
-            showToast('✍️ Menyiapkan postingan di tab Threads (Tanpa auto-submit)...');
+            showToast('✍️ Preparing the post in the Threads tab (no auto-submit)...');
           });
         } else {
           window.open(`https://www.threads.net/intent/post?text=${encodeURIComponent(text)}`, '_blank');
-          showToast('✍️ Membuka tab Threads...');
+          showToast('✍️ Opening Threads tab...');
         }
       };
     }
@@ -739,10 +778,10 @@
     if (dom.btnClearAllProducts) {
       dom.btnClearAllProducts.onclick = async () => {
         if (state.products.length === 0) {
-          showToast('Database produk sudah kosong.', false);
+          showToast('The product database is already empty.', false);
           return;
         }
-        if (confirm(`⚠️ Hapus seluruh ${state.products.length} produk dari database dashboard?`)) {
+        if (confirm(`⚠️ Delete all ${state.products.length} products from the dashboard database?`)) {
           if (Storage) {
             await Storage.clearAll();
           }
@@ -753,7 +792,7 @@
           renderProductsTable();
           updateThreadsProductOptions();
           generateAndRenderThreadsCaption();
-          showToast('Seluruh produk berhasil dibersihkan.');
+          showToast('All products cleared successfully.');
         }
       };
     }
@@ -774,7 +813,7 @@
           rawTitle: dom.editProductTitle.value.trim(),
           price: dom.editProductPrice.value.trim(),
           commission: dom.editProductCommission.value.trim() || '10%',
-          sold: dom.editProductSold.value.trim() || '1rb+ terjual',
+          sold: dom.editProductSold.value.trim() || '1k+ terjual',
           image: dom.editProductImage.value.trim(),
           cleanImgUrl: dom.editProductImage.value.trim(),
           shortLink: dom.editProductShortlink.value.trim(),
@@ -797,8 +836,45 @@
         updateDashboardMetrics();
         renderProductsTable();
         dom.modalProductEdit.classList.remove('show');
-        showToast('Data produk berhasil disimpan!');
+        showToast('Product data saved successfully!');
       };
+    }
+
+    // QOL: Ctrl/Cmd+Enter in caption editor copies the caption
+    if (dom.threadsCaptionEditor) {
+      dom.threadsCaptionEditor.addEventListener('keydown', async (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          if (dom.btnThreadsCopyCaption) dom.btnThreadsCopyCaption.click();
+        }
+      });
+    }
+
+    // QOL: Escape closes modals / clears search
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (dom.modalProductEdit && dom.modalProductEdit.classList.contains('show')) {
+        dom.modalProductEdit.classList.remove('show');
+      } else if (dom.modalImagePreview && dom.modalImagePreview.classList.contains('show')) {
+        dom.modalImagePreview.classList.remove('show');
+      } else if (document.activeElement === dom.productSearchInput) {
+        dom.productSearchInput.value = '';
+        state.searchQuery = '';
+        if (dom.searchClearBtn) dom.searchClearBtn.style.display = 'none';
+        renderProductsTable();
+      }
+    });
+
+    // QOL: Click outside closes modals
+    if (dom.modalProductEdit) {
+      dom.modalProductEdit.addEventListener('click', (e) => {
+        if (e.target === dom.modalProductEdit) dom.modalProductEdit.classList.remove('show');
+      });
+    }
+    if (dom.modalImagePreview) {
+      dom.modalImagePreview.addEventListener('click', (e) => {
+        if (e.target === dom.modalImagePreview) dom.modalImagePreview.classList.remove('show');
+      });
     }
 
     // 6. Modal Close Buttons
@@ -811,7 +887,7 @@
       try {
         if (CSV) {
           CSV.downloadCSV(state.products);
-          showToast(`Berhasil mengekspor ${state.products.length} produk ke CSV!`);
+          showToast(`Successfully exported ${state.products.length} products to CSV!`);
         }
       } catch (err) {
         alert(err.message);
@@ -822,7 +898,7 @@
       try {
         if (CSV) {
           CSV.downloadTXT(state.products);
-          showToast('File TXT berhasil diunduh!');
+          showToast('TXT file downloaded successfully!');
         }
       } catch (err) {
         alert(err.message);
@@ -832,9 +908,9 @@
     const handleExportZIP = async () => {
       try {
         if (CSV) {
-          showToast('⏳ Sedang mengumpulkan foto produk ke ZIP...');
+          showToast('⏳ Collecting product photos into ZIP...');
           await CSV.downloadZIP(state.products);
-          showToast(`File ZIP berhasil diunduh!`);
+          showToast(`ZIP file downloaded successfully!`);
         }
       } catch (err) {
         alert(err.message);
@@ -904,7 +980,7 @@
           renderProductsTable();
           dom.csvImportPreviewBox.style.display = 'none';
           state.csvImportPending = [];
-          showToast(`🎉 Sukses mengimpor ${addedCount} produk baru ke database!`);
+          showToast(`🎉 Successfully imported ${addedCount} new products into the database!`);
 
           // Switch back to products tab
           const tabProdBtn = document.querySelector('[data-tab="tab-products"]');

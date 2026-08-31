@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,18 +30,18 @@
 
       <div class="header-center">
         <!-- Live Threads Connection Status -->
-        <div class="threads-status-pill" id="threads-status-pill" title="Status koneksi tab Threads Web">
+        <div class="threads-status-pill" id="threads-status-pill" title="Threads Web tab connection status">
           <span class="threads-dot connected" id="threads-status-dot"></span>
-          <span class="threads-status-label" id="threads-status-text">🟢 Threads Web Terkoneksi</span>
+          <span class="threads-status-label" id="threads-status-text">🟢 Threads Web Connected</span>
         </div>
       </div>
 
       <div class="header-right">
-        <button id="btn-focus-threads" class="btn-header btn-open-threads" title="Buka atau fokus ke tab Threads Web aktif">
+        <button id="btn-focus-threads" class="btn-header btn-open-threads" title="Open or focus the active Threads Web tab">
           <span class="btn-icon">🔗</span>
-          <span class="btn-text">Buka Tab Threads</span>
+          <span class="btn-text">Open Threads Tab</span>
         </button>
-        <button id="btn-open-dashboard" class="btn-header btn-header-secondary" title="Buka Dashboard Utama">
+        <button id="btn-open-dashboard" class="btn-header btn-header-secondary" title="Open the Main Dashboard">
           <span class="btn-icon">📊</span>
           <span class="btn-text">Dashboard</span>
         </button>
@@ -64,22 +64,22 @@
             <div class="queue-counter-badge" id="preview-queue-index">
               Item <b id="queue-position-badge">1 / 1</b>
             </div>
-            <span class="queue-helper-text">Pilih Produk dalam Antrean:</span>
+            <span class="queue-helper-text">Pick a Product in the Queue:</span>
           </div>
 
           <div class="queue-bar-controls">
-            <button id="btn-prev-item" class="btn-nav-arrow" title="Produk Sebelumnya (Tombol Panah Kiri)">
-              <span>⬅️ Sebelumnya</span>
+            <button id="btn-prev-item" class="btn-nav-arrow" title="Previous Product (Left Arrow Key)">
+              <span>⬅️ Previous</span>
             </button>
-            
+
             <div class="queue-select-wrapper">
-              <select id="queue-select-dropdown" class="queue-select" title="Pilih produk aktif">
-                <option value="">(Memuat Antrean...)</option>
+              <select id="queue-select-dropdown" class="queue-select" title="Pick the active product">
+                <option value="">(Loading Queue...)</option>
               </select>
             </div>
 
-            <button id="btn-next-item" class="btn-nav-arrow" title="Produk Berikutnya (Tombol Panah Kanan)">
-              <span>Berikutnya ➡️</span>
+            <button id="btn-next-item" class="btn-nav-arrow" title="Next Product (Right Arrow Key)">
+              <span>Next ➡️</span>
             </button>
           </div>
         </div>
@@ -90,8 +90,8 @@
           <!-- Empty State (Shown when queue is empty) -->
           <div class="preview-empty-state" id="preview-empty-state" style="display: none;">
             <div class="empty-icon">📭</div>
-            <h3 class="empty-title">Belum Ada Produk di Antrean</h3>
-            <p class="empty-desc">Buka halaman produk Shopee dan tambahkan item ke antrean posting melalui popup ekstensi.</p>
+            <h3 class="empty-title">No Products in the Queue Yet</h3>
+            <p class="empty-desc">Open a Shopee product page and add items to the posting queue via the extension popup.</p>
           </div>
 
           <!-- Main Product Content Wrap -->
@@ -99,10 +99,10 @@
             
             <!-- Product Header: Title & Status -->
             <div class="product-header-row">
-              <div class="product-status-wrap">
-                <span class="preview-status-pill status-ready" id="preview-status-badge">READY TO POST</span>
-              </div>
-              <span class="product-store-badge">🛍️ Shopee Product</span>
+                <div class="product-status-wrap">
+                  <span class="preview-status-pill status-ready" id="preview-status-badge">READY TO POST</span>
+                </div>
+                <span class="product-store-badge">🛍️ Shopee Malaysia Product</span>
             </div>
 
             <!-- Product Body Grid: Image on Left/Top, Meta on Right -->
@@ -111,27 +111,27 @@
               <!-- Product Image Preview -->
               <div class="product-image-section">
                 <div class="image-viewport">
-                  <img id="preview-image" src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format&fit=crop&q=80" alt="Preview Foto Produk" class="main-preview-image">
-                  <div class="image-badge-counter" id="preview-img-counter">1 / 1 Foto HD</div>
+                  <img id="preview-image" src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format&fit=crop&q=80" alt="Product Photo Preview" class="main-preview-image">
+                  <div class="image-badge-counter" id="preview-img-counter">1 / 1 HD Photo</div>
                 </div>
 
                 <!-- Thumbnail Navigation Strip -->
                 <div class="thumbnail-nav-row" id="thumbnail-nav-row">
-                  <button id="btn-prev-image" class="btn-thumb-nav" title="Foto Sebelumnya">◀</button>
+                  <button id="btn-prev-image" class="btn-thumb-nav" title="Previous Photo">◀</button>
                   <div class="thumbnail-strip" id="preview-thumb-strip"></div>
-                  <button id="btn-next-image" class="btn-thumb-nav" title="Foto Berikutnya">▶</button>
+                  <button id="btn-next-image" class="btn-thumb-nav" title="Next Photo">▶</button>
                 </div>
               </div>
 
               <!-- Product Details & Pricing -->
               <div class="product-info-section">
-                <h2 class="product-title" id="preview-title" title="Nama Produk Shopee">
-                  Tas Selempang Wanita Elegan Kulit PU Premium Vintage Minimalis
+                <h2 class="product-title" id="preview-title" title="Shopee Product Name">
+                  Elegant Vintage Minimalist Premium PU Leather Women's Sling Bag
                 </h2>
 
                 <div class="product-pricing-row">
                   <div class="price-pill-primary">
-                    <span class="price-value" id="preview-price">Rp 89.000</span>
+                    <span class="price-value" id="preview-price">RM 89.00</span>
                   </div>
                   <span class="discount-pill" id="preview-discount">-40%</span>
                   <div class="rating-pill">
@@ -143,15 +143,15 @@
                 <!-- Shopee Affiliate Link Field -->
                 <div class="field-group affiliate-field-group">
                   <div class="field-label-row">
-                    <label class="field-label" for="preview-shortlink">🔗 Link Shopee Affiliate:</label>
+                    <label class="field-label" for="preview-shortlink">🔗 Shopee Affiliate Link:</label>
                   </div>
                   <div class="input-with-button-group">
-                    <input type="text" id="preview-shortlink" class="text-input" readonly value="https://s.shopee.co.id/7V1bKx9zQ">
-                    <button id="btn-copy-shortlink" class="btn-action-sm btn-copy-link" title="Salin Shortlink Affiliate">
+                    <input type="text" id="preview-shortlink" class="text-input" readonly value="https://s.shopee.com.my/7V1bKx9zQ">
+                    <button id="btn-copy-shortlink" class="btn-action-sm btn-copy-link" title="Copy Affiliate Shortlink">
                       <span class="btn-icon">📋</span>
-                      <span>Salin</span>
+                      <span>Copy</span>
                     </button>
-                    <a id="btn-open-shopee-link" href="https://s.shopee.co.id/7V1bKx9zQ" target="_blank" rel="noopener noreferrer" class="btn-action-icon" title="Buka Link Produk di Tab Baru">
+                    <a id="btn-open-shopee-link" href="https://s.shopee.com.my/7V1bKx9zQ" target="_blank" rel="noopener noreferrer" class="btn-action-icon" title="Open Product Link in a New Tab">
                       <span>↗️</span>
                     </a>
                   </div>
@@ -165,34 +165,34 @@
               <div class="field-label-row caption-label-row">
                 <div class="label-with-icon">
                   <span class="icon">✍️</span>
-                  <label class="field-label" for="preview-caption">Draft Caption Threads (Mendukung Spintax):</label>
+                  <label class="field-label" for="preview-caption">Threads Caption Draft (Spintax Supported):</label>
                 </div>
                 <div class="caption-char-count-wrap">
-                  <span id="caption-char-count">0</span> / 500 karakter
+                  <span id="caption-char-count">0</span> / 500 characters
                 </div>
               </div>
 
-              <textarea id="preview-caption" class="caption-textarea" rows="4" placeholder="Tulis caption Threads di sini...">{Rekomendasi|Spill|Racun} tas selempang wanita yang super elegan & aesthetic banget! ✨
+              <textarea id="preview-caption" class="caption-textarea" rows="4" placeholder="Write your Threads caption here...">{Gila best|Memang cantik sangat|Tak sangka sebagus ni} tas selempang wanita yang super elegan &amp; aesthetic!
 
-Kualitas kulit PU premium, muat banyak & cocok buat daily / hangout. 👜🔥
+Kulit PU premium, muat banyak &amp; sesuai untuk daily / hangout. 👜🔥
 
-👇 Cek produk & diskon spesial disini:
-https://s.shopee.co.id/7V1bKx9zQ
+👇 Cek produk &amp; diskaun istimewa kat sini:
+https://s.shopee.com.my/7V1bKx9zQ
 
-#RacunShopee #ShopeeHaul #FashionWanita #TasSelempang #OOTD</textarea>
+#RacunShopee #RacunShopeeMY #ShopeeMY #FesyenMurah #TasViral</textarea>
 
               <div class="caption-toolbar-row">
                 <div class="caption-toolbar-left">
-                  <button id="btn-spin-caption" class="btn-action-sm btn-spintax" title="Acak variasi caption dari template spintax">
+                  <button id="btn-spin-caption" class="btn-action-sm btn-spintax" title="Randomize caption variation from the spintax template">
                     <span class="btn-icon">🎲</span>
-                    <span>Acak Spintax Caption</span>
+                    <span>Spin Spintax Caption</span>
                   </button>
                 </div>
 
                 <div class="caption-toolbar-right">
-                  <button id="btn-save-caption" class="btn-action-sm btn-save" title="Simpan draft caption untuk produk ini">
+                  <button id="btn-save-caption" class="btn-action-sm btn-save" title="Save the caption draft for this product">
                     <span class="btn-icon">💾</span>
-                    <span>Simpan Draft</span>
+                    <span>Save Draft</span>
                   </button>
                 </div>
               </div>
@@ -206,11 +206,11 @@ https://s.shopee.co.id/7V1bKx9zQ
           
           <!-- BIG HERO PRIMARY ACTION BUTTON -->
           <div class="primary-post-action-wrap">
-            <button id="btn-post-now" class="btn-hero-post" title="Eksekusi posting item ini langsung ke tab Threads Web aktif">
+            <button id="btn-post-now" class="btn-hero-post" title="Execute posting of this item directly to the active Threads Web tab">
               <span class="btn-hero-icon">🚀</span>
               <div class="btn-hero-labels">
-                <span class="btn-hero-main-text">Post Item Ini Sekarang</span>
-                <span class="btn-hero-sub-text">Kirim caption & foto ke tab Threads Web yang aktif</span>
+                <span class="btn-hero-main-text">Post This Item Now</span>
+                <span class="btn-hero-sub-text">Send caption & photo to the active Threads Web tab</span>
               </div>
             </button>
           </div>
@@ -218,20 +218,20 @@ https://s.shopee.co.id/7V1bKx9zQ
           <!-- BATCH / AUTO-POST CONTROLS (COMPACT & CLEAN) -->
           <div class="autopost-compact-bar">
             <div class="autopost-controls-left">
-              <button id="btn-start-autopost" class="btn-compact-auto btn-start" title="Mulai auto-posting antrean secara berurutan">
-                <span>▶ Mulai Auto-Post</span>
+              <button id="btn-start-autopost" class="btn-compact-auto btn-start" title="Start auto-posting the queue sequentially">
+                <span>▶ Start Auto-Post</span>
               </button>
-              <button id="btn-pause-autopost" class="btn-compact-auto btn-pause" style="display: none;" title="Jeda auto-posting">
-                <span>⏸ Jeda Auto-Post</span>
+              <button id="btn-pause-autopost" class="btn-compact-auto btn-pause" style="display: none;" title="Pause auto-posting">
+                <span>⏸ Pause Auto-Post</span>
               </button>
-              <button id="btn-stop-autopost" class="btn-compact-auto btn-stop" disabled title="Hentikan auto-posting">
+              <button id="btn-stop-autopost" class="btn-compact-auto btn-stop" disabled title="Stop auto-posting">
                 <span>⏹ Stop</span>
               </button>
             </div>
 
             <div class="autopost-status-right">
-              <span class="posting-status-indicator idle" id="posting-status-badge">Idle / Siap</span>
-              <div class="countdown-wrap" title="Waktu tunggu post berikutnya">
+              <span class="posting-status-indicator idle" id="posting-status-badge">Idle / Ready</span>
+              <div class="countdown-wrap" title="Waiting time until the next post">
                 <span class="cd-label">Next:</span>
                 <span class="countdown-timer" id="countdown-display">--:--</span>
               </div>
@@ -267,17 +267,17 @@ https://s.shopee.co.id/7V1bKx9zQ
             </div>
 
             <div class="terminal-header-actions">
-              <button id="btn-clear-logs" class="btn-term-action" title="Bersihkan seluruh log">
+              <button id="btn-clear-logs" class="btn-term-action" title="Clear all logs">
                 <span class="icon">🗑️</span>
-                <span class="text">Bersihkan Log</span>
+                <span class="text">Clear Logs</span>
               </button>
-              <button id="btn-copy-logs" class="btn-term-action" title="Salin seluruh log ke clipboard">
+              <button id="btn-copy-logs" class="btn-term-action" title="Copy all logs to clipboard">
                 <span class="icon">📋</span>
-                <span class="text">Salin Log</span>
+                <span class="text">Copy Logs</span>
               </button>
-              <button id="btn-export-logs" class="btn-term-action btn-term-export" title="Unduh log ke format .txt">
+              <button id="btn-export-logs" class="btn-term-action btn-term-export" title="Download logs as a .txt file">
                 <span class="icon">💾</span>
-                <span class="text">Ekspor</span>
+                <span class="text">Export</span>
               </button>
             </div>
           </div>
@@ -286,27 +286,27 @@ https://s.shopee.co.id/7V1bKx9zQ
           <div class="terminal-toolbar">
             <!-- Filter Pills -->
             <div class="filter-pills-wrap">
-              <button class="filter-pill active" data-log-filter="ALL" title="Tampilkan semua level log">
-                <span>Semua</span>
+              <button class="filter-pill active" data-log-filter="ALL" title="Show all log levels">
+                <span>ALL</span>
                 <span class="pill-badge" id="count-log-all">0</span>
               </button>
-              <button class="filter-pill filter-debug" data-log-filter="DEBUG" title="Filter log DEBUG">
+              <button class="filter-pill filter-debug" data-log-filter="DEBUG" title="Filter DEBUG logs">
                 <span>DEBUG</span>
                 <span class="pill-badge" id="count-log-debug">0</span>
               </button>
-              <button class="filter-pill filter-dom" data-log-filter="DOM" title="Filter log DOM">
+              <button class="filter-pill filter-dom" data-log-filter="DOM" title="Filter DOM logs">
                 <span>DOM</span>
                 <span class="pill-badge" id="count-log-dom">0</span>
               </button>
-              <button class="filter-pill filter-info" data-log-filter="INFO" title="Filter log INFO">
+              <button class="filter-pill filter-info" data-log-filter="INFO" title="Filter INFO logs">
                 <span>INFO</span>
                 <span class="pill-badge" id="count-info">0</span>
               </button>
-              <button class="filter-pill filter-success" data-log-filter="SUCCESS" title="Filter log SUCCESS">
+              <button class="filter-pill filter-success" data-log-filter="SUCCESS" title="Filter SUCCESS logs">
                 <span>SUCCESS</span>
                 <span class="pill-badge" id="count-log-success">0</span>
               </button>
-              <button class="filter-pill filter-error" data-log-filter="ERROR" title="Filter log ERROR">
+              <button class="filter-pill filter-error" data-log-filter="ERROR" title="Filter ERROR logs">
                 <span>ERROR</span>
                 <span class="pill-badge" id="count-log-error">0</span>
               </button>
@@ -316,10 +316,10 @@ https://s.shopee.co.id/7V1bKx9zQ
             <div class="terminal-options-row">
               <div class="terminal-search-box">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="log-search-input" class="terminal-search-input" placeholder="Cari log / modul...">
+                <input type="text" id="log-search-input" class="terminal-search-input" placeholder="Search logs / modules...">
               </div>
 
-              <label class="autoscroll-toggle-label" title="Kunci scroll otomatis ke baris paling bawah">
+              <label class="autoscroll-toggle-label" title="Lock auto-scroll to the bottom line">
                 <input type="checkbox" id="btn-toggle-autoscroll" checked>
                 <span class="toggle-text">Auto-Scroll</span>
               </label>
