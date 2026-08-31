@@ -56,7 +56,7 @@
 
 ### Method 1: Download the Ready-to-Import Release (Recommended)
 1. Open the **[Latest Release](https://github.com/muhaafidz/shopithread/releases/latest)** page.
-2. Download the **`shopee-affiliate-threads-extension-v1.0.0.zip`** asset file.
+2. Download the **`shopee-affiliate-threads-extension-v1.1.0.zip`** asset file.
 3. Extract the ZIP file to a folder on your computer.
 4. Open Google Chrome and go to: `chrome://extensions`.
 5. Enable **Developer mode** in the top-right corner.

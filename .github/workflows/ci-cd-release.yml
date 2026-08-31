@@ -91,11 +91,11 @@ jobs:
           prerelease: false
           body: |
             ## 🧵 ShopiThread — Shopee Affiliate & Threads AutoCraft (${{ env.VERSION }})
-            
-            ### 📦 Cara Import Ekstensi ke Chrome:
-            1. Download file asset **`shopithread-${{ env.VERSION }}.zip`** di bawah.
-            2. Ekstrak file ZIP tersebut ke sebuah folder di komputer Anda.
-            3. Buka browser Chrome dan akses `chrome://extensions`.
-            4. Aktifkan **Developer mode** (Mode pengembang) di pojok kanan atas.
-            5. Klik tombol **Load unpacked** (Muat yang belum dibongkar), lalu pilih folder hasil ekstrak tadi.
-            6. Selesai! Ekstensi siap digunakan di Shopee Affiliate & Threads!
+
+            ### 📦 How to Install the Extension in Chrome:
+            1. Download the **`shopithread-${{ env.VERSION }}.zip`** asset below.
+            2. Extract the ZIP file to a folder on your computer.
+            3. Open Google Chrome and go to `chrome://extensions`.
+            4. Enable **Developer mode** in the top-right corner.
+            5. Click **Load unpacked**, then select the extracted folder.
+            6. Done! The extension is ready to use on Shopee Affiliate & Threads.
